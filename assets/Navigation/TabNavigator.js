@@ -31,53 +31,17 @@ function TabNavigator() {
 
       <Tab.Screen name="Home" component={HomeScreen} options = {{
         tabBarIcon: () => <Entypo name = "home" size = {30} color =  {colors.icon_dark}/>,
-        headerShown: true,
-        headerTitle: 'SHARON',
-        headerStyle: 
-        {  
-          backgroundColor: colors.primary_brown,
-        },
-        headerTitleStyle: 
-        {
-          fontSize:24,
-          color: '#FFFFFF',
-        },
-        headerBackVisible: true,
-        headerBackTitle:'',
-        }}/>
+        headerShown: false,
+      }}/>
 
       <Tab.Screen name="Booking1" component={Bookingpage1} options = {{
         tabBarIcon: () => <FontAwesome5 name = "calendar-alt" size = {30}color =  {colors.icon_dark}/>,
-        headerShown: true,
-        headerTitle: 'SHARON',
-        headerStyle: 
-        {  
-          backgroundColor: colors.primary_brown,
-        },
-        headerTitleStyle: 
-        {
-          fontSize:24,
-          color: '#FFFFFF',
-        },
-        headerBackVisible: true,
-        headerBackTitle:'',
+        headerShown: false,
         }}/>
 
       <Tab.Screen name="Profile" component={Profilepage} options = {{
         tabBarIcon: () => <MaterialCommunityIcons name = "account" size = {36} color =  {colors.icon_dark}/>,
-        headerShown: true,
-        headerTitle: 'SHARON',
-        headerStyle: {
-          
-          backgroundColor: colors.primary_brown,
-        },
-        headerTitleStyle: 
-        {
-          fontSize:24,
-          color: '#FFFFFF',
-        },
-        headerBackVisible: true,
-        headerBackTitle:'',
+        headerShown: false,
         }}/>
     </Tab.Navigator>
   );

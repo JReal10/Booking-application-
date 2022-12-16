@@ -8,13 +8,14 @@ import Bookingpage3 from '../Screens/Bookingpage3';
 import Bookingpage4 from '../Screens/Bookingpage4';
 import Gallerypage from '../Screens/Gallerypage';
 import TabNavigator from './TabNavigator';
+import DrawerNavigator from './DrawerNavigator';
 
 const Stack = createNativeStackNavigator();
 
 function StackNavigator() {
   return (
       <Stack.Navigator>
-        <Stack.Screen name = "Tab" component={TabNavigator} options = 
+        <Stack.Screen name = "Tab" component={DrawerNavigator} options = 
         {{
           headerShown:false,
         }}/>

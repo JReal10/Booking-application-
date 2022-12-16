@@ -5,9 +5,10 @@ import BookingButton from '../Components/BookingButton';
 import Entypo from 'react-native-vector-icons/Entypo';
 import StepIndicator from 'react-native-step-indicator';
 import FowardButton from '../Components/FowardButton';
-import { collection, getDoc,doc,setDoc} from 'firebase/firestore';
-import {BookingData} from '../Data/BookingData';
+import { useEffect } from 'react';
+import { collection, getDoc,doc, updateDoc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
+import { async } from '@firebase/util';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -33,41 +34,47 @@ const customStyles = {
   currentStepLabelColor: colors.secondary_green
 }
 
-async function AddData(a,b)
-{
-  // Add a new document in collection "cities" with ID 'LA'
-  await setDoc(doc(database,"Booking_User","User1"),
-  {
-    course: a,
-    price:b
+ async function IsAdded(id,a)
+ {
+  const Ref = doc(database, "Booking_Course", id);
+
+  await updateDoc(Ref, {
+    isAdded: a
   });
-}
+ }
 
-
-async function GetData(id)
+async function AddAllData()
 {
-  const docRef = doc(database, "Booking_Course",id);
-
-  try {
-    const docSnap = await getDoc(docRef);
-    if(docSnap.exists()) {
-       const RetrievedData = docSnap.data();
-        console.log(RetrievedData); 
-        return(RetrievedData);
-    } else {
-        console.log("Document does not exist")
-    }
-
-} catch(error) {
-    console.log(error)
+     /*await setDoc(doc(database,"Booking_User","User1"),
+   {
+     course: a,
+     price: b
+   });*/
 }
-};
+
+//  async function GetData(id)
+//  {
+//    const docRef = doc(database, "Booking_Course",id);
+
+//    try {
+//      const docSnap = await getDoc(docRef);
+//      if(docSnap.exists()) {
+//         const RetrievedData = docSnap.data();
+//          return(RetrievedData);
+//      } else {
+//          console.log("Document does not exist")
+//      }
+
+//  } catch(error) {
+//      console.log(error)
+//  }
+//  };
 
 const labels = ["Menu","Date","Confirmation"];
 
 function Bookingpage1({navigation}) {
 
-  const [course,setCourse] = React.useState('')
+  const [posts,setPosts] = React.useState([]);
 
   return (
     <View style = {styles.Container}>
@@ -79,21 +86,6 @@ function Bookingpage1({navigation}) {
           labels ={labels}
           stepCount = {3}/>
           </View>
-          <View>
-            <View style = {styles.Container2}>
-              <Text style = {styles.HeaderText}>[Hand] Clear Gel</Text>
-              <View style = {styles.time}>
-              <Entypo name = 'clock' size = {16} color = {'#828282'}/>
-              <Text style = {styles.TimeText}>20 min</Text>
-              </View>
-            </View>
-          </View>
-          <Text style = {styles.DescriptionText}>Applying clear gel</Text>
-          <View style = {styles.Container3}>
-            <Text style = {styles.priceText}>$20.00</Text>
-            <BookingButton title = 'Add' data = {BookingData} onPress = {() => {/*AddData("test")*/GetData("5vpFN69D14cH42cU1Ue9")}} style = {styles.AddButton}/>
-          </View>
-          <View style = {styles.DividerLine}></View>
 
           <View>
             <View style = {styles.Container2}>
@@ -107,57 +99,11 @@ function Bookingpage1({navigation}) {
           <Text style = {styles.DescriptionText}>Applying clear gel</Text>
           <View style = {styles.Container3}>
             <Text style = {styles.priceText}>$20.00</Text>
-            <BookingButton title = 'Add' style = {styles.AddButton}/>
+            <BookingButton title = 'Add' onPress = {() =>{IsAdded('5vpFN69D14cH42cU1Ue9',true)}} style = {styles.AddButton}/>
           </View>
           <View style = {styles.DividerLine}></View>
 
-          <View>
-            <View style = {styles.Container2}>
-              <Text style = {styles.HeaderText}>[Hand] Clear Gel</Text>
-              <View style = {styles.time}>
-              <Entypo name = 'clock' size = {16} color = {'#828282'}/>
-              <Text style = {styles.TimeText}>20 min</Text>
-              </View>
-            </View>
-          </View>
-          <Text style = {styles.DescriptionText}>Applying clear gel</Text>
-          <View style = {styles.Container3}>
-            <Text style = {styles.priceText}>$20.00</Text>
-            <BookingButton title = 'Add' style = {styles.AddButton}/>
-          </View>
-          <View style = {styles.DividerLine}></View>
-          <View>
-            <View style = {styles.Container2}>
-              <Text style = {styles.HeaderText}>[Hand] Clear Gel</Text>
-              <View style = {styles.time}>
-              <Entypo name = 'clock' size = {16} color = {'#828282'}/>
-              <Text style = {styles.TimeText}>20 min</Text>
-              </View>
-            </View>
-          </View>
-          <Text style = {styles.DescriptionText}>Applying clear gel</Text>
-          <View style = {styles.Container3}>
-            <Text style = {styles.priceText}>$20.00</Text>
-            <BookingButton title = 'Add' style = {styles.AddButton}/>
-          </View>
-          <View style = {styles.DividerLine}></View>
-
-          <View>
-            <View style = {styles.Container2}>
-              <Text style = {styles.HeaderText}>[Hand] Clear Gel</Text>
-              <View style = {styles.time}>
-              <Entypo name = 'clock' size = {16} color = {'#828282'}/>
-              <Text style = {styles.TimeText}>20 min</Text>
-              </View>
-            </View>
-          </View>
-          <Text style = {styles.DescriptionText}>Applying clear gel</Text>
-          <View style = {styles.Container3}>
-            <Text style = {styles.priceText}>$20.00</Text>
-            <BookingButton title = 'Add' style = {styles.AddButton}/>
-          </View>
-          <View style = {styles.DividerLine}></View>
-          <FowardButton title = 'CONTINUE' onPress={() => navigation.navigate('Booking2')}/>
+          <FowardButton title = 'CONTINUE' onPress={() => (navigation.navigate('Booking2'))}/>
 
           <View style = {styles.TabNavSpace}/>
           </ScrollView>
