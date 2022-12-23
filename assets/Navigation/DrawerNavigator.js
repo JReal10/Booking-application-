@@ -3,17 +3,17 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Bookingpage1 from '../Screens/Bookingpage1';
 import TabNavigator from './TabNavigator';
 import colors from '../Colors/colors';
+import CustomDrawer from '../Components/CustomDrawer';
 
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigator() {
   return (
-    <Drawer.Navigator>
-
-      <Drawer.Screen name = {'Home_tab'} component = {TabNavigator} 
-      options = {{
-        headerShown: true,
+    <Drawer.Navigator drawerContent={props => <CustomDrawer {...props}/>} screenOptions= 
+    {{
+      headerShown: true,
         headerTitle: 'SHARON',
+        drawerActiveTintColor:colors.text_brown,
         headerStyle: 
         {  
           backgroundColor: colors.primary_brown,
@@ -24,22 +24,10 @@ function DrawerNavigator() {
           color: '#FFFFFF',
         },
 
-        }}/>
-      <Drawer.Screen name = {'BookingPage'} component = {Bookingpage1}
-      options = {{
-        headerShown: true,
-        headerTitle: 'SHARON',
-        headerStyle: 
-        {  
-          backgroundColor: colors.primary_brown,
-        },
-        headerTitleStyle: 
-        {
-          fontSize:24,
-          color: '#FFFFFF',
-        },
+    }}>
 
-        }}/>
+      <Drawer.Screen name = {'Home'} component = {TabNavigator} />
+      <Drawer.Screen name = {'Booking'} component = {Bookingpage1}/>
     </Drawer.Navigator>
   );
 }
