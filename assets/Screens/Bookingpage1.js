@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { collection, getDoc,doc, updateDoc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
 import { async } from '@firebase/util';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -36,46 +37,26 @@ const customStyles = {
 
  async function IsAdded(id,a)
  {
-  const Ref = doc(database, "Booking_Course", id);
-
+  const Ref = doc(database, "Booking_Course", id);          
   await updateDoc(Ref, {
     isAdded: a
   });
+
+  const Added = true;
  }
 
-async function AddAllData()
+function AddFunction()
 {
-     /*await setDoc(doc(database,"Booking_User","User1"),
-   {
-     course: a,
-     price: b
-   });*/
+IsAdded('5vpFN69D14cH42cU1Ue9',true)
+
 }
 
-//  async function GetData(id)
-//  {
-//    const docRef = doc(database, "Booking_Course",id);
-
-//    try {
-//      const docSnap = await getDoc(docRef);
-//      if(docSnap.exists()) {
-//         const RetrievedData = docSnap.data();
-//          return(RetrievedData);
-//      } else {
-//          console.log("Document does not exist")
-//      }
-
-//  } catch(error) {
-//      console.log(error)
-//  }
-//  };
 
 const labels = ["Menu","Date","Confirmation"];
 
 function Bookingpage1({navigation}) {
 
   const [posts,setPosts] = React.useState([]);
-
   return (
     <View style = {styles.Container}>
       <SafeAreaView>
@@ -99,7 +80,9 @@ function Bookingpage1({navigation}) {
           <Text style = {styles.DescriptionText}>Applying clear gel</Text>
           <View style = {styles.Container3}>
             <Text style = {styles.priceText}>$20.00</Text>
-            <BookingButton title = 'Add' onPress = {() =>{IsAdded('5vpFN69D14cH42cU1Ue9',true)}} style = {styles.AddButton}/>
+            <TouchableOpacity>
+            <BookingButton title = 'Add' onPress = {() => this.AddFunction()} /*{IsAdded('5vpFN69D14cH42cU1Ue9',true)}*/ style = {styles.AddButton}/>
+            </TouchableOpacity>
           </View>
           <View style = {styles.DividerLine}></View>
 
