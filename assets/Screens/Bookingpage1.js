@@ -41,22 +41,22 @@ const customStyles = {
   await updateDoc(Ref, {
     isAdded: a
   });
-
-  const Added = true;
  }
-
-function AddFunction()
-{
-IsAdded('5vpFN69D14cH42cU1Ue9',true)
-
-}
-
 
 const labels = ["Menu","Date","Confirmation"];
 
 function Bookingpage1({navigation}) {
 
-  const [posts,setPosts] = React.useState([]);
+  const [state,setState] = React.useState(false)
+
+  const ButtonValue = state?"Added":"Add"
+
+  const AddFunction = (id) => {
+      const newState = !state;
+      setState(newState)
+      IsAdded(id,newState)
+  }
+
   return (
     <View style = {styles.Container}>
       <SafeAreaView>
@@ -80,8 +80,44 @@ function Bookingpage1({navigation}) {
           <Text style = {styles.DescriptionText}>Applying clear gel</Text>
           <View style = {styles.Container3}>
             <Text style = {styles.priceText}>$20.00</Text>
-            <TouchableOpacity>
-            <BookingButton title = 'Add' onPress = {() => this.AddFunction()} /*{IsAdded('5vpFN69D14cH42cU1Ue9',true)}*/ style = {styles.AddButton}/>
+            <TouchableOpacity onPress = {() => AddFunction('5vpFN69D14cH42cU1Ue9')}>
+            <BookingButton title = {ButtonValue} style = {styles.AddButton}/>
+            </TouchableOpacity>
+          </View>
+          <View style = {styles.DividerLine}></View>
+
+          <View>
+            <View style = {styles.Container2}>
+              <Text style = {styles.HeaderText}>[Hand] Clear Gel</Text>
+              <View style = {styles.time}>
+              <Entypo name = 'clock' size = {16} color = {'#828282'}/>
+              <Text style = {styles.TimeText}>20 min</Text>
+              </View>
+            </View>
+          </View>
+          <Text style = {styles.DescriptionText}>Applying clear gel</Text>
+          <View style = {styles.Container3}>
+            <Text style = {styles.priceText}>$20.00</Text>
+            <TouchableOpacity onPress = {() => AddFunction('FIhLGiLsP38mI1FVKPtU')}>
+            <BookingButton title = 'Add' style = {styles.AddButton}/>
+            </TouchableOpacity>
+          </View>
+          <View style = {styles.DividerLine}></View>
+
+          <View>
+            <View style = {styles.Container2}>
+              <Text style = {styles.HeaderText}>[Hand] Clear Gel</Text>
+              <View style = {styles.time}>
+              <Entypo name = 'clock' size = {16} color = {'#828282'}/>
+              <Text style = {styles.TimeText}>20 min</Text>
+              </View>
+            </View>
+          </View>
+          <Text style = {styles.DescriptionText}>Applying clear gel</Text>
+          <View style = {styles.Container3}>
+            <Text style = {styles.priceText}>$20.00</Text>
+            <TouchableOpacity onPress = {() => AddFunction('eC6IIrKKD6NrbMsQuZdb')}>
+            <BookingButton title = 'Add' style = {styles.AddButton}/>
             </TouchableOpacity>
           </View>
           <View style = {styles.DividerLine}></View>

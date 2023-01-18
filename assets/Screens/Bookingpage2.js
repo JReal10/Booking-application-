@@ -5,6 +5,29 @@ import FowardButton from '../Components/FowardButton';
 import { Calendar } from 'react-native-calendars';
 import TimeButton from '../Components/TimeButton';
 import colors from '../Colors/colors';
+import {LocaleConfig} from 'react-native-calendars';
+
+LocaleConfig.locales['fr'] = {
+  monthNames: [
+    'January',
+    'Febuary',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ],
+  monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+  dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
+  dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
+  today: "Aujourd'hui"
+};
+LocaleConfig.defaultLocale = 'fr';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -34,6 +57,13 @@ const customStyles = {
 const labels = ["Menu","Date","Confirmation"];
 
 function Bookingpage2({navigation}) {
+
+  const [date,setDate] = React.useState(new Date());
+  const [showTime,setShowTime] = React.useState(false)
+
+  const onChange = date => {
+    setDate(date);
+  }
   return (
     <View style = {styles.Container}>
       <SafeAreaView>
@@ -44,7 +74,23 @@ function Bookingpage2({navigation}) {
           labels ={labels}
           stepCount = {3}/>
           </View>
-          <Calendar></Calendar>
+          <Calendar
+      // Handler which gets executed on day press. Default = undefined
+      onDayPress={day => {
+        setDate(day.dateString);
+        console.log(date)
+      }}
+      // Handler which gets executed on day long press. Default = undefined
+      minDate = {new Date()}
+      markedDates={{
+        date:{selected:true}
+      }}
+      // Do not show days of other months in month page. Default = false
+      hideExtraDays={true}
+
+      firstDay={1}
+      enableSwipeMonths={true} 
+          />
           <Text style = {styles.AvailableTime}>Available Time</Text>
 
           <View style = {styles.ButtonContainer}>
