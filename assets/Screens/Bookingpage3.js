@@ -31,6 +31,9 @@ const customStyles = {
 const labels = ["Menu","Date","Confirmation"];
 
 function Bookingpage3({navigation}) {
+  const [date,setDate] = React.useState(new Date());
+  const [time,setTime] = React.useState("");
+
   return (
     <View style = {styles.Container}>
       <SafeAreaView>
@@ -67,7 +70,7 @@ function Bookingpage3({navigation}) {
             </View>
             <View style = {styles.ContainerElement}>
               <Text style = {styles.Header2}>Time</Text>
-              <Text style = {styles.Text1}>03:05</Text>
+              <Text style = {styles.Text1}></Text>
             </View>
           </View>
           <FowardButton title = 'CONTINUE' onPress={() => navigation.navigate('Booking4')}/>

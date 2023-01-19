@@ -1,33 +1,10 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView, ScrollView} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView, ScrollView,Modal} from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 import FowardButton from '../Components/FowardButton';
 import { Calendar } from 'react-native-calendars';
-import TimeButton from '../Components/TimeButton';
 import colors from '../Colors/colors';
-import {LocaleConfig} from 'react-native-calendars';
-
-LocaleConfig.locales['fr'] = {
-  monthNames: [
-    'January',
-    'Febuary',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ],
-  monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
-  dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-  dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
-  today: "Aujourd'hui"
-};
-LocaleConfig.defaultLocale = 'fr';
+import Time from '../Components/Time';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -53,17 +30,24 @@ const customStyles = {
   currentStepLabelColor: colors.secondary_green
 }
 
-
 const labels = ["Menu","Date","Confirmation"];
 
-function Bookingpage2({navigation}) {
+const getMarkedDates = (date) => {
+  const markedDates = {};
+
+  markedDates[date] = {selected: true, selectedColor: colors.secondary_green,selectedTextColor: colors.text_white };
+
+  return markedDates;
+};
+
+
+function Bookingpage2({navigation},props) {
 
   const [date,setDate] = React.useState(new Date());
+  const [time,setTime] = React.useState("");
   const [showTime,setShowTime] = React.useState(false)
+  const currentDate = new Date();
 
-  const onChange = date => {
-    setDate(date);
-  }
   return (
     <View style = {styles.Container}>
       <SafeAreaView>
@@ -78,32 +62,37 @@ function Bookingpage2({navigation}) {
       // Handler which gets executed on day press. Default = undefined
       onDayPress={day => {
         setDate(day.dateString);
-        console.log(date)
+        setShowTime(true);
       }}
       // Handler which gets executed on day long press. Default = undefined
-      minDate = {new Date()}
-      markedDates={{
-        date:{selected:true}
+      minDate = {currentDate}
+
+      markedDates={
+        getMarkedDates(date)
+      }
+
+      style = {{
+        borderRadius:10,
+        margin:10,
+        padding:10,
       }}
+
+      theme = {{
+        selectedDayBackgroundColor:colors.background,
+        selectedDayTextColor: colors.secondary_green,
+        arrowColor: colors.secondary_green,
+        calendarBackground: colors.background,
+      }}
+
       // Do not show days of other months in month page. Default = false
       hideExtraDays={true}
 
-      firstDay={1}
       enableSwipeMonths={true} 
           />
-          <Text style = {styles.AvailableTime}>Available Time</Text>
 
-          <View style = {styles.ButtonContainer}>
-          <TimeButton title = '12:45'/>
-          <TimeButton title = '13:45'/>
-          <TimeButton title = '14:45'/>
-          <TimeButton title = '15:45'/>
-          </View>
+          <Text style = {styles.AvailableTime} >Available Time</Text>
 
-          <View style = {styles.ButtonContainer}>
-          <TimeButton title = '16:45'/>
-          <TimeButton title = '17:45'/>
-          </View>
+          {showTime ? <Time changeTime = {time => setTime(time)}/> : null}
 
           <FowardButton title = 'CONTINUE' onPress={() => navigation.navigate('Booking3')}/>
           <View style = {styles.TabNavSpace}/>

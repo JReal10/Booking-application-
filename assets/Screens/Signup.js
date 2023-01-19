@@ -7,6 +7,8 @@ import LoginButton from '../Components/LoginButton';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
  import { createUserWithEmailAndPassword } from "firebase/auth";
  import { Authentication } from '../Config/firebase';
+ import { database } from '../Config/firebase';
+ import { collection, getDoc,doc, setDoc} from 'firebase/firestore';
 
 function Signup({navigation}) {
 
@@ -14,7 +16,18 @@ function Signup({navigation}) {
 
   const [email,setEmail] = React.useState('')
   const [password,setPassword] = React.useState('')
-  //const [name,setName] = React.useState('')
+  const [name,setName] = React.useState('')
+
+  const AddData = async (UserName,UserEmail) => {
+
+    const Ref = doc(database, "Booking_User",UserName);
+    const data = {
+      name: UserName,
+      email: UserEmail
+    };
+  
+    await setDoc(Ref, data)
+  };
 
     const RegisterUser = () =>
     {
@@ -22,11 +35,12 @@ function Signup({navigation}) {
       .then((re) => {
         console.log(re);
         setIsSignedIn(true);
-
       })
       .catch((re) =>{
         console.log(re);
     })
+
+    AddData(name,email);
     }
   
   return (
@@ -54,7 +68,7 @@ function Signup({navigation}) {
                 onChangeText={password => setPassword(password)} style = {styles.PasswordInput} secureTextEntry
                 autoCorrect ={false}autoCapitalize = 'none'/>
               </View>
-              <LoginButton title = {'SIGNUP'}></LoginButton>
+              <LoginButton title = {'SIGNUP'} onPress = {() => RegisterUser()}></LoginButton>
               <View style = {styles.Divider}>
               <View style = {styles.Line}/>
               <Text>OR</Text>
