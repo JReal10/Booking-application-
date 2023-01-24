@@ -8,19 +8,18 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
  import { createUserWithEmailAndPassword } from "firebase/auth";
  import { Authentication } from '../Config/firebase';
  import { database } from '../Config/firebase';
- import { collection, getDoc,doc, setDoc} from 'firebase/firestore';
+ import { doc, setDoc} from 'firebase/firestore';
 
-function Signup({navigation}) {
+function Signup({navigation,props}) {
 
   const [isSignedIn, setIsSignedIn] = React.useState(true)
-
   const [email,setEmail] = React.useState('')
   const [password,setPassword] = React.useState('')
   const [name,setName] = React.useState('')
 
   const AddData = async (UserName,UserEmail) => {
 
-    const Ref = doc(database, "Booking_User",UserName);
+    const Ref = doc(database, "Booking_User");
     const data = {
       name: UserName,
       email: UserEmail
