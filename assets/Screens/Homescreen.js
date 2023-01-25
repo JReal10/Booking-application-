@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity, ImageBackground, ScrollView } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { useState } from 'react';
 import colors from '../Colors/colors';
 
 function HomeScreen({navigation}) {

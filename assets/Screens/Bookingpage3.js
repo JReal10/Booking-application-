@@ -1,8 +1,13 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,Image,StatusBar, ScrollView} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView, ScrollView} from 'react-native';
+import { useEffect } from 'react';
+import { useRoute } from '@react-navigation/native';
 import colors from '../Colors/colors';
 import StepIndicator from 'react-native-step-indicator';
 import FowardButton from '../Components/FowardButton';
+import { getDoc,doc} from 'firebase/firestore';
+import { database } from '../Config/firebase';
+import Button from '../Components/FowardButton';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -31,8 +36,29 @@ const customStyles = {
 const labels = ["Menu","Date","Confirmation"];
 
 function Bookingpage3({navigation}) {
-  const [date,setDate] = React.useState(new Date());
-  const [time,setTime] = React.useState("");
+
+  const route = useRoute();
+
+  const [date,setDate] = React.useState("test");
+  const [time,setTime] = React.useState("test");
+  const [course,setCourse] = React.useState(["test", "test2"]);
+  const [name, setName] = React.useState("test");
+  const [email, setEmail] = React.useState("test");
+
+  const AddData = async (date,time) => {
+
+    const Ref = doc(database, "Booking_User","Jamie");
+    const data = {
+      date: date,
+      time: time
+    };
+  
+    await setDoc(Ref, data,{merge:true})
+  };
+
+  const BookingHandle = () =>{
+    navigation.navigate('Booking4');
+  }
 
   return (
     <View style = {styles.Container}>
@@ -44,36 +70,35 @@ function Bookingpage3({navigation}) {
           labels ={labels}
           stepCount = {3}/>
           </View>
+
           <View style = {styles.Container1}>
             <View style = {styles.ContainerHeader}>
               <Text style = {styles.Header}>Booking Details</Text>
             </View>
             <View style = {styles.ContainerElement}>
               <Text style = {styles.Header2}>Selected Course</Text>
-              <Text style = {styles.Text1}>[Hand] Clear only</Text>
-            </View>
-            <View style = {styles.ContainerElement}>
-              <Text style = {styles.Header2}>Selected Course</Text>
-              <Text style = {styles.Text1}>[Hand] Clear only</Text>
+              <Text style = {styles.Text1}>{route.params.paramCourse}</Text>
+              <Text style = {styles.Text1}>Total Price: {route.params.paramPrice} </Text>
+              <Text style = {styles.Text1}>Time Taken: {route.params.paramTotalTimeTaken} </Text>
             </View>
             <View style = {styles.ContainerElement}>
               <Text style = {styles.Header2}>Name</Text>
-              <Text style = {styles.Text1}>Jamie Ogundiran</Text>
+              <Text style = {styles.Text1}>{route.params.paramName}</Text>
             </View>
             <View style = {styles.ContainerElement}>
               <Text style = {styles.Header2}>Email</Text>
-              <Text style = {styles.Text1}>jamieogundiran@gmail.com</Text>
+              <Text style = {styles.Text1}>{route.params.paramEmail}</Text>
             </View>
             <View style = {styles.ContainerElement}>
               <Text style = {styles.Header2}>Date</Text>
-              <Text style = {styles.Text1}>09/11/2022</Text>
+              <Text style = {styles.Text1}>{route.params.paramDate}</Text>
             </View>
             <View style = {styles.ContainerElement}>
               <Text style = {styles.Header2}>Time</Text>
-              <Text style = {styles.Text1}></Text>
+              <Text style = {styles.Text1}>{route.params.paramKey}</Text>
             </View>
           </View>
-          <FowardButton title = 'CONTINUE' onPress={() => navigation.navigate('Booking4')}/>
+          <FowardButton title = 'CONTINUE' onPress={() => BookingHandle()}/>
           <View style = {styles.TabNavSpace}/>
           </ScrollView>
       </SafeAreaView>

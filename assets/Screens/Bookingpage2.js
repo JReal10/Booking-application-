@@ -5,6 +5,9 @@ import FowardButton from '../Components/FowardButton';
 import { Calendar } from 'react-native-calendars';
 import colors from '../Colors/colors';
 import Time from '../Components/Time';
+import { useEffect } from 'react';
+import {doc,getDocs,collection,where,query,getDoc} from 'firebase/firestore';
+import { database } from '../Config/firebase';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -41,12 +44,73 @@ const getMarkedDates = (date) => {
 };
 
 
-function Bookingpage2({navigation},props) {
+function Bookingpage2({navigation}) {
 
   const [date,setDate] = React.useState(new Date());
   const [time,setTime] = React.useState("");
-  const [showTime,setShowTime] = React.useState(false)
+  const [course,setCourse] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [email,setEmail] = React.useState("");
+  const [showTime,setShowTime] = React.useState(false);
+  const [price,setPrice] = React.useState([]);
+  const [timeTaken,setTimeTaken] = React.useState([]);
+  
   const currentDate = new Date();
+
+  const GetTotalTimeAndPrice = (data)=>{
+    const TotalValue = (data.reduce((a,v) =>  a = a + v, 0 ));
+    return TotalValue;
+  }
+
+  const GetUserDetail = (data)=>{
+  }
+
+  useEffect(() => {
+    GetCourse();
+    GetUser();
+  },[])
+
+  const GetCourse = async ()=>{
+    const a = [];
+    const price = [];
+    const TimeTaken = [];
+    const Ref = collection(database, "Booking_Course");
+    
+    // Create a query against the collection.
+    const q = query(Ref, where("isAdded", "==", true));
+    
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+            a.push(doc.data().Course_name),
+            price.push(doc.data().price),
+            TimeTaken.push(doc.data().time)
+    })
+
+    setCourse(a);
+    setPrice(price);
+    setTimeTaken(TimeTaken);
+    }
+
+  const GetUser = async() => {
+
+    const Ref = doc(database, "Booking_User","Jamie");
+    const docSnap = await getDoc(Ref);
+
+    const data = docSnap.exists() ? docSnap.data() : null
+    if (data === null || data === undefined) return null
+    setName(data.name);
+    setEmail(data.email);
+  }
+
+  const BookingHandle = () =>{
+    const TotalPrice = GetTotalTimeAndPrice(price);
+    const TotalTimeTaken = GetTotalTimeAndPrice(timeTaken);
+
+
+    navigation.navigate('Booking3',{paramKey:time, paramDate:date, paramCourse:course, paramPrice: TotalPrice, paramTotalTimeTaken: TotalTimeTaken, paramName:name,paramEmail:email});
+  }
+
 
   return (
     <View style = {styles.Container}>
@@ -94,7 +158,7 @@ function Bookingpage2({navigation},props) {
 
           {showTime ? <Time changeTime = {time => setTime(time)}/> : null}
 
-          <FowardButton title = 'CONTINUE' onPress={() => navigation.navigate('Booking3')}/>
+          <FowardButton title = 'CONTINUE' onPress={() => BookingHandle()}/>
           <View style = {styles.TabNavSpace}/>
           </ScrollView>
       </SafeAreaView>
