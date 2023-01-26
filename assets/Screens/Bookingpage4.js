@@ -5,6 +5,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FowardButton from '../Components/FowardButton';
 
 function Bookingpage4({navigation}) {
+
   return (
     <View style = {styles.Container}>
       <SafeAreaView>
@@ -13,13 +14,16 @@ function Bookingpage4({navigation}) {
             <FontAwesome name= 'check-circle' size = {122.4}style = {styles.FontAwesome}/> 
             <Text style = {styles.Text1}>Booking details has been sent to your email - jamieogundiran@gmail.com</Text>
           </View>
+
+          <FowardButton title = 'CONTINUE' onPress={() => main()}/>
+        
           <View style ={styles.FowardButton}>
               <FowardButton title = 'CONTINUE' onPress={() => navigation.navigate('Tab')}/>
           </View>
       </SafeAreaView>
     </View>
   );
-}
+} 
 
 const styles = StyleSheet.create
 ({

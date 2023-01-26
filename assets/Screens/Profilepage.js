@@ -1,12 +1,31 @@
 import * as React from 'react';
 import { Text,View, StyleSheet,SafeAreaView,ScrollView} from 'react-native';
 import colors from '../Colors/colors';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { signOut } from 'firebase/auth';
 import { Authentication } from '../Config/firebase';
+import {getDoc,doc} from 'firebase/firestore';
+import { database } from '../Config/firebase';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useState,useEffect } from 'react';
 
 function Profilepage() {
+
+  useEffect(() => {
+    GetUser();
+  },[])
+
+  const [name, setName] = useState("");
+
+  const GetUser = async() => {
+
+    const Ref = doc(database, "Booking_User","Jamie");
+    const docSnap = await getDoc(Ref);
+
+    const data = docSnap.exists() ? docSnap.data() : null
+    if (data === null || data === undefined) return null
+    setName(data.name);
+  }
 
    const logout =() =>
    {
@@ -27,7 +46,7 @@ function Profilepage() {
         <View style = {styles.ContentContainer}>
         <View style = {styles.TextContainer}>
           <MaterialIcons name = 'account-circle' size = {60} color = '#839A7F' />
-          <Text style = {styles.ProfileName}>Jamie Ogundiran</Text>
+          <Text style = {styles.ProfileName}>{name}</Text>
           </View>
           <Text>Edit</Text>
 

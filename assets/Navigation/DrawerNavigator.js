@@ -27,7 +27,6 @@ function DrawerNavigator() {
     }}>
 
       <Drawer.Screen name = {'Home'} component = {TabNavigator} />
-      <Drawer.Screen name = {'Booking'} component = {Bookingpage1}/>
     </Drawer.Navigator>
   );
 }

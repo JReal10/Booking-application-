@@ -5,9 +5,8 @@ import { useRoute } from '@react-navigation/native';
 import colors from '../Colors/colors';
 import StepIndicator from 'react-native-step-indicator';
 import FowardButton from '../Components/FowardButton';
-import { getDoc,doc} from 'firebase/firestore';
+import {doc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
-import Button from '../Components/FowardButton';
 
 const customStyles = {
   stepIndicatorSize: 30,
