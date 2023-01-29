@@ -87,7 +87,7 @@ function Profilepage() {
         </View>
 
         <View style = {styles.LogOutContainer}>
-          <Text onPress={()=>{logout()}} style = {styles.ProfileName}>Log Out</Text>
+          <Text onPress={()=>{logout()}} style = {styles.ProfileName}>Sign Out</Text>
           <Text style = {styles.ProfileName}>Delete Account</Text>
         </View>
       </ScrollView>

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Text,View, StyleSheet,SafeAreaView, ScrollView} from 'react-native';
-import { useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 import colors from '../Colors/colors';
 import StepIndicator from 'react-native-step-indicator';
 import FowardButton from '../Components/FowardButton';
-import {doc} from 'firebase/firestore';
+import {doc,setDoc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
+import { useState,useEffect } from 'react';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -38,24 +38,41 @@ function Bookingpage3({navigation}) {
 
   const route = useRoute();
 
-  const [date,setDate] = React.useState("test");
-  const [time,setTime] = React.useState("test");
-  const [course,setCourse] = React.useState(["test", "test2"]);
-  const [name, setName] = React.useState("test");
-  const [email, setEmail] = React.useState("test");
+  const [date,setDate] = useState("");
+  const [time,setTime] = useState("");
+  const [course,setCourse] = useState([]);
+  const [price,setPrice] = useState("");
+  const [timeTaken,setTimeTaken] = useState("");
 
-  const AddData = async (date,time) => {
+  useEffect(() => {
+    setData();
+  },[])
 
+  const setData = () => {
+    setDate(route.params.paramDate);
+    setCourse(route.params.paramCourse);
+    setTime(route.params.paramKey);
+    setPrice(route.params.paramPrice);
+    setTimeTaken(route.params.paramTotalTimeTaken);
+  }
+
+
+  const AddData = async (date,time,course,timeTaken, price) => {
+    
     const Ref = doc(database, "Booking_User","Jamie");
     const data = {
       date: date,
-      time: time
+      time: time,
+      course:course,
+      timeTaken:timeTaken,
+      price: price
     };
   
     await setDoc(Ref, data,{merge:true})
   };
 
   const BookingHandle = () =>{
+    AddData(date,time,course,timeTaken,price);
     navigation.navigate('Booking4');
   }
 

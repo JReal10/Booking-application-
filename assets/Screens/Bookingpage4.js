@@ -10,13 +10,11 @@ function Bookingpage4({navigation}) {
     <View style = {styles.Container}>
       <SafeAreaView>
           <View style = {styles.Container1}>
-            <Text style = {styles.Header}>Booking Confirmed</Text>
+            <Text style = {styles.Header}>BOOKING CONFIRMED!</Text>
             <FontAwesome name= 'check-circle' size = {122.4}style = {styles.FontAwesome}/> 
-            <Text style = {styles.Text1}>Booking details has been sent to your email - jamieogundiran@gmail.com</Text>
+            <Text style = {styles.Text1}>Check your profile for booking details. Contact xxx-xxx-xxxx for any enquiries, more details on contact page.</Text>
           </View>
 
-          <FowardButton title = 'CONTINUE' onPress={() => main()}/>
-        
           <View style ={styles.FowardButton}>
               <FowardButton title = 'CONTINUE' onPress={() => navigation.navigate('Tab')}/>
           </View>
@@ -51,7 +49,7 @@ const styles = StyleSheet.create
 
   Text1:
   {
-    padding: 50,
+    padding: 40,
     textAlign: 'center',
     fontSize:18,
     color: colors.text_brown,

@@ -26,6 +26,7 @@ function StackNavigator() {
         headerTitle: 'SHARON',
         headerBackVisible: true,
         headerBackTitle: '',
+        headerTintColor:colors.text_white,
         headerStyle: {
           
           backgroundColor: colors.primary_brown,
@@ -33,7 +34,6 @@ function StackNavigator() {
         headerTitleStyle: 
         {
           fontSize:24,
-          color: '#FFFFFF',
         },
         }}/>
       <Stack.Screen name="Contact" component={ContactPage} options = 
@@ -42,6 +42,7 @@ function StackNavigator() {
         headerTitle: 'SHARON',
         headerBackVisible: true,
         headerBackTitle: '',
+        headerTintColor:colors.text_white,
         headerStyle: {
           
           backgroundColor: colors.primary_brown,
@@ -49,7 +50,6 @@ function StackNavigator() {
         headerTitleStyle: 
         {
           fontSize:24,
-          color: '#FFFFFF',
         },
         }}/>
 
@@ -59,6 +59,7 @@ function StackNavigator() {
         headerTitle: 'SHARON',
         headerBackVisible: true,
         headerBackTitle: '',
+        headerTintColor:colors.text_white,
         headerStyle: {
           
           backgroundColor: colors.primary_brown,
@@ -66,7 +67,6 @@ function StackNavigator() {
         headerTitleStyle: 
         {
           fontSize:24,
-          color: '#FFFFFF',
         },
         }}/>
         
@@ -76,6 +76,7 @@ function StackNavigator() {
         headerTitle: 'SHARON',
         headerBackVisible: true,
         headerBackTitle: '',
+        headerTintColor:colors.text_white,
         headerStyle: {
           
           backgroundColor: colors.primary_brown,
@@ -83,7 +84,6 @@ function StackNavigator() {
         headerTitleStyle: 
         {
           fontSize:24,
-          color: '#FFFFFF',
         },
         }}/>
 
@@ -91,8 +91,7 @@ function StackNavigator() {
       {{
         headerShown: true,
         headerTitle: 'SHARON',
-        headerBackVisible: true,
-        headerBackTitle: '',
+        headerBackVisible: false,
         headerStyle: {
           
           backgroundColor: colors.primary_brown,
