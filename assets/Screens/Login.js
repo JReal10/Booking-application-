@@ -46,7 +46,6 @@ function Login({navigation}) {
                 <TextInput placeholder = 'Email ID' 
                 value={email}
                 onChangeText={(email) => setEmail(email)} style = {styles.EmailInput}
-                
                 autoCorrect = {false}
                 autoCapitalize = 'none'/>
               </View>

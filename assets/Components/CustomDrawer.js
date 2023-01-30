@@ -40,6 +40,7 @@ const CustomDrawer = (props) =>
 
     const data = docSnap.exists() ? docSnap.data() : null
     if (data === null || data === undefined) return null
+    
     setName(data.name);
     setDate(data.date);
     setTime(data.time);

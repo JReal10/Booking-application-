@@ -9,41 +9,54 @@ function HomeScreen({navigation}) {
     <View style ={styles.Container}>
       <SafeAreaView>
         <ScrollView>
+
+        <TouchableOpacity onPress={() => navigation.navigate('Booking1')}>
         <View style = {styles.ImageContainer}>
           <ImageBackground source = {require('../Images/image23.png')}
           style = {styles.ImageStyle}>
+          <View style = {styles.overlayContainer}>
           <View style = {styles.TextContainer}>
-          <Text style = {styles.TextStyle}>BOOK</Text>
+          <Text style = {styles.TextStyle}>Book</Text>
           </View>
           <View style = {styles.IconStyle}>
-          <FontAwesome5 name = 'arrow-circle-right' size = {40} color = {colors.secondary_green} onPress={() => navigation.navigate('Booking1')}/>
+          <FontAwesome5 name = 'arrow-circle-right' size = {40} color = {colors.secondary_green}/>
+          </View>
           </View>
           </ImageBackground>
         </View>
+        </TouchableOpacity>
 
+        <TouchableOpacity onPress={() => navigation.navigate('Gallery')}>
         <View style = {styles.ImageContainer2}>
         <ImageBackground source = {require('../Images/image58.png')}
           style = {styles.ImageStyle}>
+          <View style = {styles.overlayContainer}>
           <View style = {styles.TextContainer}>
           <Text style = {styles.TextStyle}>Gallery</Text>
           </View>
           <View style = {styles.IconStyle}>
-          <FontAwesome5 name = 'arrow-circle-right' size = {40} color = {colors.secondary_green} onPress={() => navigation.navigate('Gallery')}/>
+          <FontAwesome5 name = 'arrow-circle-right' size = {40} color = {colors.secondary_green}/>
+          </View>
           </View>
           </ImageBackground>
         </View>
+        </TouchableOpacity>
 
+        <TouchableOpacity onPress={() => navigation.navigate('Contact')} >
         <View style = {styles.ImageContainer2}>
         <ImageBackground source = {require('../Images/image56.png')}
           style = {styles.ImageStyle}>
+          <View style = {styles.overlayContainer}>
           <View style = {styles.TextContainer}>
           <Text style = {styles.TextStyle}>Contact</Text>
           </View>
           <View style = {styles.IconStyle}>
-          <FontAwesome5 name = 'arrow-circle-right' size = {40} color = {colors.secondary_green} onPress={() => navigation.navigate('Contact')}/>
+          <FontAwesome5 name = 'arrow-circle-right' size = {40} color = {colors.secondary_green}/>
+          </View>
           </View>
           </ImageBackground>
         </View>
+        </TouchableOpacity>
         <View style = {styles.TabNavSpace}></View>
         </ScrollView>
       </SafeAreaView>
@@ -99,6 +112,10 @@ const styles = StyleSheet.create
     alignItems:'flex-end',
     marginTop:'22%',
     marginHorizontal: '5%'
+  },
+  overlayContainer:{
+    flex:1,
+    backgroundColor: '#C7B39E40'
   },
 })
 

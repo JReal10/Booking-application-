@@ -1,13 +1,43 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,ScrollView} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,ScrollView, Modal} from 'react-native';
 import colors from '../Colors/colors';
 import { signOut } from 'firebase/auth';
 import { Authentication } from '../Config/firebase';
-import {getDoc,doc} from 'firebase/firestore';
+import {getDoc,doc,updateDoc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState,useEffect } from 'react';
+import LoginButton from '../Components/LoginButton';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+/**/
+
+const AppointmentModal = ({visible,children}) =>{
+  const [showModal,setShowModal] = useState(visible);
+
+  useEffect(()=>{
+    toggleModal();
+  },[visible]);
+
+  const toggleModal = () =>{
+    if(visible){
+      setShowModal(true);
+    }else{
+      setShowModal(false);
+    }
+  }
+
+  return (
+    <Modal transparent visible = {visible}> 
+      <View style = {styles.modalBackGround}>
+        <View style = {[styles.modalContainer]}>
+          {children}
+        </View>
+      </View>
+    </Modal>
+    );
+};
 
 function Profilepage() {
 
@@ -16,7 +46,15 @@ function Profilepage() {
   },[])
 
   const [name, setName] = useState("");
+  const [date,setDate] = useState("");
+  const [time,setTime] = useState("");
+  const [course,setCourse] = useState([]);
+  const [price,setPrice] = useState("");
+  const [timeTaken,setTimeTaken] = useState("");
+  const [newName, setNewName] = useState("");
 
+  const [visible, setVisible] = useState(false);
+  
   const GetUser = async() => {
 
     const Ref = doc(database, "Booking_User","Jamie");
@@ -24,7 +62,13 @@ function Profilepage() {
 
     const data = docSnap.exists() ? docSnap.data() : null
     if (data === null || data === undefined) return null
+
     setName(data.name);
+    setDate(data.date);
+    setTime(data.time);
+    setCourse(data.course);
+    setPrice(data.price);
+    setTimeTaken(data.timeTaken);
   }
 
    const logout =() =>
@@ -32,11 +76,34 @@ function Profilepage() {
      signOut(Authentication)
      .then((re) => 
      {
-       setIsLoggedIn = false;
      }).catch
      {
      }
+   }
 
+   /*const showAlert = () => {
+    return Alert.alert(
+      // the title of the alert dialog
+      "Are you sure?",
+
+      [
+        // the first button
+        {
+          text: "No",
+          //onPress: () => setChoice("Agree"),
+        },
+
+        // the second button
+        {
+          text: "Yes",
+          onPress: () => setVisible(false),
+        },
+      ]
+    );
+  };*/
+
+   const cancelAppointmentHandler = () =>{
+    setVisible(false)
    }
 
   return (
@@ -48,15 +115,44 @@ function Profilepage() {
           <MaterialIcons name = 'account-circle' size = {60} color = '#839A7F' />
           <Text style = {styles.ProfileName}>{name}</Text>
           </View>
-          <Text>Edit</Text>
+
+          <AppointmentModal visible = {visible}>
+            <View>
+              <View style = {styles.PopUpHeader}>
+              <Text style = {styles.AppointmentHeader}>Appointment Detail</Text>
+              <TouchableOpacity onPress = {() => setVisible(false)}>
+              <MaterialIcons name = 'close' size = {24} color = {colors.icon_dark} />
+              </TouchableOpacity>
+              </View>
+              <View style = {styles.ApoointmentSubWrapper}>
+                <View style = {styles.DateTimeWrapper}>
+                <Text style = {styles.TextStyle}>Date: {date}</Text>
+                <Text style = {styles.TextStyle}>Time: {time}</Text>
+              </View>
+
+              <View style = {styles.TimePriceWrapper}>
+                <Text style = {styles.TextStyle2} >Price: ${price}</Text>
+                <Text style = {styles.TextStyle2} >Aprox. Time: {timeTaken} min.</Text>
+              </View>
+
+              <Text style = {styles.CourseHeaderWrapper}>Course</Text>
+              { course.map((item, key)=>(
+              <Text key={key} style={styles.CourseTextStyle}> {item} </Text>)
+              )}
+              <TouchableOpacity onPress = {()=> cancelAppointmentHandler()}style = {styles.CancelAppointment}><Text style = {styles.textStyle3}> Cancel Appointment </Text></TouchableOpacity>
+          </View>
+            </View>
+          </AppointmentModal>
 
         </View>
 
         <View style = {styles.ContentContainer2}>
+          <TouchableOpacity onPress = {()=> setVisible(true)}>
           <View style = {styles.TextContainer2}>
           <MaterialCommunityIcons name = 'calendar-month' size = {32} color = '#839A7F' />
           <Text style = {styles.ProfileName}>Appointments</Text>
           </View>
+          </TouchableOpacity>
           <View style = {styles.TextContainer2}>
           <MaterialCommunityIcons name = 'account-multiple' size = {32} color = '#839A7F'/>
           <Text style = {styles.ProfileName}>Refferal</Text>
@@ -101,6 +197,20 @@ const styles = StyleSheet.create
   ScreenContainer: 
   {
     flex: 1 
+  },
+  modalBackGround:{
+    flex:1,
+    backgroundColor:'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems:'center',
+  },
+  modalContainer:{
+    width:'80%',
+    backgroundColor:'white',
+    paddingHorizontal:20,
+    paddingVertical:30,
+    borderRadius:20,
+    elevation:20,
   },
   ContentContainer:
   {
@@ -164,7 +274,75 @@ const styles = StyleSheet.create
     paddingLeft: 5,
     paddingRight:20,
     paddingVertical:10,
-  }
+  },
+  editStyle:{
+    fontSize:16,
+    color: colors.icon_dark,
+  },
+  DateTimeWrapper:{
+    justifyContent: 'space-between',
+    flexDirection:'column',
+    paddingVertical: 10,
+  },
+  CourseTextStyle:{
+    fontSize : 16,
+    textAlign: 'left',
+    paddingVertical:2,
+    color: "#371D10"
+  },
+  TextStyle2:{
+    color:"#371D1090",
+    fontSize:16
+  },
+  TimePriceWrapper:{
+    flexDirection:'column',
+    paddingBottom:10,
+  },
+  CourseHeaderWrapper:{
+    paddingTop:5,
+    paddingBottom:3,
+    fontSize: 20, 
+    color:"#371D10",
+  },
+  TextStyle:{
+    fontSize: 20, 
+    color:"#371D10",
+    paddingVertical:2,
+  },
+  PopUpHeader:{
+    marginBottom:'5%',
+    alignItems:'center',
+    flexDirection:'row',
+    justifyContent:'space-between'
+  },
+  AppointmentHeader:{
+    fontSize:24,
+  },
+  CancelAppointment:{
+    paddingTop: 35,
+    alignItems:'center',
+  },
+  textStyle3:{
+    textDecorationLine:'underline'
+  },
+  inputHeader:
+  {
+    fontSize:18,
+    color:colors.text_brown,
+    paddingBottom:9,
+  },
+  Inputs:
+  {
+    paddingVertical: 10
+  },
+  EmailInput:
+  {
+    backgroundColor:'#DFDFDF',
+    borderRadius:8,
+    fontSize:16,
+    height:50,
+    paddingLeft:10,
+  },
 })
 
 export default Profilepage;

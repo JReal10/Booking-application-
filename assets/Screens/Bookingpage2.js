@@ -62,9 +62,6 @@ function Bookingpage2({navigation}) {
     return TotalValue;
   }
 
-  const GetUserDetail = (data)=>{
-  }
-
   useEffect(() => {
     GetCourse();
     GetUser();
