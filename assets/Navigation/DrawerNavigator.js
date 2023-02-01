@@ -3,10 +3,13 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import TabNavigator from './TabNavigator';
 import colors from '../Colors/colors';
 import CustomDrawer from '../Components/CustomDrawer';
+import useFonts from '../Hooks/useFonts';
 
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigator() {
+
+  useFonts();
 
   return (
     <Drawer.Navigator drawerContent={props => <CustomDrawer {...props}/>} screenOptions= 
@@ -21,12 +24,15 @@ function DrawerNavigator() {
         },
         headerTitleStyle: 
         {
-          fontSize:24,
+          fontSize:28,
+          fontFamily:'DancingScript'
         },
-
+        drawerItemStyle: {
+          display: 'none',
+        },
     }}>
 
-      <Drawer.Screen name = {'Home'} component = {TabNavigator} />
+      <Drawer.Screen name = {'Home Page'} component = {TabNavigator} />
     </Drawer.Navigator>
   );
 }

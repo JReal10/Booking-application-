@@ -7,12 +7,15 @@ import Bookingpage2 from '../Screens/Bookingpage2';
 import Bookingpage3 from '../Screens/Bookingpage3';
 import Bookingpage4 from '../Screens/Bookingpage4';
 import Gallerypage from '../Screens/Gallerypage';
-import TabNavigator from './TabNavigator';
 import DrawerNavigator from './DrawerNavigator';
+import useFonts from '../Hooks/useFonts';
 
 const Stack = createNativeStackNavigator();
 
 function StackNavigator() {
+
+  useFonts();
+
   return (
       <Stack.Navigator>
         <Stack.Screen name = "Tab" component={DrawerNavigator} options = 
@@ -20,38 +23,8 @@ function StackNavigator() {
           headerShown:false,
         }}/>
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Gallery" component={Gallerypage} options = 
-      {{
-        headerShown: true,
-        headerTitle: 'SHARON',
-        headerBackVisible: true,
-        headerBackTitle: '',
-        headerTintColor:colors.text_white,
-        headerStyle: {
-          
-          backgroundColor: colors.primary_brown,
-        },
-        headerTitleStyle: 
-        {
-          fontSize:24,
-        },
-        }}/>
-      <Stack.Screen name="Contact" component={ContactPage} options = 
-      {{
-        headerShown: true,
-        headerTitle: 'SHARON',
-        headerBackVisible: true,
-        headerBackTitle: '',
-        headerTintColor:colors.text_white,
-        headerStyle: {
-          
-          backgroundColor: colors.primary_brown,
-        },
-        headerTitleStyle: 
-        {
-          fontSize:24,
-        },
-        }}/>
+        <Stack.Screen name="Gallery" component={Gallerypage}/>
+      <Stack.Screen name="Contact" component={ContactPage}/>
 
       <Stack.Screen name="Booking2" component={Bookingpage2} options = 
       {{
@@ -66,7 +39,8 @@ function StackNavigator() {
         },
         headerTitleStyle: 
         {
-          fontSize:24,
+          fontSize:28,
+          fontFamily:'DancingScript'
         },
         }}/>
         
@@ -83,7 +57,8 @@ function StackNavigator() {
         },
         headerTitleStyle: 
         {
-          fontSize:24,
+          fontSize:28,
+          fontFamily:'DancingScript'
         },
         }}/>
 
@@ -98,8 +73,9 @@ function StackNavigator() {
         },
         headerTitleStyle: 
         {
-          fontSize:24,
-          color: '#FFFFFF',
+          fontSize:28,
+          color:'#FFFFFF',
+          fontFamily:'DancingScript'
         },
         }}/>
 

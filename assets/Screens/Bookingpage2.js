@@ -8,6 +8,7 @@ import Time from '../Components/Time';
 import { useEffect } from 'react';
 import {doc,getDocs,collection,where,query,getDoc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
+import useFonts from '../Hooks/useFonts';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -178,6 +179,7 @@ const styles = StyleSheet.create
   },
   AvailableTime: 
   {
+    fontFamily:'Poppins-SemiBold',
     paddingHorizontal:12,
     fontSize: 16,
     color: colors.text_brown,

@@ -9,6 +9,7 @@ import { database } from '../Config/firebase';
 import { useEffect,useState } from 'react';
 import { Authentication } from '../Config/firebase';
 import { signOut } from 'firebase/auth';
+import { useFonts } from "expo-font";
 
 const CustomDrawer = (props) =>
 {
@@ -54,7 +55,7 @@ const CustomDrawer = (props) =>
     <DrawerContentScrollView {...props}>
     <View style = {styles.HeaderWrapper}>
       <Text style = {styles.HeaderTextWrapper}>Welcome</Text>
-      <Text style = {styles.HeaderTextWrapper}>Back!</Text>
+      <Text style = {styles.HeaderTextWrapper}>Back</Text>
       <Text style = {styles.UserName}>{name}</Text>
     </View>   
     <DrawerItemList {...props}/>
@@ -84,7 +85,7 @@ const CustomDrawer = (props) =>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <MaterialIcons name = 'logout' size = {32} color = {colors.text_brown} />
             <Text style = {styles.Logout}>
-              Sign Out
+              Log Out
             </Text>
           </View>
         </TouchableOpacity>
@@ -100,7 +101,6 @@ const styles = StyleSheet.create({
   },
   AppointmentHeaderWrapper:{
     paddingTop:10,
-
   },
   DateTimeWrapper:{
     justifyContent: 'space-between',
@@ -111,11 +111,13 @@ const styles = StyleSheet.create({
     fontSize : 15,
     textAlign: 'left',
     padding:2,
-    color: "#371D10"
+    color: colors.text_brown,
+    fontFamily:'Poppins-Regular'
   },
   TextStyle2:{
-    color:"#371D10",
-    fontSize:15
+    color:colors.text_brown,
+    fontSize:15,
+    fontFamily:'Poppins-Regular'
   },
   ApoointmentSubWrapper:{
     backgroundColor: "#BAA793",
@@ -134,18 +136,21 @@ const styles = StyleSheet.create({
   SubTextWrapper:{
     fontSize:20,
     padding: 10,
-    color: colors.text_brown
+    color: colors.text_brown,
+    fontFamily:'Merriweather-Regular'
   },
   HeaderTextWrapper:
   {
     fontSize:32,
     color:colors.background,
+    fontFamily:'Merriweather-Regular'
   },
   UserName:
   {
     fontSize: 20,
     paddingTop:15,
     color:colors.background,
+    fontFamily:'Merriweather-Regular'
   },
   TimePriceWrapper:{
     justifyContent: 'space-between',
@@ -157,17 +162,19 @@ const styles = StyleSheet.create({
     paddingTop:5,
     paddingBottom:3,
     fontSize: 16, 
-    color:"#371D10",
+    color:colors.text_brown,
   },
   TextStyle:{
     fontSize: 18, 
-    color:"#371D10",
+    color: colors.text_brown,
+    fontFamily:'Poppins-Regular'
   },
   Logout:
   {
     fontSize: 20,
     marginLeft: 5,
     color: colors.text_brown,
+    fontFamily:'Poppins-Regular'
   }
 })
 

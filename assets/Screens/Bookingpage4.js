@@ -3,14 +3,17 @@ import { Text,View, StyleSheet,SafeAreaView,Image,StatusBar} from 'react-native'
 import colors from '../Colors/colors';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FowardButton from '../Components/FowardButton';
+import useFonts from '../Hooks/useFonts';
 
 function Bookingpage4({navigation}) {
+
+  useFonts();
 
   return (
     <View style = {styles.Container}>
       <SafeAreaView>
           <View style = {styles.Container1}>
-            <Text style = {styles.Header}>BOOKING CONFIRMED!</Text>
+            <Text style = {styles.Header}>BOOKING CONFIRMED</Text>
             <FontAwesome name= 'check-circle' size = {122.4}style = {styles.FontAwesome}/> 
             <Text style = {styles.Text1}>Check your profile for booking details. Contact xxx-xxx-xxxx for any enquiries, more details on contact page.</Text>
           </View>
@@ -39,17 +42,19 @@ const styles = StyleSheet.create
     padding:50,
     fontSize:24,
     fontWeight:'bold',
-    color: colors.text_brown
+    color: colors.text_brown,
+    fontFamily:'Merriweather-Bold'
   },
   FontAwesome: 
   {
     padding:50, 
     color:colors.secondary_green
   },
-
   Text1:
   {
-    padding: 40,
+    fontFamily:'Poppins-Regular',
+    paddingHorizontal: 40,
+    paddingVertical:30,
     textAlign: 'center',
     fontSize:18,
     color: colors.text_brown,

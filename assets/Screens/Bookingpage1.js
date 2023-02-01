@@ -5,11 +5,10 @@ import BookingButton from '../Components/BookingButton';
 import Entypo from 'react-native-vector-icons/Entypo';
 import StepIndicator from 'react-native-step-indicator';
 import FowardButton from '../Components/FowardButton';
-import { useEffect } from 'react';
-import { collection, getDoc,doc, updateDoc} from 'firebase/firestore';
+import {doc, updateDoc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
-import { async } from '@firebase/util';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import useFonts from '../Hooks/useFonts';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -46,6 +45,8 @@ const customStyles = {
 const labels = ["Menu","Date","Confirmation"];
 
 function Bookingpage1({navigation}) {
+
+  useFonts();
 
   const [state,setState] = React.useState(false)
 
@@ -155,11 +156,13 @@ const styles = StyleSheet.create
   },
   HeaderText: 
   {
+    fontFamily:'Merriweather-Regular',
     fontSize: 18,
     color: colors.text_brown,
   },
   TimeText: 
   {
+    fontFamily:'Poppins-Regular',
     fontSize:16,
     color: '#828282',
     marginLeft: '2%'
@@ -173,6 +176,7 @@ const styles = StyleSheet.create
   },
   DescriptionText:
   {
+    fontFamily:'Poppins-Regular',
     paddingTop: 5,
     paddingHorizontal:12,
     fontSize:16,
@@ -190,6 +194,7 @@ const styles = StyleSheet.create
   },
   priceText: 
   {
+    fontFamily:'Poppins-Regular',
     fontSize: 24,
     color: '#626262'
   },

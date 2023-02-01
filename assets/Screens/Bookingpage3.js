@@ -7,6 +7,7 @@ import FowardButton from '../Components/FowardButton';
 import {doc,setDoc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
 import { useState,useEffect } from 'react';
+import useFonts from '../Hooks/useFonts';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -37,6 +38,7 @@ const labels = ["Menu","Date","Confirmation"];
 function Bookingpage3({navigation}) {
 
   const route = useRoute();
+  useFonts();
 
   const [date,setDate] = useState("");
   const [time,setTime] = useState("");
@@ -93,7 +95,8 @@ function Bookingpage3({navigation}) {
             </View>
             <View style = {styles.ContainerElement}>
               <Text style = {styles.Header2}>Selected Course</Text>
-              <Text style = {styles.Text1}>{route.params.paramCourse}</Text>
+              {course.map((item, key)=>(
+              <Text key={key} style={styles.Text1}> {item} </Text>))}
               <Text style = {styles.Text1}>Total Price: {route.params.paramPrice} </Text>
               <Text style = {styles.Text1}>Time Taken: {route.params.paramTotalTimeTaken} </Text>
             </View>
@@ -150,6 +153,7 @@ const styles = StyleSheet.create
   },
   Header:
   {
+    fontFamily:'Merriweather-Bold',
     fontSize:24,
     fontWeight:'bold',
     color: colors.text_white
@@ -158,16 +162,18 @@ const styles = StyleSheet.create
   {
     marginBottom:28,
     borderBottomWidth:1,
-    borderColor: colors.text_white
+    borderColor: '#FFFFFF80'
   },
   Header2:
   {
+    fontFamily:'Merriweather-Bold',
     fontSize:20,
     fontWeight:'bold',
     color: colors.text_white
   },
   Text1:
   {
+    fontFamily:'Poppins-Regular',
     fontSize:18,
     color: colors.text_white,
     marginTop:7,

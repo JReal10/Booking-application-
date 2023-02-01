@@ -1,10 +1,30 @@
 import * as React from 'react';
 import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity, ImageBackground, ScrollView } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { useState } from 'react';
 import colors from '../Colors/colors';
+import AppLoading from 'expo-app-loading';
+import useFonts from '../Hooks/useFonts';
+import { useState } from 'react';
 
 function HomeScreen({navigation}) {
+
+  const [IsReady, SetIsReady] = useState(false);
+
+  const FetchFonts = async () => {
+    await useFonts();
+    console.log('FontLoaded')
+  };
+
+  if (!IsReady) {
+    return (
+      <AppLoading
+        startAsync={FetchFonts}
+        onFinish={() => SetIsReady(true)}
+        onError={(err) => console.log(err)}
+      />
+    );
+  }
+
   return (
     <View style ={styles.Container}>
       <SafeAreaView>
@@ -100,7 +120,7 @@ const styles = StyleSheet.create
   {
     fontSize: 40,
     color: colors.text_brown,
-    //fontFamily: 'Poppins-SemiBold'
+    fontFamily: 'Poppins-Medium'
   },
   TextContainer:
   {

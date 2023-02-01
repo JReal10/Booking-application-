@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,ImageBackground,Pressable, } from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,ImageBackground,Pressable, TouchableOpacity, } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import colors from '../Colors/colors';
 import { TextInput } from 'react-native-gesture-handler';
@@ -7,15 +7,16 @@ import LoginButton from '../Components/LoginButton';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Authentication } from '../Config/firebase';
-
+import { useState } from 'react';
+import useFonts from '../Hooks/useFonts';
+ 
 function Login({navigation}) {
 
-  //const {login} = React.useContext(AuthContext)
+  useFonts();
 
-  const [isLoggedIn,setIsLoggedIn] = React.useState(false)
-  const [email,setEmail] = React.useState('')
-  const [password,setPassword] = React.useState('')
-  const [userToken, setUserToken] = React.useState(null);
+  const [isLoggedIn,setIsLoggedIn] = useState(false)
+  const [email,setEmail] = useState('')
+  const [password,setPassword] = useState('')
 
     const LogInUser = () =>
     {
@@ -30,13 +31,14 @@ function Login({navigation}) {
       {
         console.log(re);
       })
-    }
+    };
 
   return (
     <View style ={styles.Container}>
       <SafeAreaView>
       <ImageBackground
           source={require('../Images/image60.png')} resizeMode= {'stretch'} style = {styles.ImageBackground}>
+        <View style = {styles.overlayContainer}>
         <StatusBar style="dark-content"/>
         <View style = {styles.ImageContainer}>
         <Text style = {styles.Sharon}>SHARON</Text>
@@ -72,15 +74,15 @@ function Login({navigation}) {
               <FontAwesome name = {'google'} size = {36}/>
               <FontAwesome name = {'twitter'} size = {36}/>
               </View>
+              <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
               <View style = {styles.TextView}>
               <Text style = {styles.TextWrapper1}>Already Have An Account?</Text>
-              <Pressable onPress={() => navigation.navigate('Signup')}>
               <Text style = {styles.TextWrapper2}>Sign Up</Text>
-              </Pressable>
               </View>
+              </TouchableOpacity>
             </View>
         </View>
-        
+        </View>
         </ImageBackground>
       </SafeAreaView>
     </View>
@@ -110,10 +112,11 @@ const styles = StyleSheet.create
   },
   Sharon:
   {
-    fontSize:36,
+    fontSize:42,
     marginTop:40,
-    fontWeight:'bold',
+    fontFamily:'DancingScript',
     color:colors.text_white,
+
   },
   LoginContent:
   {
@@ -130,10 +133,16 @@ const styles = StyleSheet.create
     fontSize:18,
     color:colors.text_brown,
     paddingBottom:9,
+    fontFamily:'Merriweather-Regular'
+  },
+  overlayContainer:{
+    flex:1,
+    backgroundColor: '#C7B39E20'
   },
   Inputs:
   {
-    paddingVertical: 10
+    paddingVertical: 10,
+    fontFamily:'Poppins-Regular'
   },
   EmailInput:
   {
@@ -142,6 +151,8 @@ const styles = StyleSheet.create
     fontSize:16,
     height:50,
     paddingLeft:10,
+    fontFamily:'Poppins-Regular'
+
   },
   PasswordInput:
   {
@@ -150,7 +161,9 @@ const styles = StyleSheet.create
     paddingLeft:10,
     borderRadius:8,
     fontSize:16,
-    borderColor:'#DFDFDF'
+    borderColor:'#DFDFDF',
+    fontFamily:'Poppins-Regular'
+
   },
   Divider:
   {
@@ -160,6 +173,7 @@ const styles = StyleSheet.create
     alignItems:'center',
     flexDirection:'row',
     paddingHorizontal:10,
+    fontFamily:'Poppins-Regular'
   },
   Line:
   {
@@ -185,14 +199,17 @@ const styles = StyleSheet.create
   TextWrapper1:
   {
     color: colors.text_brown,
-    fontSize:15
+    fontSize:15,
+    fontFamily:'Poppins-Regular'
+
   },
   TextWrapper2:
   {
     marginLeft:5,
     color:'#AF3000',
     fontWeight:'bold',
-    fontSize:15
+    fontSize:15,
+    fontFamily:'Poppins-Regular'
   }
 })
 

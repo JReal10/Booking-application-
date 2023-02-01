@@ -113,7 +113,7 @@ function Profilepage() {
         <View style = {styles.ContentContainer}>
         <View style = {styles.TextContainer}>
           <MaterialIcons name = 'account-circle' size = {60} color = '#839A7F' />
-          <Text style = {styles.ProfileName}>{name}</Text>
+          <Text style = {styles.TextStyle}>{name}</Text>
           </View>
 
           <AppointmentModal visible = {visible}>
@@ -126,20 +126,20 @@ function Profilepage() {
               </View>
               <View style = {styles.ApoointmentSubWrapper}>
                 <View style = {styles.DateTimeWrapper}>
-                <Text style = {styles.TextStyle}>Date: {date}</Text>
-                <Text style = {styles.TextStyle}>Time: {time}</Text>
+                <Text style = {styles.ModalTextStyle}>Date: {date}</Text>
+                <Text style = {styles.ModalTextStyle}>Time: {time}</Text>
               </View>
 
               <View style = {styles.TimePriceWrapper}>
-                <Text style = {styles.TextStyle2} >Price: ${price}</Text>
-                <Text style = {styles.TextStyle2} >Aprox. Time: {timeTaken} min.</Text>
+                <Text style = {styles.ModalTextStyle2} >Price: ${price}</Text>
+                <Text style = {styles.ModalTextStyle2} >Aprox. Time: {timeTaken} min.</Text>
               </View>
 
               <Text style = {styles.CourseHeaderWrapper}>Course</Text>
               { course.map((item, key)=>(
               <Text key={key} style={styles.CourseTextStyle}> {item} </Text>)
               )}
-              <TouchableOpacity onPress = {()=> cancelAppointmentHandler()}style = {styles.CancelAppointment}><Text style = {styles.textStyle3}> Cancel Appointment </Text></TouchableOpacity>
+              <TouchableOpacity onPress = {()=> cancelAppointmentHandler()}style = {styles.CancelAppointment}><Text style = {styles.ModalTextStyle3}> Cancel Appointment </Text></TouchableOpacity>
           </View>
             </View>
           </AppointmentModal>
@@ -150,41 +150,41 @@ function Profilepage() {
           <TouchableOpacity onPress = {()=> setVisible(true)}>
           <View style = {styles.TextContainer2}>
           <MaterialCommunityIcons name = 'calendar-month' size = {32} color = '#839A7F' />
-          <Text style = {styles.ProfileName}>Appointments</Text>
+          <Text style = {styles.TextStyle}>Appointments</Text>
           </View>
           </TouchableOpacity>
           <View style = {styles.TextContainer2}>
           <MaterialCommunityIcons name = 'account-multiple' size = {32} color = '#839A7F'/>
-          <Text style = {styles.ProfileName}>Refferal</Text>
+          <Text style = {styles.TextStyle}>Refferal</Text>
           </View>
         </View>
 
         <View style = {styles.ContentContainer2}>
           <View style = {styles.TextContainer2}>
           <MaterialIcons name = 'payment' size = {32} color = '#839A7F'/>
-          <Text style = {styles.ProfileName}>Payment</Text>
+          <Text style = {styles.TextStyle}>Payment</Text>
           </View>
           <View style = {styles.TextContainer2}>
           <MaterialIcons name = 'notifications' size = {32} color = '#839A7F'/>
-          <Text style = {styles.ProfileName}>Notifications</Text>
+          <Text style = {styles.TextStyle}>Notifications</Text>
           </View>
         </View>
         
         <View style = {styles.ContentContainer2}>
           <View style = {styles.TextContainer3}>
-          <Text style = {styles.ProfileName}>Privacy Policy</Text>
+          <Text style = {styles.TextStyle}>Privacy Policy</Text>
           </View>
           <View style = {styles.TextContainer3}>
-          <Text style = {styles.ProfileName}>Terms & Conditions</Text>
+          <Text style = {styles.TextStyle}>Terms & Conditions</Text>
           </View>
           <View style = {styles.TextContainer3}>
-          <Text style = {styles.ProfileName}>About us</Text>
+          <Text style = {styles.TextStyle}>About us</Text>
           </View>
         </View>
 
         <View style = {styles.LogOutContainer}>
-          <Text onPress={()=>{logout()}} style = {styles.ProfileName}>Sign Out</Text>
-          <Text style = {styles.ProfileName}>Delete Account</Text>
+          <Text onPress={()=>{logout()}} style = {styles.TextStyle2}>Sign Out</Text>
+          <Text style = {styles.TextStyle2}>Delete Account</Text>
         </View>
       </ScrollView>
       </SafeAreaView>
@@ -230,11 +230,19 @@ const styles = StyleSheet.create
     flexDirection:'row',
     alignItems:'center',
   },
-  ProfileName:
+  TextStyle:
   {
     marginLeft:10,
-    fontSize: 20,
+    fontSize: 18,
     color: colors.text_brown,
+    fontFamily:'Merriweather-Regular'
+  },
+  TextStyle2:{
+    marginLeft:10,
+    fontSize: 18,
+    color: colors.text_brown,
+    fontFamily:'Poppins-Regular'
+
   },
   ContentContainer2:
   {
@@ -290,7 +298,7 @@ const styles = StyleSheet.create
     paddingVertical:2,
     color: "#371D10"
   },
-  TextStyle2:{
+  ModalTextStyle2:{
     color:"#371D1090",
     fontSize:16
   },
@@ -304,7 +312,7 @@ const styles = StyleSheet.create
     fontSize: 20, 
     color:"#371D10",
   },
-  TextStyle:{
+  ModalTextStyle:{
     fontSize: 20, 
     color:"#371D10",
     paddingVertical:2,
@@ -322,7 +330,7 @@ const styles = StyleSheet.create
     paddingTop: 35,
     alignItems:'center',
   },
-  textStyle3:{
+  ModalTextStyle3:{
     textDecorationLine:'underline'
   },
   inputHeader:

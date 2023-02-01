@@ -11,6 +11,7 @@ import Profilepage from '../Screens/Profilepage';
 const Tab = createBottomTabNavigator();
 
 function TabNavigator() {
+
   return (
     <Tab.Navigator 
     screenOptions= 
