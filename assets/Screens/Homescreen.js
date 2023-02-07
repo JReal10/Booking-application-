@@ -12,7 +12,6 @@ function HomeScreen({navigation}) {
 
   const FetchFonts = async () => {
     await useFonts();
-    console.log('FontLoaded')
   };
 
   if (!IsReady) {
@@ -29,7 +28,6 @@ function HomeScreen({navigation}) {
     <View style ={styles.Container}>
       <SafeAreaView>
         <ScrollView>
-
         <TouchableOpacity onPress={() => navigation.navigate('Booking1')}>
         <View style = {styles.ImageContainer}>
           <ImageBackground source = {require('../Images/image23.png')}
