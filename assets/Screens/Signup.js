@@ -16,14 +16,14 @@ function Signup({navigation,props}) {
 
   useFonts();
 
-  const [isSignedIn, setIsSignedIn] = useState(true)
   const [email,setEmail] = useState('')
   const [password,setPassword] = useState('')
   const [name,setName] = useState('')
+  const [UserID,setUserID] = useState('')
 
-  const AddData = async (UserName,UserEmail) => {
+  const AddData = async (UserName,UserEmail,userID) => {
 
-    const Ref = doc(database, "Booking_User");
+    const Ref = doc(database, "Booking_User", userID);
     const data = {
       name: UserName,
       email: UserEmail
@@ -36,14 +36,12 @@ function Signup({navigation,props}) {
     {
       createUserWithEmailAndPassword(Authentication,email,password )
       .then((re) => {
-        console.log(re);
-        setIsSignedIn(true);
+        AddData(name,email,re.user.uid)
+        setUserID(re.user.uid)
       })
       .catch((re) =>{
         console.log(re);
     })
-
-    AddData(name,email);
     }
   
   return (

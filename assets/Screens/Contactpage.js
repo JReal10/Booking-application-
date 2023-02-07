@@ -9,8 +9,6 @@ import openMap from 'react-native-open-maps';
 //Main content for contact page
 function ContactPage() {
 
-
-
   const handleEmail = () => {
   const to = ['tiaan@email.com'] // string or array of email addresses
   sendEmail(to, {

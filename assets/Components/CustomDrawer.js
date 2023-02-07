@@ -9,7 +9,6 @@ import { database } from '../Config/firebase';
 import { useEffect,useState } from 'react';
 import { Authentication } from '../Config/firebase';
 import { signOut } from 'firebase/auth';
-import { useFonts } from "expo-font";
 
 const CustomDrawer = (props) =>
 {

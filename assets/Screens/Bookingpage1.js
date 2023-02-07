@@ -9,6 +9,7 @@ import {doc, updateDoc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useFonts from '../Hooks/useFonts';
+import { useState } from 'react';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -48,14 +49,14 @@ function Bookingpage1({navigation}) {
 
   useFonts();
 
-  const [state,setState] = React.useState(false)
+  const [state,setState] = useState(false)
 
   const ButtonValue = state?"Added":"Add"
 
   const AddFunction = (id) => {
-      const newState = !state;
-      setState(newState)
-      IsAdded(id,newState)
+    const newState = !state;
+    setState(newState)
+    IsAdded(id,newState)
   }
 
   return (

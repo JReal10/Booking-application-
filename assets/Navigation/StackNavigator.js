@@ -23,8 +23,41 @@ function StackNavigator() {
           headerShown:false,
         }}/>
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Gallery" component={Gallerypage}/>
-      <Stack.Screen name="Contact" component={ContactPage}/>
+        <Stack.Screen name="Gallery" component={Gallerypage} options = 
+      {{
+        headerShown: true,
+        headerTitle: 'SHARON',
+        headerBackVisible: true,
+        headerBackTitle: '',
+        headerTintColor:colors.text_white,
+        headerStyle: {
+          
+          backgroundColor: colors.primary_brown,
+        },
+        headerTitleStyle: 
+        {
+          fontSize:28,
+          fontFamily:'DancingScript'
+        },
+        }}/>
+        
+      <Stack.Screen name="Contact" component={ContactPage} options = 
+      {{
+        headerShown: true,
+        headerTitle: 'SHARON',
+        headerBackVisible: true,
+        headerBackTitle: '',
+        headerTintColor:colors.text_white,
+        headerStyle: {
+          
+          backgroundColor: colors.primary_brown,
+        },
+        headerTitleStyle: 
+        {
+          fontSize:28,
+          fontFamily:'DancingScript'
+        },
+        }}/>
 
       <Stack.Screen name="Booking2" component={Bookingpage2} options = 
       {{

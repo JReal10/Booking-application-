@@ -42,7 +42,7 @@ function RootNavigator()
   }
     return (
       <NavigationContainer>
-       {user ? <StackNavigator/> :<AuthStack/>}
+       {user ? <StackNavigator/> :<AuthStack/>} 
       </NavigationContainer>
     )
   }

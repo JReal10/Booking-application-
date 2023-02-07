@@ -3,15 +3,12 @@ import { Text,View, StyleSheet,SafeAreaView,ScrollView, Modal} from 'react-nativ
 import colors from '../Colors/colors';
 import { signOut } from 'firebase/auth';
 import { Authentication } from '../Config/firebase';
-import {getDoc,doc,updateDoc} from 'firebase/firestore';
+import {getDoc,doc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState,useEffect } from 'react';
-import LoginButton from '../Components/LoginButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-/**/
 
 const AppointmentModal = ({visible,children}) =>{
   const [showModal,setShowModal] = useState(visible);
@@ -51,13 +48,20 @@ function Profilepage() {
   const [course,setCourse] = useState([]);
   const [price,setPrice] = useState("");
   const [timeTaken,setTimeTaken] = useState("");
-  const [newName, setNewName] = useState("");
 
   const [visible, setVisible] = useState(false);
+  const [user,setUser] = useState(null);
+
+  const CurrentAuth = async () => {
+    onAuthStateChanged(Authentication, 
+      async authenticatedUser => {authenticatedUser? setUser(authenticatedUser.uid):setUser(null); 
+    })
+  }
   
   const GetUser = async() => {
 
     const Ref = doc(database, "Booking_User","Jamie");
+    //SetData is wrong use an if statement
     const docSnap = await getDoc(Ref);
 
     const data = docSnap.exists() ? docSnap.data() : null

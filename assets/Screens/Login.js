@@ -24,8 +24,6 @@ function Login({navigation}) {
       .then((re) => 
      {
         setIsLoggedIn(true);
-        console.log('working')
-        
       })
       .catch((re) =>
       {
