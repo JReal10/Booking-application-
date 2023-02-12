@@ -7,7 +7,7 @@ import FowardButton from '../Components/FowardButton';
 import {doc,setDoc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
 import { useState,useEffect } from 'react';
-import useFonts from '../Hooks/useFonts';
+import { Authentication } from '../Config/firebase';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -38,7 +38,7 @@ const labels = ["Menu","Date","Confirmation"];
 function Bookingpage3({navigation}) {
 
   const route = useRoute();
-  useFonts();
+  const user = Authentication.currentUser?.uid
 
   const [date,setDate] = useState("");
   const [time,setTime] = useState("");
@@ -61,13 +61,14 @@ function Bookingpage3({navigation}) {
 
   const AddData = async (date,time,course,timeTaken, price) => {
     
-    const Ref = doc(database, "Booking_User","Jamie");
+    const Ref = doc(database, "Booking_User",user);
     const data = {
       date: date,
       time: time,
       course:course,
       timeTaken:timeTaken,
-      price: price
+      price: price,
+      appointmentCreated:true
     };
   
     await setDoc(Ref, data,{merge:true})

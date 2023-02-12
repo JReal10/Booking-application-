@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { Text,View, StyleSheet,SafeAreaView,ScrollView,Image,Modal } from 'react-native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import colors from '../Colors/colors';
 import GalleryData from '../Data/GalleryData';
-import { useState,useEffect } from 'react';
+import { useState} from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function Gallerypage() {
@@ -20,6 +19,16 @@ function Gallerypage() {
         Have any questions? Please visit our FAQ section below or contact our customer care team for more information.
         </Text>
       </View>
+
+      {GalleryData.map((gallery) => {
+        return (
+            <TouchableOpacity>
+              <Image style = {styles.item} source = {gallery.image}/>
+              <Text style = {styles.title}> {gallery.title}</Text>
+            </TouchableOpacity>
+          );
+        })}
+
       <View style = {styles.imageContainer}>
       {GalleryData.map((gallery) => {
         return (

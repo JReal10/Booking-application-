@@ -6,7 +6,7 @@ import AppLoading from 'expo-app-loading';
 import useFonts from '../Hooks/useFonts';
 import { useState } from 'react';
 
-function HomeScreen({navigation}) {
+function HomeScreen({navigation}){
 
   const [IsReady, SetIsReady] = useState(false);
 

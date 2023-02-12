@@ -7,8 +7,9 @@ import colors from '../Colors/colors';
 import Time from '../Components/Time';
 import { useEffect } from 'react';
 import {doc,getDocs,collection,where,query,getDoc} from 'firebase/firestore';
+import { Authentication } from '../Config/firebase';
 import { database } from '../Config/firebase';
-import useFonts from '../Hooks/useFonts';
+import { useState } from 'react';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -47,16 +48,18 @@ const getMarkedDates = (date) => {
 
 function Bookingpage2({navigation}) {
 
-  const [date,setDate] = React.useState(new Date());
-  const [time,setTime] = React.useState("");
-  const [course,setCourse] = React.useState("");
-  const [name, setName] = React.useState("");
-  const [email,setEmail] = React.useState("");
-  const [showTime,setShowTime] = React.useState(false);
-  const [price,setPrice] = React.useState([]);
-  const [timeTaken,setTimeTaken] = React.useState([]);
+  const [date,setDate] = useState(new Date());
+  const [time,setTime] = useState("");
+  const [course,setCourse] = useState("");
+  const [name, setName] = useState("");
+  const [email,setEmail] = useState("");
+  const [showTime,setShowTime] = useState(false);
+  const [price,setPrice] = useState([]);
+  const [timeTaken,setTimeTaken] = useState([]);
   
   const currentDate = new Date();
+  const user = Authentication.currentUser?.uid
+
 
   const GetTotalTimeAndPrice = (data)=>{
     const TotalValue = (data.reduce((a,v) =>  a = a + v, 0 ));
@@ -92,7 +95,7 @@ function Bookingpage2({navigation}) {
 
   const GetUser = async() => {
 
-    const Ref = doc(database, "Booking_User","Jamie");
+    const Ref = doc(database, "Booking_User",user);
     const docSnap = await getDoc(Ref);
 
     const data = docSnap.exists() ? docSnap.data() : null
@@ -106,7 +109,7 @@ function Bookingpage2({navigation}) {
     const TotalTimeTaken = GetTotalTimeAndPrice(timeTaken);
 
 
-    navigation.navigate('Booking3',{paramKey:time, paramDate:date, paramCourse:course, paramPrice: TotalPrice, paramTotalTimeTaken: TotalTimeTaken, paramName:name,paramEmail:email});
+    navigation.navigate('Booking3',{paramKey:time, paramDate:date, paramCourse:course, paramPrice: TotalPrice, paramTotalTimeTaken: TotalTimeTaken, paramName:name,paramEmail:email,paramUID: user});
   }
 
 

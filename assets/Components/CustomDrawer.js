@@ -22,6 +22,10 @@ const CustomDrawer = (props) =>
   const [course,setCourse] = useState([]);
   const [price,setPrice] = useState("");
   const [timeTaken,setTimeTaken] = useState("");
+  const [appointmentCreated, setAppointmentCreated] = useState(false);
+
+
+  const user = Authentication.currentUser?.uid
 
   const logout =() =>
   {
@@ -35,18 +39,26 @@ const CustomDrawer = (props) =>
 
   const GetUser = async() => {
 
-    const Ref = doc(database, "Booking_User","Jamie");
+    const Ref = doc(database, "Booking_User",user);
     const docSnap = await getDoc(Ref);
 
     const data = docSnap.exists() ? docSnap.data() : null
     if (data === null || data === undefined) return null
     
+    if (data.appointmentCreated == true){
     setName(data.name);
     setDate(data.date);
     setTime(data.time);
     setCourse(data.course);
     setPrice(data.price);
     setTimeTaken(data.timeTaken);
+    setAppointmentCreated(true);
+    }
+    else
+    {
+      setName(data.name)
+      setAppointmentCreated(false);
+    }
   }
 
   return (
@@ -56,12 +68,14 @@ const CustomDrawer = (props) =>
       <Text style = {styles.HeaderTextWrapper}>Welcome</Text>
       <Text style = {styles.HeaderTextWrapper}>Back</Text>
       <Text style = {styles.UserName}>{name}</Text>
-    </View>   
+    </View>  
     <DrawerItemList {...props}/>
 
         <View style = {styles.AppointmentHeaderWrapper}>
         <Text style = {styles.SubTextWrapper}>Next Appointment</Text>
         </View>
+        {(appointmentCreated == true)?
+        <View>
         <View style = {styles.ApoointmentSubWrapper}>
         <View style = {styles.DateTimeWrapper}>
         <Text style = {styles.TextStyle}>{date}</Text>
@@ -78,6 +92,8 @@ const CustomDrawer = (props) =>
         <Text style = {styles.TextStyle2} >Aprox. Time: {timeTaken} min.</Text>
         </View>
       </View>
+      </View> : (<View style = {styles.NoAppWrapper}><Text style = {styles.NoAppText}>No Appointment Booked</Text></View>)
+      }
       </DrawerContentScrollView>
       
         <TouchableOpacity onPress={() => {logout()}} style={{paddingVertical: 30,paddingHorizontal:15}}>
@@ -174,6 +190,19 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     color: colors.text_brown,
     fontFamily:'Poppins-Regular'
+  },
+  NoAppWrapper:
+  {
+    alignItems:'flex-start',
+    paddingHorizontal:10,
+    paddingVertical:'5%'
+  },
+  NoAppText:
+  {
+    fontFamily:'Poppins-Regular',
+    fontSize:16,
+    color:'#66554195',
+    textDecorationLine:'underline'    
   }
 })
 

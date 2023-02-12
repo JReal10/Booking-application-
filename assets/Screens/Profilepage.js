@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,ScrollView, Modal} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,ScrollView, Modal,SectionList} from 'react-native';
 import colors from '../Colors/colors';
 import { signOut } from 'firebase/auth';
 import { Authentication } from '../Config/firebase';
-import {getDoc,doc} from 'firebase/firestore';
+import {getDoc,doc,collection,getDocs,query,where} from 'firebase/firestore';
 import { database } from '../Config/firebase';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -36,43 +36,68 @@ const AppointmentModal = ({visible,children}) =>{
     );
 };
 
-function Profilepage() {
+function Profilepage({route}) {
+
+  const user = Authentication.currentUser?.uid
 
   useEffect(() => {
-    GetUser();
+    GetUser(user);
   },[])
 
+
   const [name, setName] = useState("");
+  const [email,setEmail] = useState("");
   const [date,setDate] = useState("");
   const [time,setTime] = useState("");
   const [course,setCourse] = useState([]);
   const [price,setPrice] = useState("");
   const [timeTaken,setTimeTaken] = useState("");
-
   const [visible, setVisible] = useState(false);
-  const [user,setUser] = useState(null);
+  const [appointmentCreated, setAppointmentCreated] = useState(false);
 
-  const CurrentAuth = async () => {
-    onAuthStateChanged(Authentication, 
-      async authenticatedUser => {authenticatedUser? setUser(authenticatedUser.uid):setUser(null); 
+  const GetUser2 = async ()=>{
+    const list = []
+    const Ref = collection(database, "Booking_User");
+    
+    // Create a query against the collection.
+    const q = query(Ref, where("email", "==", email));
+    
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      list.push(doc.data().course),
+      list.push(doc.data().date)
     })
-  }
+    
+    setTest(list);
+    console.log(test);
+    }
   
-  const GetUser = async() => {
+  const GetUser = async(user) => {
 
-    const Ref = doc(database, "Booking_User","Jamie");
+    const Ref = doc(database, "Booking_User",user);
     //SetData is wrong use an if statement
     const docSnap = await getDoc(Ref);
 
     const data = docSnap.exists() ? docSnap.data() : null
     if (data === null || data === undefined) return null
+    const ac = data.appointmentCreated;
 
+    if (data.appointmentCreated == true){
     setName(data.name);
+    setEmail(data.email);
     setDate(data.date);
     setTime(data.time);
     setCourse(data.course);
     setPrice(data.price);
     setTimeTaken(data.timeTaken);
+    setAppointmentCreated(true)
+    }
+    else
+    {
+      setName(data.name)
+      setAppointmentCreated(false);
+    }
   }
 
    const logout =() =>
@@ -89,7 +114,6 @@ function Profilepage() {
     return Alert.alert(
       // the title of the alert dialog
       "Are you sure?",
-
       [
         // the first button
         {
@@ -113,7 +137,6 @@ function Profilepage() {
   return (
     <View style = {styles.ScreenContainer}>
       <SafeAreaView>
-      <ScrollView>
         <View style = {styles.ContentContainer}>
         <View style = {styles.TextContainer}>
           <MaterialIcons name = 'account-circle' size = {60} color = '#839A7F' />
@@ -128,6 +151,7 @@ function Profilepage() {
               <MaterialIcons name = 'close' size = {24} color = {colors.icon_dark} />
               </TouchableOpacity>
               </View>
+              {(appointmentCreated == true)? 
               <View style = {styles.ApoointmentSubWrapper}>
                 <View style = {styles.DateTimeWrapper}>
                 <Text style = {styles.ModalTextStyle}>Date: {date}</Text>
@@ -144,9 +168,13 @@ function Profilepage() {
               <Text key={key} style={styles.CourseTextStyle}> {item} </Text>)
               )}
               <TouchableOpacity onPress = {()=> cancelAppointmentHandler()}style = {styles.CancelAppointment}><Text style = {styles.ModalTextStyle3}> Cancel Appointment </Text></TouchableOpacity>
-          </View>
+          </View>  : (<View style = {styles.NoAppWrapper}><Text style = {styles.NoAppText}> No Appointment Booked </Text></View>)
+          }
             </View>
           </AppointmentModal>
+
+        </View>
+        <View>
 
         </View>
 
@@ -157,10 +185,13 @@ function Profilepage() {
           <Text style = {styles.TextStyle}>Appointments</Text>
           </View>
           </TouchableOpacity>
+
+          <TouchableOpacity onPress = {()=> GetUser2()}>
           <View style = {styles.TextContainer2}>
           <MaterialCommunityIcons name = 'account-multiple' size = {32} color = '#839A7F'/>
           <Text style = {styles.TextStyle}>Refferal</Text>
           </View>
+          </TouchableOpacity>
         </View>
 
         <View style = {styles.ContentContainer2}>
@@ -190,7 +221,6 @@ function Profilepage() {
           <Text onPress={()=>{logout()}} style = {styles.TextStyle2}>Sign Out</Text>
           <Text style = {styles.TextStyle2}>Delete Account</Text>
         </View>
-      </ScrollView>
       </SafeAreaView>
     </View>
   );
@@ -355,6 +385,18 @@ const styles = StyleSheet.create
     height:50,
     paddingLeft:10,
   },
+  NoAppWrapper:
+  {
+    paddingVertical:'40%',
+    alignItems:'center'
+  },
+  NoAppText:
+  {
+    fontFamily:'Poppins-Regular',
+    fontSize:16,
+    color:'#66554190',
+    textDecorationLine:'underline'    
+  }
 })
 
 export default Profilepage;

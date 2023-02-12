@@ -40,7 +40,8 @@ function TabNavigator() {
         headerShown: false,
         }}/>
 
-      <Tab.Screen name="Profile" component={Profilepage} options = {{
+      <Tab.Screen name="Profile" component={Profilepage} 
+      options = {{
         tabBarIcon: () => <MaterialCommunityIcons name = "account" size = {36} color =  {colors.icon_dark}/>,
         headerShown: false,
         }}/>
