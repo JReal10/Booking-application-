@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,ScrollView, Modal,SectionList} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,ScrollView, Modal,SectionList,Linking} from 'react-native';
 import colors from '../Colors/colors';
 import { signOut } from 'firebase/auth';
 import { Authentication } from '../Config/firebase';
@@ -39,6 +39,7 @@ const AppointmentModal = ({visible,children}) =>{
 function Profilepage({route}) {
 
   const user = Authentication.currentUser?.uid
+  const test = Authentication.currentUser;
 
   useEffect(() => {
     GetUser(user);
@@ -130,6 +131,10 @@ function Profilepage({route}) {
     );
   };*/
 
+  const handleNoti =() =>{
+    Linking.openURL('App-Prefs:NOTIFICATIONS_ID&path=<bundle_id>');
+  }
+
    const cancelAppointmentHandler = () =>{
     setVisible(false)
    }
@@ -186,24 +191,22 @@ function Profilepage({route}) {
           </View>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress = {()=> GetUser2()}>
+          <TouchableOpacity>
           <View style = {styles.TextContainer2}>
           <MaterialCommunityIcons name = 'account-multiple' size = {32} color = '#839A7F'/>
           <Text style = {styles.TextStyle}>Refferal</Text>
           </View>
           </TouchableOpacity>
-        </View>
 
-        <View style = {styles.ContentContainer2}>
-          <View style = {styles.TextContainer2}>
-          <MaterialIcons name = 'payment' size = {32} color = '#839A7F'/>
-          <Text style = {styles.TextStyle}>Payment</Text>
-          </View>
+          <TouchableOpacity onPress={()=>handleNoti()}>
           <View style = {styles.TextContainer2}>
           <MaterialIcons name = 'notifications' size = {32} color = '#839A7F'/>
           <Text style = {styles.TextStyle}>Notifications</Text>
           </View>
-        </View>
+          </TouchableOpacity>
+          
+          </View>
+      
         
         <View style = {styles.ContentContainer2}>
           <View style = {styles.TextContainer3}>
@@ -219,7 +222,6 @@ function Profilepage({route}) {
 
         <View style = {styles.LogOutContainer}>
           <Text onPress={()=>{logout()}} style = {styles.TextStyle2}>Sign Out</Text>
-          <Text style = {styles.TextStyle2}>Delete Account</Text>
         </View>
       </SafeAreaView>
     </View>
@@ -257,7 +259,7 @@ const styles = StyleSheet.create
     flexDirection: 'row',
     paddingLeft: 5,
     paddingRight:20,
-    paddingVertical:10,
+    paddingVertical:15,
   },
   TextContainer:
   {
@@ -288,14 +290,14 @@ const styles = StyleSheet.create
     flexDirection: 'column',
     paddingLeft: 5,
     paddingRight:20,
-    paddingVertical:10,
+    paddingVertical:25,
   },
   TextContainer2: 
   {
     flexDirection:'row',
     alignItems:'center',
     marginLeft:'3%',
-    marginTop: '2%',
+    marginTop: '5%',
     marginBottom: '3%'
   },
   TextContainer3:
@@ -311,7 +313,7 @@ const styles = StyleSheet.create
   {
     marginBottom: 29.5,
     marginHorizontal:21,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     flexDirection: 'row',
     paddingLeft: 5,
     paddingRight:20,

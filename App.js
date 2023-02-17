@@ -3,6 +3,7 @@ import 'react-native-gesture-handler';
 import { NavigationContainer} from '@react-navigation/native';
 import StackNavigator from './assets/Navigation/StackNavigator';
 import AuthStack from './assets/Navigation/AuthStack';
+import ClientStack from './assets/Navigation/ClientStack';
 import { useContext,createContext,useState,useEffect } from 'react';
 import {onAuthStateChanged} from 'firebase/auth';
 import { ActivityIndicator, View } from 'react-native';
@@ -12,8 +13,10 @@ const AuthenticatedUserContext = createContext({});
 
 const AuthenticatedUserProvider = ({children}) => {
     const [user,setUser] = useState(null);
+    const [uid,setUid] = useState(null);
+    
     return(
-      <AuthenticatedUserContext.Provider value = {{user,setUser}}>
+      <AuthenticatedUserContext.Provider value = {{user,setUser,uid,setUid}}>
         {children}
       </AuthenticatedUserContext.Provider>
     )
@@ -22,11 +25,15 @@ const AuthenticatedUserProvider = ({children}) => {
 function RootNavigator()
   {
     const {user,setUser} = useContext(AuthenticatedUserContext);
+    const {uid,setUid} = useContext(AuthenticatedUserContext);
     const [loading,setLoading] = useState(true);
+
     useEffect(() => {
       const unsubscribe = onAuthStateChanged(Authentication, 
-        async authenticatedUser => {authenticatedUser ? setUser(authenticatedUser):setUser(null); 
+        async authenticatedUser => {authenticatedUser ? setUser(authenticatedUser):setUser(null);
+        authenticatedUser ? setUid(authenticatedUser.uid):setUid(null); 
         setLoading(false);
+        console.log(uid);
       }
     );
 
@@ -42,7 +49,7 @@ function RootNavigator()
   }
     return (
       <NavigationContainer>
-       {user ? <StackNavigator/> :<AuthStack/>} 
+       {(user && uid != 'HGQyTSjcj1VtfVlIq0rak6qT6402') ? <StackNavigator/> :(user && uid == 'HGQyTSjcj1VtfVlIq0rak6qT6402') ? <ClientStack/> : <AuthStack/>} 
       </NavigationContainer>
     )
   }
