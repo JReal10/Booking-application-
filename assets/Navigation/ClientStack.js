@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ClientHomepage from '../Screens/ClientHomepage';
 import colors from '../Colors/colors';
 import useFonts from '../Hooks/useFonts';
+import ClientDrawer from './ClientDrawer';
 
 const Stack = createNativeStackNavigator();
 
@@ -12,21 +13,10 @@ function ClientStack() {
 
   return (
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={ClientHomepage} options = {{
-        headerShown: false,
-        headerTitle: 'SHARON',
-        headerBackVisible: false,
-        headerStyle: {
-          
-          backgroundColor: colors.primary_brown,
-        },
-        headerTitleStyle: 
-        {
-          fontSize:28,
-          color:'#FFFFFF',
-          fontFamily:'DancingScript'
-        },
-        }} />
+        <Stack.Screen name = "Tab" component={ClientDrawer} options = 
+        {{
+          headerShown:false,
+        }}/>
       </Stack.Navigator>
       );}
 

@@ -307,7 +307,6 @@ const styles = StyleSheet.create
     marginLeft:'3%',
     marginTop: '3%',
     marginBottom: '5%'
-
   },
   LogOutContainer: 
   {

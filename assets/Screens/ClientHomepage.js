@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity, ScrollView } from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity, ScrollView,StatusBar } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import colors from '../Colors/colors';
 import AppLoading from 'expo-app-loading';
@@ -57,9 +57,18 @@ function ClientHomeage({navigation}){
   return (
     <View style ={styles.Container}>
       <SafeAreaView style = {styles.contentContainer}>
+        <StatusBar barStyle={'dark-content'}></StatusBar>
         <ScrollView>
-          <View>
-          <Text>Appointment</Text>
+          <View style = {styles.appoContainer}>
+          <View style = {styles.headerWrapper}>
+          <Text style = {styles.headerStyle}>Today's Appointments</Text>
+          </View>
+          <View style = {styles.subTextWrapper}>
+            <Text style = {styles.subTextStyle}>There are no appointment today..</Text>
+          </View>
+          <View style = {styles.headerWrapper}>
+          <Text style = {styles.headerStyle}>Future Appointments</Text>
+          </View>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -80,8 +89,29 @@ const styles = StyleSheet.create
   {
     height:'100%',
     justifyContent: 'space-between',
-    alignItems: 'center',
     backgroundColor:colors.background,
+  },
+  headerStyle:
+  {
+    textAlign:'left',
+    fontSize:16,
+    fontFamily:'Merriweather-Regular',
+    color: colors.text_brown,
+  },
+  subTextStyle:
+  {
+    textAlign:'center',
+
+  },
+  subTextWrapper:
+  {
+    paddingVertical:'20%',
+    opacity:0.5,
+  },
+  appoContainer:
+  {
+    paddingTop:'10%',
+    padding:20,
   }
 })
 
