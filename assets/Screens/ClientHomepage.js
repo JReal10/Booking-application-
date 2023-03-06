@@ -69,6 +69,12 @@ function ClientHomeage({navigation}){
           <View style = {styles.headerWrapper}>
           <Text style = {styles.headerStyle}>Future Appointments</Text>
           </View>
+          <View style = {styles.headerWrapper2}>
+          <Text style = {styles.headerStyle}>Energy Consumption</Text>
+          </View>
+          <View style = {styles.headerWrapper2}>
+          <Text style = {styles.headerStyle}>Revenue</Text>
+          </View>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -112,6 +118,11 @@ const styles = StyleSheet.create
   {
     paddingTop:'10%',
     padding:20,
+  },
+  headerWrapper2:
+  {
+    alignItems:'center',
+    paddingVertical:'5%'
   }
 })
 
