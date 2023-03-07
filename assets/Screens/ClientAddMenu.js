@@ -1,12 +1,13 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity, ScrollView,StatusBar,TextInput } from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity,FlatList,StatusBar,TextInput } from 'react-native';
 import colors from '../Colors/colors';
 import AppLoading from 'expo-app-loading';
 import useFonts from '../Hooks/useFonts';
 import { database } from '../Config/firebase';
-import { getDoc,doc } from 'firebase/firestore';
+import { addDoc,collection,getDocs,deleteDoc,doc} from 'firebase/firestore';
+import Entypo from 'react-native-vector-icons/Entypo';
 import Button from '../Components/CustomButton';
-import { useState,useEffect }from 'react';
+import { useState,useEffect,useCallback }from 'react';
 
 function ClientAddMenu({navigation}){
 
@@ -15,7 +16,33 @@ function ClientAddMenu({navigation}){
   const [courseTime, setCourseTime] = useState("");
   const [coursePrice, setCoursePrice] = useState("");
   const [courseDesc,setCourseDesc] = useState(""); 
+  const [course,setCourse] = useState([]);
+  const [refreshing, setRefreshing] = useState(true);
 
+  useEffect(() => {
+    if(refreshing){
+    GetUser();
+    setRefreshing(false);
+    }
+  },[refreshing])
+
+  const clearInput = useCallback(()=> (setCourseName(""),setCourseDesc(""),setCoursePrice(""),setCourseTime("")), []);
+
+  
+  const collectIdsAndDocs = (doc) => {
+    return {id: doc.id, ...doc.data()};
+  };
+
+  const GetUser = async() => {
+
+    const Ref = collection(database, "Booking_Course");
+
+    //SetData is wrong use an if statement
+    const docSnap = await getDocs(Ref);
+    const list = docSnap.docs.map(collectIdsAndDocs);
+
+    setCourse(list);
+    }
 
   const FetchFonts = async () => {
     await useFonts();
@@ -31,52 +58,87 @@ function ClientAddMenu({navigation}){
     );
   }
 
+  const AddMenu = async(Name,Time,Price,Desc) =>{
+    const docRef = await addDoc(collection(database, "Booking_Course"), {
+      Course_name: courseName,
+      time: courseTime,
+      price: coursePrice,
+      Description: courseDesc,
+      isAdded:false
+    });
+    setRefreshing(true);
+  };
+
+  const deleteMenu = async(id)=>{
+    await deleteDoc(doc(database, "Booking_Course", id));
+    setRefreshing(true);
+  }
+
+  const renderItem = ({ item }) => (
+    <View style = {styles.itemContainer}>
+      <Text style = {styles.itemHeader}>Course: {item.Course_name}</Text>
+      <Text style = {styles.itemTextStyle}>Description: {item.Description}</Text>
+      <Text style = {styles.itemTextStyle}>Time: {item.time} min</Text>
+      <Text style = {styles.itemTextStyle}>Price: {item.price} yen</Text>
+      <TouchableOpacity onPress={()=>(deleteMenu(item.id))}>
+      <View style = {styles.deleteContainer}>
+      <Entypo name = 'cross' size = {20} color = {colors.text_white} />
+      <Text style = {styles.itemDeleteStyle}>Delete course</Text>
+      </View> 
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <View style ={styles.Container}>
       <SafeAreaView style = {styles.SafeAreaView}>
       <View style = {styles.contentContainer}>
       <StatusBar barStyle={'dark-content'}></StatusBar>
-        <ScrollView>
+          <View>
           <View style = {styles.Inputs}>
             <Text style = {styles.inputHeader}>Course Name</Text>
             <TextInput placeholder = 'enter course name...' 
             value={courseName}
-            onChangeText={(courseName) => setEmail(setCourseName(courseName))} style = {styles.EmailInput}
-            autoCorrect = {false}
-            autoCapitalize = 'none'/>
-        </View>
-        <View style = {styles.inputWrapper3}>
-        <View style = {styles.Inputs}>
-            <Text style = {styles.inputHeader}>Course Name</Text>
-            <TextInput placeholder = 'enter course name...' 
-            value={courseName}
-            onChangeText={(courseName) => setEmail(courseName)} style = {styles.InputWrapper2}
+            onChangeText={(courseName) => setCourseName(courseName)} style = {styles.InputWrapper}
             autoCorrect = {false}
             autoCapitalize = 'none'/>
         </View>
         <View style = {styles.Inputs}>
-            <Text style = {styles.inputHeader}>Course Name</Text>
-            <TextInput placeholder = 'enter course name...' 
-            value={courseName}
-            onChangeText={(courseName) => setEmail(courseName)} style = {styles.InputWrapper2}
+            <Text style = {styles.inputHeader}>Course Time</Text>
+            <TextInput placeholder = 'set time...' 
+            value={courseTime}
+            onChangeText={(courseTime) => setCourseTime(courseTime)} style = {styles.InputWrapper}
             autoCorrect = {false}
             autoCapitalize = 'none'/>
-        </View>
         </View>
         <View style = {styles.Inputs}>
-            <Text style = {styles.inputHeader}>Course Name</Text>
-            <TextInput placeholder = 'enter course name...' 
-            value={courseName}
-            onChangeText={(courseName) => setEmail(courseName)} style = {styles.EmailInput}
+            <Text style = {styles.inputHeader}>Course price</Text>
+            <TextInput placeholder = 'set price...' 
+            value={coursePrice}
+            onChangeText={(coursePrice) => setCoursePrice(coursePrice)} style = {styles.InputWrapper}
             autoCorrect = {false}
             autoCapitalize = 'none'/>
         </View>
-        <Button title = {'ADD MENU'} backgroundColor = {colors.secondary_green} fontFamily= {'Poppins-Regular'}></Button>
-        
+        <View style = {styles.Inputs}>
+            <Text style = {styles.inputHeader}>Course description</Text>
+            <TextInput placeholder = 'set course description..' 
+            value={courseDesc}
+            onChangeText={(courseDesc) => setCourseDesc(courseDesc)} style = {styles.InputWrapper}
+            autoCorrect = {false}
+            autoCapitalize = 'none'/>
+        </View>
+        <View style = {styles.Button}>
+        <Button title = {'ADD MENU'} backgroundColor = {colors.secondary_green} onPress = { ()=> (AddMenu(courseName,coursePrice,courseTime,courseDesc),clearInput)} fontFamily= {'Poppins-Regular'}></Button>
+        </View>
         <Text style = {styles.HeaderStyle}>Menu</Text>
-        <View>
+        <FlatList
+          data={course}
+          key={course.length}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.key}
+          extraData={course}
+        />
         </View>
-        </ScrollView>
         </View>
       </SafeAreaView>
     </View>
@@ -101,9 +163,9 @@ const styles = StyleSheet.create
     width:'100%',
     height:'100%',
     paddingHorizontal:30,
-    flexDirection:'column',
+    flexDirection:'row',
   },
-  EmailInput:
+  InputWrapper:
   {
     backgroundColor:'#DFDFDF',
     borderRadius:8,
@@ -112,21 +174,6 @@ const styles = StyleSheet.create
     paddingLeft:10,
     fontFamily:'Poppins-Regular'
 
-  },
-  InputWrapper2:
-  {
-    backgroundColor:'#DFDFDF',
-    borderRadius:8,
-    fontSize:16,
-    height:45,
-    width:'100%',
-    paddingLeft:10,
-    fontFamily:'Poppins-Regular'
-  },
-  inputWrapper3:
-  {
-    justifyContent:"space-between",
-    flexDirection:'row',
   },
   Inputs:
   {
@@ -146,7 +193,46 @@ const styles = StyleSheet.create
     fontSize:18,
     color:colors.text_brown,
     fontFamily:'Merriweather-Regular'
-
+  },
+  Button:
+  {
+    paddingVertical:'3%',
+  },
+  itemTextStyle:
+  {
+    fontSize:'15',
+    paddingBottom:'1%',
+    fontFamily:'Merriweather-Regular',
+    color:colors.text_white,
+    opacity:'0.8'
+  },
+  itemContainer:
+  {
+    marginVertical:'1%',
+    padding:'2%',
+    borderRadius:8,
+    backgroundColor:colors.primary_brown
+  },
+  itemHeader:
+  {
+    color:colors.text_brown,
+    fontFamily:'Poppins-Medium',
+    fontSize:'16',
+    paddingBottom:'2%'
+  },
+  itemDeleteStyle:
+  {
+    fontSize:'15',
+    fontFamily:'Merriweather-Bold',
+    color:colors.text_white,
+  },
+  deleteContainer:
+  {
+    alignSelf:'center',
+    paddingBottom:'1%',
+    paddingVertical:'2%',
+    flexDirection:'row',
+    alignItems:'center',
   }
 
 })
