@@ -132,8 +132,8 @@ function ClientAddMenu({navigation}){
         </View>
         <Text style = {styles.HeaderStyle}>Menu</Text>
         <FlatList
+          style = {styles.FlatList} 
           data={course}
-          key={course.length}
           renderItem={renderItem}
           keyExtractor={(item) => item.key}
           extraData={course}
@@ -233,6 +233,10 @@ const styles = StyleSheet.create
     paddingVertical:'2%',
     flexDirection:'row',
     alignItems:'center',
+  },
+  FlatList:
+  {
+    height:'40%'
   }
 
 })

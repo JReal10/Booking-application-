@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,ScrollView} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,ScrollView,FlatList} from 'react-native';
 import colors from '../Colors/colors';
 import BookingButton from '../Components/BookingButton';
 import Entypo from 'react-native-vector-icons/Entypo';
 import StepIndicator from 'react-native-step-indicator';
 import FowardButton from '../Components/FowardButton';
-import {doc, updateDoc} from 'firebase/firestore';
+import {doc, updateDoc,collection,getDocs} from 'firebase/firestore';
 import { database } from '../Config/firebase';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useFonts from '../Hooks/useFonts';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 const customStyles = {
   stepIndicatorSize: 30,
@@ -47,7 +47,31 @@ const labels = ["Menu","Date","Confirmation"];
 
 function Bookingpage1({navigation}) {
 
+  const [course,setCourse] = useState([]);
+  const [refreshing, setRefreshing] = useState(true);
+
+  useEffect(() => {
+    if(refreshing){
+    GetUser();
+    setRefreshing(false);
+    }
+  },[refreshing])
+
+  
   useFonts();
+
+  const renderItem = ({ item }) => (
+    <View style = {styles.itemContainer}>
+      <Text style = {styles.itemHeader}>Course: {item.Course_name}</Text>
+      <Text style = {styles.itemTextStyle}>Description: {item.Description}</Text>
+      <Text style = {styles.itemTextStyle}>Time: {item.time} min</Text>
+      <Text style = {styles.itemTextStyle}>Price: {item.price} yen</Text>
+    </View>
+  );
+  
+  const collectIdsAndDocs = (doc) => {
+    return {id: doc.id, ...doc.data()};
+  };
 
   const [state,setState] = useState(false)
 
@@ -59,10 +83,22 @@ function Bookingpage1({navigation}) {
     IsAdded(id,newState)
   }
 
+  const GetUser = async() => {
+
+    const Ref = collection(database, "Booking_Course");
+
+    //SetData is wrong use an if statement
+    const docSnap = await getDocs(Ref);
+    const list = docSnap.docs.map(collectIdsAndDocs);
+
+    setCourse(list);
+    console.log(list);
+    }
+
   return (
     <View style = {styles.Container}>
       <SafeAreaView>
-        <ScrollView>
+        <View>
           <View style = {styles.stepIndicator}>
           <StepIndicator customStyles={customStyles}
           currentPosition = {0}
@@ -123,11 +159,17 @@ function Bookingpage1({navigation}) {
             </TouchableOpacity>
           </View>
           <View style = {styles.DividerLine}></View>
-
+          <FlatList
+          style = {styles.FlatList} 
+          data={course}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.key}
+          extraData={course}
+          />
           <FowardButton title = 'CONTINUE' onPress={() => (navigation.navigate('Booking2'))}/>
 
           <View style = {styles.TabNavSpace}/>
-          </ScrollView>
+          </View>
       </SafeAreaView>
     </View>
   );

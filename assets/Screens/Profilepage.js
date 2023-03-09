@@ -90,6 +90,7 @@ function Profilepage({route}) {
     setDate(data.date);
     setTime(data.time);
     setCourse(data.course);
+    console.log(data.AppointmentDetail)
     setPrice(data.price);
     setTimeTaken(data.timeTaken);
     setAppointmentCreated(true)

@@ -4,7 +4,7 @@ import { useRoute } from '@react-navigation/native';
 import colors from '../Colors/colors';
 import StepIndicator from 'react-native-step-indicator';
 import FowardButton from '../Components/FowardButton';
-import {doc,setDoc} from 'firebase/firestore';
+import {doc,setDoc,updateDoc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
 import { useState,useEffect } from 'react';
 import { Authentication } from '../Config/firebase';
@@ -68,7 +68,14 @@ function Bookingpage3({navigation}) {
       course:course,
       timeTaken:timeTaken,
       price: price,
-      appointmentCreated:true
+      appointmentCreated:true,
+      AppointmentDetail:
+      [{course:course,
+        date:date,
+        time: time,
+        course:course,
+        timeTaken:timeTaken,
+        price: price}]
     };
   
     await setDoc(Ref, data,{merge:true})
