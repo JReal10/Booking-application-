@@ -14,9 +14,6 @@ export default function Button(props) {
 const styles = StyleSheet.create({
   button: {
     alignItems: 'center',
-    paddingVertical: 15,
-    marginHorizontal:12,
-    marginTop:20,
     borderRadius: 8,
     elevation: 3,
     backgroundColor: colors.secondary_green,

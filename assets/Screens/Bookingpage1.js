@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Text,View, StyleSheet,SafeAreaView,ScrollView,FlatList} from 'react-native';
 import colors from '../Colors/colors';
-import BookingButton from '../Components/BookingButton';
 import Entypo from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import StepIndicator from 'react-native-step-indicator';
 import FowardButton from '../Components/FowardButton';
 import {doc, updateDoc,collection,getDocs} from 'firebase/firestore';
@@ -49,6 +49,15 @@ function Bookingpage1({navigation}) {
 
   const [course,setCourse] = useState([]);
   const [refreshing, setRefreshing] = useState(true);
+  const [state,setState] = useState(false)
+  const [buttons, setButtons] = useState(course.reduce((obj, item) => ({...obj, [item.id]: false}), {}));
+  const [added, setAdded] = useState([]);
+
+  const handleButtonPress = (id) => {
+    setButtons({...buttons, [id]: !buttons[id]});
+    console.log(buttons);
+    IsAdded(id,!buttons[id]);
+  }
 
   useEffect(() => {
     if(refreshing){
@@ -61,27 +70,43 @@ function Bookingpage1({navigation}) {
   useFonts();
 
   const renderItem = ({ item }) => (
-    <View style = {styles.itemContainer}>
-      <Text style = {styles.itemHeader}>Course: {item.Course_name}</Text>
-      <Text style = {styles.itemTextStyle}>Description: {item.Description}</Text>
-      <Text style = {styles.itemTextStyle}>Time: {item.time} min</Text>
-      <Text style = {styles.itemTextStyle}>Price: {item.price} yen</Text>
+    <View style = {styles.courseContainer}>
+      <View style = {styles.courseHeader}>
+      <Text style = {styles.HeaderText}>Course: {item.Course_name}</Text>
+      <View style = {styles.time}>
+        <Entypo name = 'clock' size = {16} color = {'#828282'}/>
+        <Text style = {styles.TimeText}>{item.time} min</Text>
+      </View>
+      </View>
+
+      <Text style = {styles.DescriptionText}>Description: {item.Description}</Text>
+      <View style = {styles.courseSubContainer}>
+      <Text style = {styles.priceText}>Price: {item.price} yen</Text>
+      <TouchableOpacity style={[styles.button, { backgroundColor: buttons   [item.id] ? colors.secondary_green : '#828282'}]}
+        onPress={() => handleButtonPress(item.id)}>
+
+        {buttons[item.id] ? <Ionicons name = 'ios-checkmark-sharp' size = {16} color = {colors.background}/>:<Ionicons name = 'ios-add-sharp' size = {16} color = {colors.background}/>}
+        <Text style={[styles.buttonText, {color: buttons[item.id] ? colors.background:colors.background}]}>{buttons[item.id] ? 'Added' : 'Add'}</Text>
+      </TouchableOpacity>
+      </View>
     </View>
   );
+
+  const ItemDivider = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "100%",
+          backgroundColor: "#00000030",
+        }}
+      />
+    );
+  }
   
   const collectIdsAndDocs = (doc) => {
     return {id: doc.id, ...doc.data()};
   };
-
-  const [state,setState] = useState(false)
-
-  const ButtonValue = state?"Added":"Add"
-
-  const AddFunction = (id) => {
-    const newState = !state;
-    setState(newState)
-    IsAdded(id,newState)
-  }
 
   const GetUser = async() => {
 
@@ -92,7 +117,6 @@ function Bookingpage1({navigation}) {
     const list = docSnap.docs.map(collectIdsAndDocs);
 
     setCourse(list);
-    console.log(list);
     }
 
   return (
@@ -106,69 +130,16 @@ function Bookingpage1({navigation}) {
           stepCount = {3}/>
           </View>
 
-          <View>
-            <View style = {styles.Container2}>
-              <Text style = {styles.HeaderText}>[Hand] Clear Gel</Text>
-              <View style = {styles.time}>
-              <Entypo name = 'clock' size = {16} color = {'#828282'}/>
-              <Text style = {styles.TimeText}>20 min</Text>
-              </View>
-            </View>
-          </View>
-          <Text style = {styles.DescriptionText}>Applying clear gel</Text>
-          <View style = {styles.Container3}>
-            <Text style = {styles.priceText}>$20.00</Text>
-            <TouchableOpacity onPress = {() => AddFunction('5vpFN69D14cH42cU1Ue9')}>
-            <BookingButton title = {ButtonValue} style = {styles.AddButton}/>
-            </TouchableOpacity>
-          </View>
-          <View style = {styles.DividerLine}></View>
 
-          <View>
-            <View style = {styles.Container2}>
-              <Text style = {styles.HeaderText}>[Hand] Clear Gel</Text>
-              <View style = {styles.time}>
-              <Entypo name = 'clock' size = {16} color = {'#828282'}/>
-              <Text style = {styles.TimeText}>20 min</Text>
-              </View>
-            </View>
-          </View>
-          <Text style = {styles.DescriptionText}>Applying clear gel</Text>
-          <View style = {styles.Container3}>
-            <Text style = {styles.priceText}>$20.00</Text>
-            <TouchableOpacity onPress = {() => AddFunction('FIhLGiLsP38mI1FVKPtU')}>
-            <BookingButton title = 'Add' style = {styles.AddButton}/>
-            </TouchableOpacity>
-          </View>
-          <View style = {styles.DividerLine}></View>
-
-          <View>
-            <View style = {styles.Container2}>
-              <Text style = {styles.HeaderText}>[Hand] Clear Gel</Text>
-              <View style = {styles.time}>
-              <Entypo name = 'clock' size = {16} color = {'#828282'}/>
-              <Text style = {styles.TimeText}>20 min</Text>
-              </View>
-            </View>
-          </View>
-          <Text style = {styles.DescriptionText}>Applying clear gel</Text>
-          <View style = {styles.Container3}>
-            <Text style = {styles.priceText}>$20.00</Text>
-            <TouchableOpacity onPress = {() => AddFunction('eC6IIrKKD6NrbMsQuZdb')}>
-            <BookingButton title = 'Add' style = {styles.AddButton}/>
-            </TouchableOpacity>
-          </View>
-          <View style = {styles.DividerLine}></View>
           <FlatList
           style = {styles.FlatList} 
           data={course}
           renderItem={renderItem}
-          keyExtractor={(item) => item.key}
-          extraData={course}
+          keyExtractor={(item) => item.id}
+          ItemSeparatorComponent={ItemDivider}
+          showsVerticalScrollIndicator = {false}
           />
-          <FowardButton title = 'CONTINUE' onPress={() => (navigation.navigate('Booking2'))}/>
-
-          <View style = {styles.TabNavSpace}/>
+            <FowardButton title = 'CONTINUE' onPress={() => (navigation.navigate('Booking2',{paramAdded:added}))}/>
           </View>
       </SafeAreaView>
     </View>
@@ -188,14 +159,20 @@ const styles = StyleSheet.create
   {
     flex:1
   },
-  Container2:
+  courseContainer:
   {
-    paddingTop: 20,
-    paddingBottom:5,
-    paddingHorizontal:12,
+    flexDirection: 'column',
+    paddingVertical:'2%',
+    padding:'2%',
+  },
+  courseHeader:
+  {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+  },
+  courseSubContainer:
+  {
+    flexDirection: 'row',
+    justifyContent:'space-between'
   },
   HeaderText: 
   {
@@ -221,36 +198,40 @@ const styles = StyleSheet.create
   {
     fontFamily:'Poppins-Regular',
     paddingTop: 5,
-    paddingHorizontal:12,
     fontSize:16,
     color: '#828282',
-
-  },
-  Container3: 
-  {
-    paddingTop:30,
-    paddingBottom:12,
-    paddingHorizontal:12,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center'
+    marginBottom:'5%',
+    marginTop:'3%'
   },
   priceText: 
   {
     fontFamily:'Poppins-Regular',
-    fontSize: 24,
+    fontSize: 20,
     color: '#626262'
   },
-  DividerLine: 
+  FlatList:
   {
-    borderBottomWidth:1,
-    borderBottomColor: '#B0B0B0',
-    marginHorizontal: 12,
+    height:'75%',
+    borderRadius:'8'
   },
-  TabNavSpace: 
-  {
-    paddingVertical:40,
+  button: {
+    alignItems: 'center',
+    paddingVertical: 6,
+    paddingHorizontal:15,
+    borderRadius: 8,
+    elevation: 3,
+    backgroundColor: colors.secondary_green,
+    flexDirection:'row'
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: colors.text_white,
+  },
+  mainButton:{
+    position:'absolute',
   }
+
 })
 
 export default Bookingpage1;

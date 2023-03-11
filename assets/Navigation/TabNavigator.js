@@ -18,7 +18,7 @@ function TabNavigator() {
     {{
       tabBarStyle:
       {
-        height:90,
+        height:"12%",
         backgroundColor: colors.text_white,
         elevation: 0,
         position: 'absolute',

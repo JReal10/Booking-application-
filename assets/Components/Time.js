@@ -27,17 +27,17 @@ export default function Time(props) {
   return (
     <View>
     <View style = {styles.ButtonContainer}>
-    <TimeButton style = {{}} onPress={() => AddFunction('12:45')} title = {ButtonValue}/>
-    <TimeButton onPress={() =>  AddFunction('12:45')} title = {ButtonValue}/>
-    <TimeButton onPress={() => props.changeTime('14:45')}  title = '14:45'/>
-    <TimeButton onPress={() => props.changeTime('15:45')}  title = '15:45'/>
+    <TimeButton style = {{}} onPress={() => AddFunction('1245')} title = {ButtonValue}/>
+    <TimeButton onPress={() =>  AddFunction('1245')} title = {ButtonValue}/>
+    <TimeButton onPress={() => props.changeTime('1445')}  title = '14:45'/>
+    <TimeButton onPress={() => props.changeTime('1545')}  title = '15:45'/>
     </View>
 
     <View style = {styles.ButtonContainer}>
-    <TimeButton onPress = {() => props.changeTime('16:45')} title = '16:45'/>
-    <TimeButton onPress = {() => props.changeTime('17:45')} title = '17:45'/>
-    <TimeButton onPress = {() => props.changeTime('18:45')} title = '18:45'/>
-    <TimeButton onPress = {() => props.changeTime('19:45')} title = '19:45'/>
+    <TimeButton onPress = {() => props.changeTime('1645')} title = '16:45'/>
+    <TimeButton onPress = {() => props.changeTime('1745')} title = '17:45'/>
+    <TimeButton onPress = {() => props.changeTime('1845')} title = '18:45'/>
+    <TimeButton onPress = {() => props.changeTime('1945')} title = '19:45'/>
     </View>
     </View>
   );

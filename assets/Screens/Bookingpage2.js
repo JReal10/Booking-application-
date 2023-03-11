@@ -7,6 +7,7 @@ import colors from '../Colors/colors';
 import Time from '../Components/Time';
 import { useEffect } from 'react';
 import {doc,getDocs,collection,where,query,getDoc} from 'firebase/firestore';
+import { useRoute } from '@react-navigation/native';
 import { Authentication } from '../Config/firebase';
 import { database } from '../Config/firebase';
 import { useState } from 'react';
@@ -53,13 +54,14 @@ function Bookingpage2({navigation}) {
   const [course,setCourse] = useState("");
   const [name, setName] = useState("");
   const [email,setEmail] = useState("");
+  const [timestamp,setTimeStamp] = useState(new Date());
   const [showTime,setShowTime] = useState(false);
   const [price,setPrice] = useState([]);
   const [timeTaken,setTimeTaken] = useState([]);
   
   const currentDate = new Date();
   const user = Authentication.currentUser?.uid
-
+  const route = useRoute();
 
   const GetTotalTimeAndPrice = (data)=>{
     const TotalValue = (data.reduce((a,v) =>  a = a + v, 0 ));
@@ -67,6 +69,7 @@ function Bookingpage2({navigation}) {
   }
 
   useEffect(() => {
+    console.log(route.params.paramAdded)
     GetCourse();
     GetUser();
   },[])
@@ -83,9 +86,9 @@ function Bookingpage2({navigation}) {
     const querySnapshot = await getDocs(q);
 
     querySnapshot.forEach((doc) => {
-            a.push(doc.data().Course_name),
-            price.push(doc.data().price),
-            TimeTaken.push(doc.data().time)
+      a.push(doc.data().Course_name),
+      price.push(doc.data().price),
+      TimeTaken.push(doc.data().time)
     })
 
     setCourse(a);
@@ -107,9 +110,7 @@ function Bookingpage2({navigation}) {
   const BookingHandle = () =>{
     const TotalPrice = GetTotalTimeAndPrice(price);
     const TotalTimeTaken = GetTotalTimeAndPrice(timeTaken);
-
-
-    navigation.navigate('Booking3',{paramKey:time, paramDate:date, paramCourse:course, paramPrice: TotalPrice, paramTotalTimeTaken: TotalTimeTaken, paramName:name,paramEmail:email,paramUID: user});
+    navigation.navigate('Booking3',{paramKey:time, paramDate:date, paramCourse:course, paramPrice: TotalPrice, paramTotalTimeTaken: TotalTimeTaken, paramName:name,paramEmail:email,paramUID: user,paramTimeStamp: timestamp, paramAdded: route.params.paramButton});
   }
 
 
@@ -124,41 +125,37 @@ function Bookingpage2({navigation}) {
           stepCount = {3}/>
           </View>
           <Calendar
-      // Handler which gets executed on day press. Default = undefined
-      onDayPress={day => {
-        setDate(day.dateString);
-        setShowTime(true);
-      }}
-      // Handler which gets executed on day long press. Default = undefined
-      minDate = {currentDate}
+          // Handler which gets executed on day press. Default = undefined
+          onDayPress={day => {
+            setTimeStamp(day.timestamp);
+            setDate(day.dateString);
+            setShowTime(true);
+          }}
+          // Handler which gets executed on day long press. Default = undefined
+          minDate = {currentDate}
 
-      markedDates={
-        getMarkedDates(date)
-      }
+          markedDates={
+            getMarkedDates(date)
+          }
 
-      style = {{
-        borderRadius:10,
-        margin:10,
-        padding:10,
-      }}
+          style = {{
+            borderRadius:10,
+            margin:10,
+            padding:10,
+          }}
 
-      theme = {{
-        selectedDayBackgroundColor:colors.background,
-        selectedDayTextColor: colors.secondary_green,
-        arrowColor: colors.secondary_green,
-        calendarBackground: colors.background,
-      }}
+          theme = {{
+            selectedDayBackgroundColor:colors.background,
+            selectedDayTextColor: colors.secondary_green,
+            arrowColor: colors.secondary_green,
+            calendarBackground: colors.background,
+          }}
 
-      // Do not show days of other months in month page. Default = false
-      hideExtraDays={true}
-
-      enableSwipeMonths={true} 
+          // Do not show days of other months in month page. Default = false
+          hideExtraDays={true}
+          enableSwipeMonths={true} 
           />
-
-          <Text style = {styles.AvailableTime} >Available Time</Text>
-
           {showTime ? <Time changeTime = {time => setTime(time)}/> : null}
-
           <FowardButton title = 'CONTINUE' onPress={() => BookingHandle()}/>
           <View style = {styles.TabNavSpace}/>
           </ScrollView>
