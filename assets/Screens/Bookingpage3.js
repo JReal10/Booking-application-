@@ -4,7 +4,7 @@ import { useRoute } from '@react-navigation/native';
 import colors from '../Colors/colors';
 import StepIndicator from 'react-native-step-indicator';
 import FowardButton from '../Components/FowardButton';
-import {doc,setDoc,updateDoc} from 'firebase/firestore';
+import {doc,setDoc,collection,addDoc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
 import { useState,useEffect } from 'react';
 import { Authentication } from '../Config/firebase';
@@ -45,6 +45,9 @@ function Bookingpage3({navigation}) {
   const [course,setCourse] = useState([]);
   const [price,setPrice] = useState("");
   const [timeTaken,setTimeTaken] = useState("");
+  const [timeStamp,setTimeStamp] = useState(new Date());
+  const [added,setAdded] = useState({});
+
 
   useEffect(() => {
     setData();
@@ -56,10 +59,23 @@ function Bookingpage3({navigation}) {
     setTime(route.params.paramKey);
     setPrice(route.params.paramPrice);
     setTimeTaken(route.params.paramTotalTimeTaken);
+    setTimeStamp(route.params.paramTimeStamp);
+    setAdded(route.params.paramAdded);
   }
 
+  const AddData2 = async (time,course,timeTaken, price,uid) => {
 
-  const AddData = async (date,time,course,timeTaken, price) => {
+    const docRef = await addDoc(collection(database, "Booking_Appointment", uid), {
+      date:time,
+      course:course,
+      timeTaken:timeTaken,
+      price: price,
+      id: uid,
+      appointmentCreated:true,
+    });
+  };
+
+  /*const AddData = async (date,time,course,timeTaken, price) => {
     
     const Ref = doc(database, "Booking_User",user);
     const data = {
@@ -69,20 +85,14 @@ function Bookingpage3({navigation}) {
       timeTaken:timeTaken,
       price: price,
       appointmentCreated:true,
-      AppointmentDetail:
-      [{course:course,
-        date:date,
-        time: time,
-        course:course,
-        timeTaken:timeTaken,
-        price: price}]
     };
   
     await setDoc(Ref, data,{merge:true})
-  };
+  };*/
 
   const BookingHandle = () =>{
     AddData(date,time,course,timeTaken,price);
+    AddData2(date,time,course,price,timeTaken,timeStamp);
     navigation.navigate('Booking4');
   }
 
@@ -124,6 +134,7 @@ function Bookingpage3({navigation}) {
               <Text style = {styles.Header2}>Time</Text>
               <Text style = {styles.Text1}>{route.params.paramKey}</Text>
             </View>
+            <Text>{route.params.paramAdded}</Text>
           </View>
           <FowardButton title = 'CONTINUE' onPress={() => BookingHandle()}/>
           <View style = {styles.TabNavSpace}/>
