@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,ScrollView, Modal,SectionList,Linking} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,FlatList, Modal,Linking} from 'react-native';
 import colors from '../Colors/colors';
 import { signOut } from 'firebase/auth';
 import { Authentication } from '../Config/firebase';
-import {getDoc,doc,collection,getDocs,query,where} from 'firebase/firestore';
+import {getDoc,doc,collection,getDocs,query,where,docs} from 'firebase/firestore';
+import Entypo from 'react-native-vector-icons/Entypo';
 import { database } from '../Config/firebase';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -39,68 +40,62 @@ const AppointmentModal = ({visible,children}) =>{
 function Profilepage({route}) {
 
   const user = Authentication.currentUser?.uid
-  const test = Authentication.currentUser;
 
   useEffect(() => {
     GetUser(user);
+    GetAppointment(user);
   },[])
 
 
   const [name, setName] = useState("");
-  const [email,setEmail] = useState("");
-  const [date,setDate] = useState("");
   const [time,setTime] = useState("");
-  const [course,setCourse] = useState([]);
-  const [price,setPrice] = useState("");
-  const [timeTaken,setTimeTaken] = useState("");
+  const [course,setCourse] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [appointmentCreated, setAppointmentCreated] = useState(false);
 
-  const GetUser2 = async ()=>{
-    const list = []
-    const Ref = collection(database, "Booking_User");
+  const collectIdsAndDocs = (doc) => {
+    return {id: doc.id, ...doc.data()};
+  };
+
+  const GetAppointment = async (userID)=>{
+    const Ref = collection(database, "Booking_Appointment");
     
     // Create a query against the collection.
-    const q = query(Ref, where("email", "==", email));
+    const q = query(Ref, where("id", "==", userID));
     
     const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach((doc) => {
-      list.push(doc.data().course),
-      list.push(doc.data().date)
-    })
+    const list = querySnapshot.docs.map(collectIdsAndDocs);
     
-    setTest(list);
-    console.log(test);
+    setCourse(list);
     }
   
   const GetUser = async(user) => {
 
     const Ref = doc(database, "Booking_User",user);
-    //SetData is wrong use an if statement
     const docSnap = await getDoc(Ref);
 
     const data = docSnap.exists() ? docSnap.data() : null
     if (data === null || data === undefined) return null
     const ac = data.appointmentCreated;
 
-    if (data.appointmentCreated == true){
     setName(data.name);
-    setEmail(data.email);
-    setDate(data.date);
-    setTime(data.time);
-    setCourse(data.course);
-    console.log(data.AppointmentDetail)
-    setPrice(data.price);
-    setTimeTaken(data.timeTaken);
-    setAppointmentCreated(true)
-    }
-    else
-    {
-      setName(data.name)
-      setAppointmentCreated(false);
-    }
   }
+
+  const renderItem = ({item}) => (
+    <View style = {styles.courseContainer}>
+      <View style = {styles.courseHeader}>
+      <Text style = {styles.HeaderText}>Course: {item.course}</Text>
+      <View style = {styles.time}>
+        <Entypo name = 'clock' size = {16} color = {'#828282'}/>
+        <Text style = {styles.TimeText}>{item.date} min</Text>
+        <Text style = {styles.TimeText}>{item.timeTaken} min</Text>
+      </View>
+      </View>
+      <View style = {styles.courseSubContainer}>
+      <Text style = {styles.priceText}>Price: {item.price} yen</Text>
+      </View>
+      <TouchableOpacity onPress = {()=> cancelAppointmentHandler()}style = {styles.CancelAppointment}><Text style = {styles.ModalTextStyle3}> Cancel Appointment </Text></TouchableOpacity>
+    </View>
+  );
 
    const logout =() =>
    {
@@ -157,23 +152,16 @@ function Profilepage({route}) {
               <MaterialIcons name = 'close' size = {24} color = {colors.icon_dark} />
               </TouchableOpacity>
               </View>
-              {(appointmentCreated == true)? 
+              {(course != null)? 
               <View style = {styles.ApoointmentSubWrapper}>
-                <View style = {styles.DateTimeWrapper}>
-                <Text style = {styles.ModalTextStyle}>Date: {date}</Text>
-                <Text style = {styles.ModalTextStyle}>Time: {time}</Text>
-              </View>
-
-              <View style = {styles.TimePriceWrapper}>
-                <Text style = {styles.ModalTextStyle2} >Price: ${price}</Text>
-                <Text style = {styles.ModalTextStyle2} >Aprox. Time: {timeTaken} min.</Text>
-              </View>
-
-              <Text style = {styles.CourseHeaderWrapper}>Course</Text>
-              { course.map((item, key)=>(
-              <Text key={key} style={styles.CourseTextStyle}> {item} </Text>)
-              )}
-              <TouchableOpacity onPress = {()=> cancelAppointmentHandler()}style = {styles.CancelAppointment}><Text style = {styles.ModalTextStyle3}> Cancel Appointment </Text></TouchableOpacity>
+                <FlatList
+                  style = {styles.FlatList} 
+                  data={course}
+                  renderItem={renderItem}
+                  horizontal = {true}
+                  keyExtractor={(item) => item.id}
+                  showsVerticalScrollIndicator = {false}
+                  />
           </View>  : (<View style = {styles.NoAppWrapper}><Text style = {styles.NoAppText}> No Appointment Booked </Text></View>)
           }
             </View>
@@ -323,35 +311,18 @@ const styles = StyleSheet.create
     fontSize:16,
     color: colors.icon_dark,
   },
-  DateTimeWrapper:{
-    justifyContent: 'space-between',
-    flexDirection:'column',
-    paddingVertical: 10,
+  courseContainer:
+  {
+    flexDirection: 'column',
+    paddingVertical:'5%',
+    padding:'2%',
   },
-  CourseTextStyle:{
-    fontSize : 16,
-    textAlign: 'left',
-    paddingVertical:2,
-    color: "#371D10"
-  },
-  ModalTextStyle2:{
-    color:"#371D1090",
-    fontSize:16
-  },
-  TimePriceWrapper:{
-    flexDirection:'column',
-    paddingBottom:10,
-  },
+
   CourseHeaderWrapper:{
     paddingTop:5,
     paddingBottom:3,
     fontSize: 20, 
     color:"#371D10",
-  },
-  ModalTextStyle:{
-    fontSize: 20, 
-    color:"#371D10",
-    paddingVertical:2,
   },
   PopUpHeader:{
     marginBottom:'5%',
@@ -398,7 +369,7 @@ const styles = StyleSheet.create
     fontSize:16,
     color:'#66554190',
     textDecorationLine:'underline'    
-  }
+  },
 })
 
 export default Profilepage;

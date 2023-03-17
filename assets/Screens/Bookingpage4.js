@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Text,View, StyleSheet,SafeAreaView,Image,StatusBar} from 'react-native';
 import colors from '../Colors/colors';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import FowardButton from '../Components/FowardButton';
 import useFonts from '../Hooks/useFonts';
+import Button from '../Components/CustomButton';
 
 function Bookingpage4({navigation}) {
 
@@ -18,8 +18,8 @@ function Bookingpage4({navigation}) {
             <Text style = {styles.Text1}>Check your profile for booking details. Contact xxx-xxx-xxxx for any enquiries, more details on contact page.</Text>
           </View>
 
-          <View style ={styles.FowardButton}>
-              <FowardButton title = 'CONTINUE' onPress={() => navigation.navigate('Tab')}/>
+          <View style ={styles.Button}>
+              <Button title = 'CONTINUE' backgroundColor = {colors.secondary_green} fontFamilly = {"Poppins-SemiBold"} onPress={() => navigation.navigate('Tab')}/>
           </View>
       </SafeAreaView>
     </View>
@@ -60,9 +60,10 @@ const styles = StyleSheet.create
     color: colors.text_brown,
     marginTop:7,
   },
-  FowardButton:
+  Button:
   {
     marginTop:'40%',
+    alignItems:'center',
   }
 })
 

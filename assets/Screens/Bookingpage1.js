@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,ScrollView,FlatList} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,FlatList} from 'react-native';
 import colors from '../Colors/colors';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import StepIndicator from 'react-native-step-indicator';
-import FowardButton from '../Components/FowardButton';
-import {doc, updateDoc,collection,getDocs} from 'firebase/firestore';
+import {collection,getDocs} from 'firebase/firestore';
+import Button from '../Components/CustomButton';
 import { database } from '../Config/firebase';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useFonts from '../Hooks/useFonts';
@@ -35,33 +35,21 @@ const customStyles = {
   currentStepLabelColor: colors.secondary_green
 }
 
- async function IsAdded(id,a)
- {
-  const Ref = doc(database, "Booking_Course", id);          
-  await updateDoc(Ref, {
-    isAdded: a
-  });
- }
-
 const labels = ["Menu","Date","Confirmation"];
 
 function Bookingpage1({navigation}) {
 
   const [course,setCourse] = useState([]);
   const [refreshing, setRefreshing] = useState(true);
-  const [state,setState] = useState(false)
   const [buttons, setButtons] = useState(course.reduce((obj, item) => ({...obj, [item.id]: false}), {}));
-  const [added, setAdded] = useState([]);
 
   const handleButtonPress = (id) => {
     setButtons({...buttons, [id]: !buttons[id]});
-    console.log(buttons);
-    IsAdded(id,!buttons[id]);
   }
 
   useEffect(() => {
     if(refreshing){
-    GetUser();
+    GetCourse();
     setRefreshing(false);
     }
   },[refreshing])
@@ -83,7 +71,7 @@ function Bookingpage1({navigation}) {
       <View style = {styles.courseSubContainer}>
       <Text style = {styles.priceText}>Price: {item.price} yen</Text>
       <TouchableOpacity style={[styles.button, { backgroundColor: buttons   [item.id] ? colors.secondary_green : '#828282'}]}
-        onPress={() => handleButtonPress(item.id)}>
+        onPress={() => {handleButtonPress(item.id)}}>
 
         {buttons[item.id] ? <Ionicons name = 'ios-checkmark-sharp' size = {16} color = {colors.background}/>:<Ionicons name = 'ios-add-sharp' size = {16} color = {colors.background}/>}
         <Text style={[styles.buttonText, {color: buttons[item.id] ? colors.background:colors.background}]}>{buttons[item.id] ? 'Added' : 'Add'}</Text>
@@ -108,7 +96,7 @@ function Bookingpage1({navigation}) {
     return {id: doc.id, ...doc.data()};
   };
 
-  const GetUser = async() => {
+  const GetCourse = async() => {
 
     const Ref = collection(database, "Booking_Course");
 
@@ -139,7 +127,9 @@ function Bookingpage1({navigation}) {
           ItemSeparatorComponent={ItemDivider}
           showsVerticalScrollIndicator = {false}
           />
-            <FowardButton title = 'CONTINUE' onPress={() => (navigation.navigate('Booking2',{paramAdded:added}))}/>
+          <View style = {styles.ContinueButton}>
+          <Button onPress ={() => (navigation.navigate('Booking2',{paramAdded:buttons}))} title = 'CONTINUE' backgroundColor = {colors.secondary_green} fontFamilly = {"Poppins-SemiBold"}></Button>
+          </View>
           </View>
       </SafeAreaView>
     </View>
@@ -152,8 +142,6 @@ const styles = StyleSheet.create
   {
     paddingVertical: '8%',
     paddingHorizontal:'5%',
-    borderBottomWidth:1,
-    borderBottomColor: '#B0B0B0'
   },
   Container: 
   {
@@ -211,7 +199,7 @@ const styles = StyleSheet.create
   },
   FlatList:
   {
-    height:'75%',
+    height:'67%',
     borderRadius:'8'
   },
   button: {
@@ -230,6 +218,11 @@ const styles = StyleSheet.create
   },
   mainButton:{
     position:'absolute',
+  },
+  ContinueButton:
+  {
+    alignItems:'center',
+    marginTop:'3%'
   }
 
 })

@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView, ScrollView} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView, FlatList} from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import colors from '../Colors/colors';
 import StepIndicator from 'react-native-step-indicator';
-import FowardButton from '../Components/FowardButton';
-import {doc,setDoc,collection,addDoc} from 'firebase/firestore';
+import {collection,addDoc,Timestamp,doc,getDoc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
 import { useState,useEffect } from 'react';
+import Button from '../Components/CustomButton';
 import { Authentication } from '../Config/firebase';
 
 const customStyles = {
@@ -38,68 +38,69 @@ const labels = ["Menu","Date","Confirmation"];
 function Bookingpage3({navigation}) {
 
   const route = useRoute();
-  const user = Authentication.currentUser?.uid
-
-  const [date,setDate] = useState("");
-  const [time,setTime] = useState("");
   const [course,setCourse] = useState([]);
-  const [price,setPrice] = useState("");
-  const [timeTaken,setTimeTaken] = useState("");
-  const [timeStamp,setTimeStamp] = useState(new Date());
-  const [added,setAdded] = useState({});
+  const [time,setTime] = useState(null);
+  const [price,setPrice] = useState(null);
+  const timeStamp = route.params.paramTimeStamp;
+
+  const user = Authentication.currentUser?.uid;
+
+  const courseMap = route.params.paramAdded;
 
 
   useEffect(() => {
-    setData();
+    GetCourse();
   },[])
 
-  const setData = () => {
-    setDate(route.params.paramDate);
-    setCourse(route.params.paramCourse);
-    setTime(route.params.paramKey);
-    setPrice(route.params.paramPrice);
-    setTimeTaken(route.params.paramTotalTimeTaken);
-    setTimeStamp(route.params.paramTimeStamp);
-    setAdded(route.params.paramAdded);
+  const GetCourse = async () =>{
+
+    const list = [];
+    let totalPrice = 0;
+    let totalTime = 0;  
+
+    for (const key in courseMap) {
+      if (courseMap[key] === true) {
+        const Ref = doc(database, "Booking_Course", key);
+        const docSnap = await getDoc(Ref);
+        list.push(docSnap.data().Course_name);
+        totalPrice += docSnap.data().price;
+        totalTime += docSnap.data().time;
+        }
+      }
+    setCourse(list);
+    setTime(totalTime);
+    setPrice(totalPrice);
   }
 
-  const AddData2 = async (time,course,timeTaken, price,uid) => {
+  const AddData2 = async () => {
 
-    const docRef = await addDoc(collection(database, "Booking_Appointment", uid), {
-      date:time,
-      course:course,
-      timeTaken:timeTaken,
-      price: price,
-      id: uid,
-      appointmentCreated:true,
-    });
+      const docRef = await addDoc(collection(database, "Booking_Appointment"), {
+        date:timeStamp,
+        course:course,
+        timeTaken:time,
+        price: price,
+        id: user,
+        appointmentCreated:true,
+      });
+
   };
 
-  /*const AddData = async (date,time,course,timeTaken, price) => {
-    
-    const Ref = doc(database, "Booking_User",user);
-    const data = {
-      date: date,
-      time: time,
-      course:course,
-      timeTaken:timeTaken,
-      price: price,
-      appointmentCreated:true,
-    };
-  
-    await setDoc(Ref, data,{merge:true})
-  };*/
+  const renderItem = ({ item }) => (
+    <View style = {styles.courseContainer}>
+      <View style = {styles.courseHeader}>
+        <Text style = {styles.courseText}>{item}</Text>
+      </View>
+    </View>
+  );
 
   const BookingHandle = () =>{
-    AddData(date,time,course,timeTaken,price);
-    AddData2(date,time,course,price,timeTaken,timeStamp);
+    AddData2();
     navigation.navigate('Booking4');
   }
 
   return (
     <View style = {styles.Container}>
       <SafeAreaView>
-        <ScrollView>
           <View style = {styles.stepIndicator}>
           <StepIndicator customStyles={customStyles}
           currentPosition = {2}
@@ -107,16 +108,21 @@ function Bookingpage3({navigation}) {
           stepCount = {3}/>
           </View>
 
-          <View style = {styles.Container1}>
+          <View style = {styles.DetailContainer}>
             <View style = {styles.ContainerHeader}>
               <Text style = {styles.Header}>Booking Details</Text>
             </View>
             <View style = {styles.ContainerElement}>
-              <Text style = {styles.Header2}>Selected Course</Text>
-              {course.map((item, key)=>(
-              <Text key={key} style={styles.Text1}> {item} </Text>))}
-              <Text style = {styles.Text1}>Total Price: {route.params.paramPrice} </Text>
-              <Text style = {styles.Text1}>Time Taken: {route.params.paramTotalTimeTaken} </Text>
+              <Text style = {styles.Header2}>Selected Course</Text>   
+              <FlatList
+              style = {styles.FlatList} 
+              data={course}
+              renderItem={renderItem}
+              horizontal = {true}
+              showsVerticalScrollIndicator = {false}
+              />
+              <Text style = {styles.Text1}>Total Price: {price} yen </Text>
+              <Text style = {styles.Text1}>Time Taken: {time} </Text>
             </View>
             <View style = {styles.ContainerElement}>
               <Text style = {styles.Header2}>Name</Text>
@@ -134,11 +140,11 @@ function Bookingpage3({navigation}) {
               <Text style = {styles.Header2}>Time</Text>
               <Text style = {styles.Text1}>{route.params.paramKey}</Text>
             </View>
-            <Text>{route.params.paramAdded}</Text>
           </View>
-          <FowardButton title = 'CONTINUE' onPress={() => BookingHandle()}/>
-          <View style = {styles.TabNavSpace}/>
-          </ScrollView>
+          <View style = {styles.Button}>
+          <Button onPress ={()=> BookingHandle()} title = 'CONFIRM' backgroundColor = {colors.secondary_green} fontFamilly = {"Poppins-SemiBold"}>
+          </Button>
+          </View>
       </SafeAreaView>
     </View>
   );
@@ -150,57 +156,76 @@ const styles = StyleSheet.create
   {
     paddingVertical: '8%',
     paddingHorizontal:'5%',
-    borderBottomWidth:1,
-    borderBottomColor: '#B0B0B0'
   },
   Container: 
   {
-    flex:1
+    flex:1,
   },
   TabNavSpace: 
   {
     paddingVertical:20,
   },
-  Container1: 
+  PositionContainer:
   {
-    marginVertical: 15,
-    marginHorizontal:12,
-    backgroundColor: colors.secondary_green,
-    paddingTop: 30,
-    paddingHorizontal:28,
+    justifyContent:'space-between',
+    flexDirection:'column'
+  },
+  DetailContainer: 
+  {
+    marginHorizontal:40,
     borderRadius:8,
+    marginBottom:'5%',
+
   },
   Header:
   {
     fontFamily:'Merriweather-Bold',
     fontSize:24,
     fontWeight:'bold',
-    color: colors.text_white
+    color: colors.text_brown
   },
   ContainerHeader:
   {
     marginBottom:28,
-    borderBottomWidth:1,
-    borderColor: '#FFFFFF80'
   },
   Header2:
   {
     fontFamily:'Merriweather-Bold',
-    fontSize:20,
+    fontSize:18,
     fontWeight:'bold',
-    color: colors.text_white
+    color: colors.text_brown
   },
   Text1:
   {
-    fontFamily:'Poppins-Regular',
-    fontSize:18,
-    color: colors.text_white,
+    fontFamily:'Poppins-Medium',
+    fontSize:15,
+    color: "#181A18",
     marginTop:7,
   },
   ContainerElement: 
   {
     marginBottom: 24,
+  },
+  courseContainer:
+  {
+    marginVertical:'15%',
+    paddingVertical:'15%',
+    paddingHorizontal:'10%',
+  },
+  courseHeader:
+  {
+    flexDirection: 'row',
+  },
+  courseText:
+  {
+    fontFamily:'Poppins-Medium',
+    fontSize:14
+  },
+  Button:
+  {
+    alignItems:'center',
   }
+
 })
 
 export default Bookingpage3

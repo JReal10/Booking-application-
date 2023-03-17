@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView, ScrollView,Modal} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView, ScrollView,Modal,Button} from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
-import FowardButton from '../Components/FowardButton';
+import CButton from '../Components/CustomButton';
 import { Calendar } from 'react-native-calendars';
 import colors from '../Colors/colors';
-import Time from '../Components/Time';
 import { useEffect } from 'react';
 import {doc,getDocs,collection,where,query,getDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
@@ -50,51 +49,39 @@ const getMarkedDates = (date) => {
 function Bookingpage2({navigation}) {
 
   const [date,setDate] = useState(new Date());
-  const [time,setTime] = useState("");
-  const [course,setCourse] = useState("");
   const [name, setName] = useState("");
   const [email,setEmail] = useState("");
   const [timestamp,setTimeStamp] = useState(new Date());
   const [showTime,setShowTime] = useState(false);
-  const [price,setPrice] = useState([]);
-  const [timeTaken,setTimeTaken] = useState([]);
+  const [selectedTime, setSelectedTime] = useState("");
+  const AVAILABLE_TIMES = ['8:00','10:00', '12:00', '14:00', '16:00', '18:00'];
+  const [availableTimes, setAvailableTimes] = useState(
+    AVAILABLE_TIMES.reduce((obj, time) => {
+      obj[time] = false;
+      return obj;
+    }, {})
+  );
   
   const currentDate = new Date();
   const user = Authentication.currentUser?.uid
   const route = useRoute();
 
-  const GetTotalTimeAndPrice = (data)=>{
-    const TotalValue = (data.reduce((a,v) =>  a = a + v, 0 ));
-    return TotalValue;
-  }
-
   useEffect(() => {
-    console.log(route.params.paramAdded)
-    GetCourse();
     GetUser();
   },[])
-
-  const GetCourse = async ()=>{
-    const a = [];
-    const price = [];
-    const TimeTaken = [];
-    const Ref = collection(database, "Booking_Course");
-    
-    // Create a query against the collection.
-    const q = query(Ref, where("isAdded", "==", true));
-    
-    const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach((doc) => {
-      a.push(doc.data().Course_name),
-      price.push(doc.data().price),
-      TimeTaken.push(doc.data().time)
-    })
-
-    setCourse(a);
-    setPrice(price);
-    setTimeTaken(TimeTaken);
-    }
+  
+  const handleToggle = (time) => {
+    console.log(timestamp);
+    const updatedTimes = { ...availableTimes };
+    Object.keys(updatedTimes).forEach((key) => {
+      if (key !== time) {
+        updatedTimes[key] = false;
+      }
+    });
+    updatedTimes[time] = !availableTimes[time];
+    setAvailableTimes(updatedTimes);
+    setSelectedTime(updatedTimes[time] ? time : '');
+  };
 
   const GetUser = async() => {
 
@@ -108,9 +95,7 @@ function Bookingpage2({navigation}) {
   }
 
   const BookingHandle = () =>{
-    const TotalPrice = GetTotalTimeAndPrice(price);
-    const TotalTimeTaken = GetTotalTimeAndPrice(timeTaken);
-    navigation.navigate('Booking3',{paramKey:time, paramDate:date, paramCourse:course, paramPrice: TotalPrice, paramTotalTimeTaken: TotalTimeTaken, paramName:name,paramEmail:email,paramUID: user,paramTimeStamp: timestamp, paramAdded: route.params.paramButton});
+    navigation.navigate('Booking3',{paramKey:selectedTime, paramDate:date, paramName:name,paramEmail:email,paramTimeStamp: timestamp, paramAdded: route.params.paramAdded});
   }
 
 
@@ -133,7 +118,6 @@ function Bookingpage2({navigation}) {
           }}
           // Handler which gets executed on day long press. Default = undefined
           minDate = {currentDate}
-
           markedDates={
             getMarkedDates(date)
           }
@@ -155,8 +139,35 @@ function Bookingpage2({navigation}) {
           hideExtraDays={true}
           enableSwipeMonths={true} 
           />
-          {showTime ? <Time changeTime = {time => setTime(time)}/> : null}
-          <FowardButton title = 'CONTINUE' onPress={() => BookingHandle()}/>
+          {showTime && ( 
+          <View>
+          <Text style = {styles.AvailableTime}>Select available time for date:</Text>
+          <View style={styles.buttonContainer}>
+            {AVAILABLE_TIMES.map((time) => (
+              
+              <View style = {{width:'33%', marginBottom:'2%'}}>
+                  <Button
+                    key={time}
+                    title={time}
+                    onPress={() => handleToggle(time)}
+                    color={availableTimes[time] ? colors.secondary_green : colors.icon_dark}
+                  />
+              </View>
+            ))}
+            </View>
+            </View>)}
+            {selectedTime && (
+              <Text style={styles.selectedTime}>
+                You have selected {selectedTime}
+              </Text>
+            )}
+            {selectedTime && (
+              <View style = {styles.customButton}>
+              <CButton onPress ={()=> BookingHandle()} title = 'CONFIRM' backgroundColor = {colors.secondary_green} fontFamilly = {"Poppins-SemiBold"}></CButton>
+              </View>
+            )}
+
+
           <View style = {styles.TabNavSpace}/>
           </ScrollView>
       </SafeAreaView>
@@ -170,8 +181,6 @@ const styles = StyleSheet.create
   {
     paddingVertical: '8%',
     paddingHorizontal:'5%',
-    borderBottomWidth:1,
-    borderBottomColor: '#B0B0B0'
   },
   Container: 
   {
@@ -183,20 +192,29 @@ const styles = StyleSheet.create
     paddingHorizontal:12,
     fontSize: 16,
     color: colors.text_brown,
-    paddingVertical: 25,
+    paddingVertical: '3%',
     fontWeight: 'bold'
 
   },
-  ButtonContainer: 
-  {
+  buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    paddingBottom:20,
+    flexWrap:'wrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
   },
-  TabNavSpace: 
+  selectedTime: {
+    marginVertical: '5%',
+    fontWeight: 'bold',
+    paddingHorizontal:12,
+    fontSize: 14,
+    color: colors.text_brown,
+  },
+  customButton:
   {
-    paddingVertical:40,
+    alignItems:'center'
   }
+
 })
 
 export default Bookingpage2
