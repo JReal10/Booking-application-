@@ -4,11 +4,12 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import colors from '../Colors/colors';
 import AppLoading from 'expo-app-loading';
 import useFonts from '../Hooks/useFonts';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
 function HomeScreen({navigation}){
 
   const [IsReady, SetIsReady] = useState(false);
+
 
   const FetchFonts = async () => {
     await useFonts();
