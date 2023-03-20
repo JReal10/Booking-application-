@@ -42,11 +42,8 @@ function Bookingpage3({navigation}) {
   const [time,setTime] = useState(null);
   const [price,setPrice] = useState(null);
   const timeStamp = route.params.paramTimeStamp;
-
   const user = Authentication.currentUser?.uid;
-
   const courseMap = route.params.paramAdded;
-
 
   useEffect(() => {
     GetCourse();
@@ -75,12 +72,12 @@ function Bookingpage3({navigation}) {
   const AddData2 = async () => {
 
       const docRef = await addDoc(collection(database, "Booking_Appointment"), {
-        date:timeStamp,
+        date:route.params.paramDate,
+        time:route.params.paramKey,
         course:course,
         timeTaken:time,
         price: price,
-        id: user,
-        appointmentCreated:true,
+        uid: user,
       });
 
   };
@@ -118,11 +115,10 @@ function Bookingpage3({navigation}) {
               style = {styles.FlatList} 
               data={course}
               renderItem={renderItem}
-              horizontal = {true}
               showsVerticalScrollIndicator = {false}
               />
               <Text style = {styles.Text1}>Total Price: {price} yen </Text>
-              <Text style = {styles.Text1}>Time Taken: {time} </Text>
+              <Text style = {styles.Text1}>Time Taken: {time} min </Text>
             </View>
             <View style = {styles.ContainerElement}>
               <Text style = {styles.Header2}>Name</Text>
@@ -208,13 +204,8 @@ const styles = StyleSheet.create
   },
   courseContainer:
   {
-    marginVertical:'15%',
-    paddingVertical:'15%',
-    paddingHorizontal:'10%',
-  },
-  courseHeader:
-  {
-    flexDirection: 'row',
+    paddingVertical:'2%',
+    paddingHorizontal:'2%'
   },
   courseText:
   {

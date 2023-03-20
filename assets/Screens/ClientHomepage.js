@@ -9,9 +9,11 @@ import { useState,useEffect }from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 
 
-function ClientHomeage({navigation}){
+function ClientHomeage({}){
 
-  const [appointment,setAppointment] = useState([]);
+  const [appointment,setAppointment] = useState("");
+  const [AppointmentFuture, setApointmentFuture] = useState("");
+  const [AppointmentToday, setApointmentToday] = useState("");
   const [refreshing, setRefreshing] = useState(true);
   const [appoAvailable,setAppoAvailable] = useState(true);
   const [appoTodayAvailable,setAppoTodayAvailable] = useState(true);
@@ -19,27 +21,33 @@ function ClientHomeage({navigation}){
 
 
   useEffect(() => {
-    if(refreshing){
     GetAppointment();
-    setRefreshing(false);
-    }
-  },[refreshing])
+    //setRefreshing(false);
+    GetAllAppointment();
+  },[])
 
   const deleteAppointment = async(id)=>{
-    await deleteDoc(doc(database, "Booking_Course", id));
+    await deleteDoc(doc(database, "Booking_Appointment", id));
     setRefreshing(true);
   }
 
   const renderItem = ({ item }) => (
     <View style = {styles.itemContainer}>
-      <Text style = {styles.itemHeader}>Course: {item.Course_name}</Text>
-      <Text style = {styles.itemTextStyle}>Description: {item.Description}</Text>
-      <Text style = {styles.itemTextStyle}>Time: {item.time} min</Text>
-      <Text style = {styles.itemTextStyle}>Price: {item.price} yen</Text>
-      <TouchableOpacity onPress={()=>(deleteMenu(item.id))}>
+        <Text style = {styles.courseHeader}>COURSE:</Text>
+        <View>
+        {(item.course).map(item => (
+        <Text style ={styles.courseText} key={item}> {item}</Text>
+        ))}
+      </View>
+      <View style = {styles.courseDetailContainer}>
+      <Text style = {styles.courseDetailText}>Date&Time: {item.date}</Text>
+      </View>
+      <Text style = {styles.courseDetailText}>Price: {item.price} yen</Text>
+      
+      <TouchableOpacity onPress={()=>{(deleteAppointment(item.id)),    setRefreshing(false)}}>
       <View style = {styles.deleteContainer}>
       <Entypo name = 'cross' size = {20} color = {colors.text_white} />
-      <Text style = {styles.itemDeleteStyle}>Delete course</Text>
+      <Text style = {styles.itemDeleteStyle}>Delete Appointment</Text>
       </View> 
       </TouchableOpacity>
     </View>
@@ -52,14 +60,41 @@ function ClientHomeage({navigation}){
 
   const GetAppointment = async() => {
 
-    const Ref = collection(database, "Booking_Course");
+    const Ref = collection(database, "Booking_Appointment");
 
     //SetData is wrong use an if statement
     const docSnap = await getDocs(Ref);
     const list = docSnap.docs.map(collectIdsAndDocs);
 
     setAppointment(list);
-    console.log(list);
+  }
+
+  const GetAllAppointment = async ()=>{
+
+    const FutureApp = []
+    const TodayApp = []
+    // get the current date
+    const today = new Date();
+
+    // compare the date parts of the two Date objects
+
+    for (let i = 0; i < appointment.length; i++) {
+      const item = appointment[i];
+      const DATE = item.date + "T" + item.time + ":00"; 
+      const newDATE = new Date(DATE);
+
+      const isToday = newDATE.getDate() === today.getDate() &&
+      newDATE.getMonth() === today.getMonth() &&
+      newDATE.getFullYear() === today.getFullYear();
+
+      if (isToday){
+        TodayApp.push(item)
+      }else{
+        FutureApp.push(item)
+      }
+    }
+    setApointmentFuture(FutureApp);
+    setApointmentToday(TodayApp);
   }
 
   const FetchFonts = async () => {
@@ -82,19 +117,17 @@ function ClientHomeage({navigation}){
         <StatusBar barStyle={'dark-content'}></StatusBar>
         <View>
           <View style = {styles.appoContainer}>
-          <View style = {styles.headerWrapper}>
+          <View>
           <Text style = {styles.headerStyle}>Today's Appointments</Text>
           </View>
           {
-          (appoAvailable == true)?
+          (AppointmentToday != "")?
           (<View style = {styles.AppointmentView2}>
           <FlatList
           style= {styles.FlatList}
-          data={appointment}
+          data={AppointmentToday}
           renderItem={renderItem}
           keyExtractor={(item) => item.key}
-          extraData={appointment}
-          horizontal={true}
           />
           </View>):
           <View style = {styles.subTextWrapper}>
@@ -105,26 +138,19 @@ function ClientHomeage({navigation}){
           <Text style = {styles.headerStyle}>Future Appointments</Text>
           </View>
           {
-          (appoAvailable == true)?(
+          (AppointmentFuture != "")?(
           <View style={styles.AppointmentView}>
           <FlatList
           style= {styles.FlatList}
-          data={appointment}
+          data={AppointmentFuture}
           renderItem={renderItem}
           keyExtractor={(item) => item.key}
-          extraData={appointment}
           />
           </View>):
           <View style = {styles.subTextWrapper}>
-            <Text style = {styles.subTextStyle}>There are no appointments</Text>
+            <Text style = {styles.subTextStyle}>There are no future appointments</Text>
           </View>
           }
-          <View style = {styles.headerWrapper2}>
-          <Text style = {styles.headerStyle}>Energy Consumption</Text>
-          </View>
-          <View style = {styles.headerWrapper2}>
-          <Text style = {styles.headerStyle}>Revenue</Text>
-          </View>
           </View>
         </View>
       </SafeAreaView>
@@ -174,27 +200,12 @@ const styles = StyleSheet.create
     alignItems:'center',
     paddingVertical:'5%'
   },
-  itemTextStyle:
-  {
-    fontSize:'15',
-    paddingBottom:'1%',
-    fontFamily:'Merriweather-Regular',
-    color:colors.text_white,
-    opacity:'0.8'
-  },
   itemContainer:
   {
     marginVertical:'1%',
     padding:'2%',
     borderRadius:8,
     backgroundColor:colors.primary_brown
-  },
-  itemHeader:
-  {
-    color:colors.text_brown,
-    fontFamily:'Poppins-Medium',
-    fontSize:'16',
-    paddingBottom:'2%'
   },
   itemDeleteStyle:
   {
@@ -217,12 +228,52 @@ const styles = StyleSheet.create
   },
   AppointmentView2:
   {
-    marginVertical:'5%'
+    marginVertical:'5%',
+    height:'30%',
   },
   FlatList:
   {
     borderRadius:8
-  }
+  },
+  HeaderText: 
+  {
+    fontFamily:'Merriweather-Regular',
+    fontSize: 16,
+    color: colors.text_brown,
+  },
+  courseText:{
+    fontFamily:'Poppins-Regular',
+    fontSize: 16,
+    color: '#626262'
+  },
+  courseSubText:
+  {
+    fontFamily:'Poppins-Regular',
+    fontSize: 16,
+    color: '#626262'
+
+  },
+  courseDetailText:{
+    fontFamily:'Poppins-Regular',
+    fontSize: 14,
+    color: '#626262',
+    paddingVertical:'1%'
+  },
+  courseDetailContainer:{
+    paddingVertical:'3%'
+  },
+  courseContainer:
+  {
+    flexDirection: 'column',
+    paddingVertical:'2%',
+    padding:'2%',
+  },
+  courseHeader:
+  {
+    fontFamily:'Poppins-Regular',
+    fontSize: 18,
+    color: '#626262'
+  },
 })
 
 

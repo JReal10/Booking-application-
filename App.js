@@ -49,7 +49,7 @@ function RootNavigator()
   }
     return (
       <NavigationContainer>
-       {(user && uid != 'HGQyTSjcj1VtfVlIq0rak6qT6402') ? <StackNavigator/> :(user && uid == 'HGQyTSjcj1VtfVlIq0rak6qT6402') ? <ClientStack/> : <AuthStack/>} 
+       {(user && uid != 'DmkZbAIep7Sv3o990gcMz2rDMep2') ? <StackNavigator/> :(user && uid == 'DmkZbAIep7Sv3o990gcMz2rDMep2') ? <ClientStack/> : <AuthStack/>} 
       </NavigationContainer>
     )
   }

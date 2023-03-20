@@ -3,13 +3,13 @@ import { Text,View, StyleSheet,SafeAreaView,FlatList, Modal,Linking} from 'react
 import colors from '../Colors/colors';
 import { signOut } from 'firebase/auth';
 import { Authentication } from '../Config/firebase';
-import {getDoc,doc,collection,getDocs,query,where,docs} from 'firebase/firestore';
-import Entypo from 'react-native-vector-icons/Entypo';
+import {getDoc,doc,collection,getDocs,query,where,deleteDoc} from 'firebase/firestore';
 import { database } from '../Config/firebase';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState,useEffect } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useFonts } from 'expo-font';
 
 const AppointmentModal = ({visible,children}) =>{
   const [showModal,setShowModal] = useState(visible);
@@ -40,16 +40,18 @@ const AppointmentModal = ({visible,children}) =>{
 function Profilepage({route}) {
 
   const user = Authentication.currentUser?.uid
+  const [refreshing, setRefreshing] = useState(true);
 
   useEffect(() => {
+    if(refreshing){
     GetUser(user);
     GetAppointment(user);
-  },[])
-
+    setRefreshing(false);
+    }
+  },[refreshing])
 
   const [name, setName] = useState("");
-  const [time,setTime] = useState("");
-  const [course,setCourse] = useState(null);
+  const [course,setCourse] = useState("");
   const [visible, setVisible] = useState(false);
 
   const collectIdsAndDocs = (doc) => {
@@ -60,13 +62,19 @@ function Profilepage({route}) {
     const Ref = collection(database, "Booking_Appointment");
     
     // Create a query against the collection.
-    const q = query(Ref, where("id", "==", userID));
+    const q = query(Ref, where("uid", "==", userID));
     
     const querySnapshot = await getDocs(q);
     const list = querySnapshot.docs.map(collectIdsAndDocs);
     
     setCourse(list);
-    }
+  }
+
+  const CancelAppointment = async(appoID) => {
+
+    await deleteDoc(doc(database, "Booking_Appointment", appoID));
+    setRefreshing(true);
+  }
   
   const GetUser = async(user) => {
 
@@ -82,20 +90,34 @@ function Profilepage({route}) {
 
   const renderItem = ({item}) => (
     <View style = {styles.courseContainer}>
-      <View style = {styles.courseHeader}>
-      <Text style = {styles.HeaderText}>Course: {item.course}</Text>
-      <View style = {styles.time}>
-        <Entypo name = 'clock' size = {16} color = {'#828282'}/>
-        <Text style = {styles.TimeText}>{item.date} min</Text>
-        <Text style = {styles.TimeText}>{item.timeTaken} min</Text>
+      <Text style = {styles.courseHeader}>COURSE:</Text>
+        <View>
+        {(item.course).map(item => (
+        <Text style ={styles.courseText} key={item}> {item}</Text>
+        ))}
       </View>
+      <View style = {styles.courseDetailContainer}>
+      <Text style = {styles.courseDetailText}>Date&Time: {item.date}</Text>
+
+      <Text style = {styles.courseDetailText}>estimated time: {item.timeTaken} min</Text>
+
+      <Text style = {styles.courseDetailText}>Price: {item.price} yen</Text>
+      <TouchableOpacity onPress = {()=> CancelAppointment(item.id)}style = {styles.CancelAppointment}><Text style = {styles.CancelAppointmentText}> Cancel Appointment </Text></TouchableOpacity>
       </View>
-      <View style = {styles.courseSubContainer}>
-      <Text style = {styles.priceText}>Price: {item.price} yen</Text>
-      </View>
-      <TouchableOpacity onPress = {()=> cancelAppointmentHandler()}style = {styles.CancelAppointment}><Text style = {styles.ModalTextStyle3}> Cancel Appointment </Text></TouchableOpacity>
     </View>
   );
+
+  const ItemDivider = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "100%",
+          backgroundColor: "#00000030",
+        }}
+      />
+    );
+  }
 
    const logout =() =>
    {
@@ -107,33 +129,9 @@ function Profilepage({route}) {
      }
    }
 
-   /*const showAlert = () => {
-    return Alert.alert(
-      // the title of the alert dialog
-      "Are you sure?",
-      [
-        // the first button
-        {
-          text: "No",
-          //onPress: () => setChoice("Agree"),
-        },
-
-        // the second button
-        {
-          text: "Yes",
-          onPress: () => setVisible(false),
-        },
-      ]
-    );
-  };*/
-
   const handleNoti =() =>{
     Linking.openURL('App-Prefs:NOTIFICATIONS_ID&path=<bundle_id>');
   }
-
-   const cancelAppointmentHandler = () =>{
-    setVisible(false)
-   }
 
   return (
     <View style = {styles.ScreenContainer}>
@@ -148,22 +146,22 @@ function Profilepage({route}) {
             <View>
               <View style = {styles.PopUpHeader}>
               <Text style = {styles.AppointmentHeader}>Appointment Detail</Text>
-              <TouchableOpacity onPress = {() => setVisible(false)}>
+              <TouchableOpacity onPress = {() => {setVisible(false)}}>
               <MaterialIcons name = 'close' size = {24} color = {colors.icon_dark} />
               </TouchableOpacity>
               </View>
-              {(course != null)? 
+              {(course != "")? 
               <View style = {styles.ApoointmentSubWrapper}>
                 <FlatList
                   style = {styles.FlatList} 
                   data={course}
                   renderItem={renderItem}
-                  horizontal = {true}
+                  ItemSeparatorComponent={ItemDivider}
                   keyExtractor={(item) => item.id}
                   showsVerticalScrollIndicator = {false}
                   />
-          </View>  : (<View style = {styles.NoAppWrapper}><Text style = {styles.NoAppText}> No Appointment Booked </Text></View>)
-          }
+              </View>  : (<View style = {styles.NoAppWrapper}><Text style = {styles.NoAppText}> No Appointment Booked </Text></View>)
+              }
             </View>
           </AppointmentModal>
 
@@ -171,9 +169,8 @@ function Profilepage({route}) {
         <View>
 
         </View>
-
         <View style = {styles.ContentContainer2}>
-          <TouchableOpacity onPress = {()=> setVisible(true)}>
+          <TouchableOpacity onPress = {()=> {setVisible(true),setRefreshing(true)}}>
           <View style = {styles.TextContainer2}>
           <MaterialCommunityIcons name = 'calendar-month' size = {32} color = '#839A7F' />
           <Text style = {styles.TextStyle}>Appointments</Text>
@@ -231,6 +228,7 @@ const styles = StyleSheet.create
   },
   modalContainer:{
     width:'80%',
+    height:'60%',
     backgroundColor:'white',
     paddingHorizontal:20,
     paddingVertical:30,
@@ -317,12 +315,12 @@ const styles = StyleSheet.create
     paddingVertical:'5%',
     padding:'2%',
   },
-
   CourseHeaderWrapper:{
     paddingTop:5,
     paddingBottom:3,
     fontSize: 20, 
     color:"#371D10",
+  
   },
   PopUpHeader:{
     marginBottom:'5%',
@@ -334,10 +332,11 @@ const styles = StyleSheet.create
     fontSize:24,
   },
   CancelAppointment:{
-    paddingTop: 35,
+    marginTop: '10%',
+    marginBottom: '5%',
     alignItems:'center',
   },
-  ModalTextStyle3:{
+  CancelAppointmentText:{
     textDecorationLine:'underline'
   },
   inputHeader:
@@ -369,6 +368,49 @@ const styles = StyleSheet.create
     fontSize:16,
     color:'#66554190',
     textDecorationLine:'underline'    
+  },
+  FlatList:
+  {
+    height:'90%'
+  },
+  HeaderText: 
+  {
+    fontFamily:'Merriweather-Regular',
+    fontSize: 16,
+    color: colors.text_brown,
+  },
+  courseText:{
+    fontFamily:'Poppins-Regular',
+    fontSize: 16,
+    color: '#626262'
+  },
+  courseSubText:
+  {
+    fontFamily:'Poppins-Regular',
+    fontSize: 16,
+    color: '#626262'
+
+  },
+  courseDetailText:{
+    fontFamily:'Poppins-Regular',
+    fontSize: 14,
+    color: '#626262',
+    paddingVertical:'1%'
+  },
+  courseDetailContainer:{
+    paddingVertical:'3%'
+  },
+  courseContainer:
+  {
+    flexDirection: 'column',
+    paddingVertical:'2%',
+    padding:'2%',
+  },
+  courseHeader:
+  {
+    fontFamily:'Poppins-Regular',
+    fontSize: 18,
+    color: '#626262'
   },
 })
 

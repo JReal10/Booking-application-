@@ -61,10 +61,9 @@ function ClientAddMenu({navigation}){
   const AddMenu = async(Name,Time,Price,Desc) =>{
     const docRef = await addDoc(collection(database, "Booking_Course"), {
       Course_name: courseName,
-      time: courseTime,
-      price: coursePrice,
+      time: parseInt(courseTime),
+      price: parseInt(coursePrice),
       Description: courseDesc,
-      isAdded:false
     });
     setRefreshing(true);
   };
