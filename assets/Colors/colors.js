@@ -5,7 +5,6 @@ const colors = {
   background : '#FAFAFA',
   text_white : '#FFFFFF',
   icon_dark: '#4D4B4B'
-
 }
 
 export default colors;
