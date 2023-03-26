@@ -7,24 +7,61 @@ import { database } from '../Config/firebase';
 import { deleteDoc,doc,collection,getDocs } from 'firebase/firestore';
 import { useState,useEffect }from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
-
+import { useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function ClientHomeage({}){
 
-  const [appointment,setAppointment] = useState("");
   const [AppointmentFuture, setApointmentFuture] = useState("");
   const [AppointmentToday, setApointmentToday] = useState("");
+  const [appointment,setAppointment] = useState("");
   const [refreshing, setRefreshing] = useState(true);
-  const [appoAvailable,setAppoAvailable] = useState(true);
-  const [appoTodayAvailable,setAppoTodayAvailable] = useState(true);
   const [IsReady, SetIsReady] = useState(false);
-
+  const isFocused = useIsFocused();
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
+
+    if(refreshing){  
     GetAppointment();
-    //setRefreshing(false);
-    GetAllAppointment();
-  },[])
+    setRefreshing(false);
+    loadCount();
+    }
+    if (isFocused){
+      autoDelete();
+    }
+  },[refreshing,isFocused])
+
+  const loadCount = async () => {
+    const storedCount = await AsyncStorage.getItem('count');
+    if (storedCount !== null) {
+      setCount(parseInt(storedCount));
+    }
+  };
+
+  const autoDelete = async()=>{
+
+    const today = new Date();
+
+    // compare the date parts of the two Date objects
+
+    for (let i = 0; i < appointment.length; i++) {
+      const item = appointment[i];
+      const DATE = new Date(item.date); 
+
+      const isPastDate = DATE < today
+
+      if (isPastDate){
+        const newCount = count + 1;
+        const Ref = doc(database, "Booking_Appointment", item.id);
+        setCount(newCount);
+        AsyncStorage.setItem('count', newCount.toString());
+
+        await deleteDoc(Ref);
+    }
+    }
+    setRefreshing(true);
+  }
 
   const deleteAppointment = async(id)=>{
     await deleteDoc(doc(database, "Booking_Appointment", id));
@@ -40,9 +77,10 @@ function ClientHomeage({}){
         ))}
       </View>
       <View style = {styles.courseDetailContainer}>
-      <Text style = {styles.courseDetailText}>Date&Time: {item.date}</Text>
-      </View>
+      <Text style = {styles.courseDetailText}>Date: {item.date}</Text>
+      <Text style = {styles.courseDetailText}>time: {item.time}</Text>
       <Text style = {styles.courseDetailText}>Price: {item.price} yen</Text>
+      </View>
       
       <TouchableOpacity onPress={()=>{(deleteAppointment(item.id)),    setRefreshing(false)}}>
       <View style = {styles.deleteContainer}>
@@ -66,11 +104,7 @@ function ClientHomeage({}){
     const docSnap = await getDocs(Ref);
     const list = docSnap.docs.map(collectIdsAndDocs);
 
-    setAppointment(list);
-  }
-
-  const GetAllAppointment = async ()=>{
-
+    
     const FutureApp = []
     const TodayApp = []
     // get the current date
@@ -78,8 +112,8 @@ function ClientHomeage({}){
 
     // compare the date parts of the two Date objects
 
-    for (let i = 0; i < appointment.length; i++) {
-      const item = appointment[i];
+    for (let i = 0; i < list.length; i++) {
+      const item = list[i];
       const DATE = item.date + "T" + item.time + ":00"; 
       const newDATE = new Date(DATE);
 
@@ -95,6 +129,7 @@ function ClientHomeage({}){
     }
     setApointmentFuture(FutureApp);
     setApointmentToday(TodayApp);
+    setAppointment(list);
   }
 
   const FetchFonts = async () => {
@@ -257,10 +292,10 @@ const styles = StyleSheet.create
     fontFamily:'Poppins-Regular',
     fontSize: 14,
     color: '#626262',
-    paddingVertical:'1%'
+    paddingVertical:'0.5%'
   },
   courseDetailContainer:{
-    paddingVertical:'3%'
+    paddingVertical:'2%'
   },
   courseContainer:
   {

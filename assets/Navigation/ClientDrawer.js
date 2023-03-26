@@ -5,12 +5,12 @@ import colors from '../Colors/colors';
 import CustomDrawer from '../Components/ClientCustomDrawer';
 import useFonts from '../Hooks/useFonts';
 import ClientAddMenu from '../Screens/ClientAddMenu';
+import EnergyConsumption from '../Screens/EnergyConsumption';
 
 const Drawer = createDrawerNavigator();
 
 function ClientDrawer() {
 
-  useFonts();
 
   return (
     <Drawer.Navigator drawerContent={props => <CustomDrawer {...props}/>} screenOptions= 
@@ -36,6 +36,9 @@ function ClientDrawer() {
       }} />
       <Drawer.Screen name = {'Add Menu'} component = {ClientAddMenu} options ={{
         headerTitle: 'Add Menu',
+      }}/>
+      <Drawer.Screen name = {'Energy Consumption'} component = {EnergyConsumption} options ={{
+        headerTitle: 'Energy Consumption',
       }}/>
 
     </Drawer.Navigator>
