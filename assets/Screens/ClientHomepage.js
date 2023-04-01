@@ -19,6 +19,8 @@ function ClientHomeage({}){
   const [IsReady, SetIsReady] = useState(false);
   const isFocused = useIsFocused();
   const [count, setCount] = useState(0);
+  const [day, setDay] = useState(0);
+  const [appointmentHist, setAppointmentHist] = useState([]);
 
   useEffect(() => {
 
@@ -37,13 +39,28 @@ function ClientHomeage({}){
     if (storedCount !== null) {
       setCount(parseInt(storedCount));
     }
+    const storedDay = await AsyncStorage.getItem('day');
+    if (storedDay !== null) {
+      setDay(parseInt(storedDay));
+    }
+    const storedAppo = await AsyncStorage.getItem('appoData');
+    if (storedAppo !== null) {
+      setAppointmentHist(JSON.parse(storedAppo));
+    }
   };
 
   const autoDelete = async()=>{
 
     const today = new Date();
+    const dayOfMonth = today.getDate();
+    AsyncStorage.setItem('day', dayOfMonth.toString());
 
     // compare the date parts of the two Date objects
+
+    if(dayOfMonth == 1)
+    {
+      AsyncStorage.setItem('count', "0");
+    }
 
     for (let i = 0; i < appointment.length; i++) {
       const item = appointment[i];
@@ -56,6 +73,9 @@ function ClientHomeage({}){
         const Ref = doc(database, "Booking_Appointment", item.id);
         setCount(newCount);
         AsyncStorage.setItem('count', newCount.toString());
+        appointmentHist.push(item)
+        const aString = JSON.stringify([appointmentHist]);
+        await AsyncStorage.setItem('appoData', aString);
 
         await deleteDoc(Ref);
     }

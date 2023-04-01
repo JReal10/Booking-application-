@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity,FlatList,StatusBar,TextInput, Dimensions } from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,FlatList} from 'react-native';
 import colors from '../Colors/colors';
 import AppLoading from 'expo-app-loading';
 import useFonts from '../Hooks/useFonts';
@@ -13,20 +13,20 @@ function EnergyConsumption({navigation}){
   const {height, width} = useWindowDimensions();
   const [IsReady, SetIsReady] = useState(false);
   const [count, setCount] = useState(0);
-  const [days, setDays] = useState(5);
+  const [day, setDay] = useState(5);
 
   const EnergyRateArray = [
-    { name: 'Air Conditioner', value: 318 * days },
-    { name: 'Air Purifier', value: 100 * days},
+    { name: 'Air Conditioner', value: 318 * day },
+    { name: 'Air Purifier', value: 100 * day},
     { name: 'UV Light', value: 96 * count},
     { name: 'Nail Gel Remover', value: 72 * count},
-    { name: 'Desktop PC', value: 200 * days},
-    { name: 'Wifi', value: 20 * days},
+    { name: 'Desktop PC', value: 200 * day},
+    { name: 'Wifi', value: 20 * day},
     { name: 'Vaccum', value: 120 * count},
-    { name: 'Card Reader', value: 0.5 * days},
-    { name: 'Light', value: 300 * days},
-    { name: 'Towel Warmer', value: 100 * days},
-    { name: 'Time Card', value: 10 * days},
+    { name: 'Card Reader', value: 0.5 * day},
+    { name: 'Light', value: 300 * day},
+    { name: 'Towel Warmer', value: 100 * day},
+    { name: 'Time Card', value: 10 * day},
   ];
 
   const date = new Date().toLocaleDateString();
@@ -42,12 +42,12 @@ function EnergyConsumption({navigation}){
   const light = 300; 
   const towelWarmer = 100;
   const timeCard = 10;
-  const AverageCustomer = (count/days) * 100;
+  const AverageCustomer = (count/day) * 100;
 
   const WattsPerAppointment = (uvLight * 1) + (gelRemover * 0.5) + (vaccum * 0.5);
   const WattsPerday = (ac * 8) + (airPurifier * 8) + (PC * 8) + (wifi * 8) + (cardReader * 8) + (light * 8) + (towelWarmer * 8) + (timeCard * 8);
 
-  const totalCost = ((WattsPerday/1000) * ElectricityPrices * days) + ((WattsPerAppointment/1000) * ElectricityPrices * count);
+  const totalCost = ((WattsPerday/1000) * ElectricityPrices * day) + ((WattsPerAppointment/1000) * ElectricityPrices * count);
   const roundedTotalCost = totalCost.toFixed(0);
   const PredictedCost = ((WattsPerday/1000) * ElectricityPrices * 30) + ((WattsPerAppointment/1000) * ElectricityPrices * AverageCustomer);
   const roundedPredictedCost = PredictedCost.toFixed(0)
@@ -62,6 +62,10 @@ function EnergyConsumption({navigation}){
     const storedCount = await AsyncStorage.getItem('count');
     if (storedCount !== null) {
       setCount(parseInt(storedCount));
+    }
+    const storedDay = await AsyncStorage.getItem('day');
+    if (storedDay !== null) {
+      setDay(parseInt(storedDay));
     }
   };
 

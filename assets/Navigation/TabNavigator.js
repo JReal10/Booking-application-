@@ -10,6 +10,8 @@ import Profilepage from '../Screens/Profilepage';
 
 const Tab = createBottomTabNavigator();
 
+//create a navigation tab for a screen: HomeScreen, BookingPage1 and ProfilePage
+
 function TabNavigator() {
 
   return (

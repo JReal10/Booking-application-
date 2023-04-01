@@ -3,7 +3,7 @@ import 'react-native-gesture-handler';
 import { NavigationContainer} from '@react-navigation/native';
 import StackNavigator from './assets/Navigation/StackNavigator';
 import AuthStack from './assets/Navigation/AuthStack';
-import ClientStack from './assets/Navigation/ClientStack';
+import AdminStack from './assets/Navigation/AdminStack';
 import { useContext,createContext,useState,useEffect } from 'react';
 import {onAuthStateChanged} from 'firebase/auth';
 import { ActivityIndicator, View } from 'react-native';
@@ -49,7 +49,7 @@ function RootNavigator()
   }
     return (
       <NavigationContainer>
-       {(user && uid != 'DmkZbAIep7Sv3o990gcMz2rDMep2') ? <StackNavigator/> :(user && uid == 'DmkZbAIep7Sv3o990gcMz2rDMep2') ? <ClientStack/> : <AuthStack/>} 
+       {(user && uid != 'DmkZbAIep7Sv3o990gcMz2rDMep2') ? <StackNavigator/> :(user && uid == 'DmkZbAIep7Sv3o990gcMz2rDMep2') ? <AdminStack/> : <AuthStack/>} 
       </NavigationContainer>
     )
   }

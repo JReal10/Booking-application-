@@ -9,41 +9,19 @@ import { useState } from 'react';
 import useFonts from '../Hooks/useFonts';
 import AppLoading from 'expo-app-loading';
  
-function Login({navigation}) {
+function Login({navigation}){ //Main componenets for the login screen
 
   const [IsReady, SetIsReady] = useState(false);
-  const [isLoggedIn,setIsLoggedIn] = useState(false)
   const [error, setError] = useState(false)
   const [email,setEmail] = useState('')
   const [password,setPassword] = useState('')
 
+  //A function to load fonts
   const FetchFonts = async () => {
     await useFonts();
   };
 
-    const LogInUser = () =>
-    {
-      signInWithEmailAndPassword(Authentication,email,password)
-      .then((re) => 
-     {
-        setIsLoggedIn(true);
-      }) 
-      .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          setError(true);
-        }
-        if (error.code === 'auth/invalid-email') {
-          setError(true);
-        }
-        if (error.code === 'auth/user-not-found') {
-          setError(true);
-        }
-        if (error.code === 'auth/wrong-password') {
-          setError(true);
-        }
-      });
-    };
-
+  //Loads the font if React Hook "isReady" is true, if not displays loading screen till it's true.
   if (!IsReady) {
     return (
       <AppLoading
@@ -54,6 +32,31 @@ function Login({navigation}) {
     );
   }
 
+  //Function to Authenticate user 
+  const LogInUser = () => {
+    //Authenticate user with a built in authentication function in firebase
+    signInWithEmailAndPassword(Authentication,email,password)
+    .then((re) => 
+    {
+    }) 
+    .catch(error => {
+      //Error checking, if there are errors the React Hook set Error is set to true.
+      if (error.code === 'auth/email-already-in-use') {
+        setError(true);
+      }
+      if (error.code === 'auth/invalid-email') {
+        setError(true);
+      }
+      if (error.code === 'auth/user-not-found') {
+        setError(true);
+      }
+      if (error.code === 'auth/wrong-password') {
+        setError(true);
+      }
+    });
+  };
+
+  //The UI componenet part of the screen
   return (
     <KeyboardAvoidingView
     behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style = {styles.Container}>
@@ -64,82 +67,85 @@ function Login({navigation}) {
               <View style = {styles.ImageContainer}>
                 <Text style = {styles.Sharon}>SHARON</Text>
                 <View style = {styles.LoginContent}>
-                {(error == false)?
-                <View>
-                  <View style = {styles.Inputs}>
-                    <Text style = {styles.inputHeader}>Email</Text>
-                    <TextInput placeholder = 'Email ID' 
-                    value={email}
-                    onChangeText={(email) => setEmail(email)} style = {styles.EmailInput}
-                    autoCorrect = {false}
-                    autoCapitalize = 'none'/>
-                  </View>
-                  <View style = {styles.Inputs}>
-                    <Text style = {styles.inputHeader}>Password</Text>
-                    <TextInput 
-                    placeholder = 'Password' 
-                    value = {password}
-                    onChangeText={(password) => setPassword(password)} 
-                    style = {styles.PasswordInput}
-                    secureTextEntry
-                    autoCorrect ={false}
-                    autoCapitalize = 'none'/>
-                  </View> 
-                </View>:
-                  <View>
-                    <View style = {styles.Inputs}>
-                      <Text style = {styles.inputHeader}>Email</Text>
-                      <TextInput placeholder = 'Email ID' 
-                      value={email}
-                      onChangeText={(email) => setEmail(email)} style = {styles.errorEmailInput}
-                      autoCorrect = {false}
-                      autoCapitalize = 'none'/>
-                    </View>
-                    <Text style = {styles.errorText}>Wrong password or email address</Text>
 
-                    <View style = {styles.Inputs}>
-                      <Text style = {styles.inputHeader}>Password</Text>
-                      <TextInput 
-                      placeholder = 'Password' 
-                      value = {password}
-                      onChangeText={(password) => setPassword(password)} 
-                      style = {styles.errorPasswordInput}
-                      secureTextEntry
-                      autoCorrect ={false}
-                      autoCapitalize = 'none'/>
+                  {(error == false)?//An UI of an error input text is displyed if the React hook error is true
+                    <View>
+                      <View style = {styles.Inputs}>
+                        <Text style = {styles.inputHeader}>Email</Text>
+                        <TextInput placeholder = 'Email ID' 
+                        value={email}
+                        onChangeText={(email) => setEmail(email)} style = {styles.EmailInput}
+                        autoCorrect = {false}
+                        autoCapitalize = 'none'/>
+                      </View>
+                      <View style = {styles.Inputs}>
+                        <Text style = {styles.inputHeader}>Password</Text>
+                        <TextInput 
+                        placeholder = 'Password' 
+                        value = {password}
+                        onChangeText={(password) => setPassword(password)} 
+                        style = {styles.PasswordInput}
+                        secureTextEntry
+                        autoCorrect ={false}
+                        autoCapitalize = 'none'/>
+                      </View> 
+                    </View>:
+                    <View>
+                      <View style = {styles.Inputs}>
+                        <Text style = {styles.inputHeader}>Email</Text>
+                        <TextInput placeholder = 'Email ID' 
+                        value={email}
+                        onChangeText={(email) => setEmail(email)} style = {styles.errorEmailInput}
+                        autoCorrect = {false}
+                        autoCapitalize = 'none'/>
+                      </View>
+                      <Text style = {styles.errorText}>Wrong password or email address</Text>
+                      <View style = {styles.Inputs}>
+                        <Text style = {styles.inputHeader}>Password</Text>
+                        <TextInput 
+                        placeholder = 'Password' 
+                        value = {password}
+                        onChangeText={(password) => setPassword(password)} 
+                        style = {styles.errorPasswordInput}
+                        secureTextEntry
+                        autoCorrect ={false}
+                        autoCapitalize = 'none'/>
+                      </View>
+                      <Text style = {styles.errorText}>Wrong password or email address</Text>
                     </View>
-                    <Text style = {styles.errorText}>Wrong password or email address</Text>
-                  </View>
                   }
- 
-              <View>
-                <Text style = {styles.fpTextStyle}>
-                  Forgot Password?
-                </Text>
-              </View>
-              <Button title = {'LOGIN'} backgroundColor = {colors.secondary_green} onPress = {() => {LogInUser()}} fontFamily= {'Poppins-Regular'}></Button>
-              <TouchableOpacity onPress={() => navigation.navigate('Signup')} style = {styles.textPos}>
-              <View style = {styles.TextView}>
-              <Text style = {styles.TextWrapper1}>Already Have An Account?</Text>
-              <Text style = {styles.TextWrapper2}>Sign Up</Text>
-              </View>
-              </TouchableOpacity>
+  
+                  <View>
+                    <Text style = {styles.fpTextStyle}>
+                      Forgot Password?
+                    </Text>
+                  </View>
 
-              <TouchableOpacity onPress={() => navigation.navigate('cLogin')}>
-              <View style = {styles.TextView}>
-              <Text style = {styles.TextWrapper1}>CLIENT LOGIN</Text>
+                  <Button title = {'LOGIN'} backgroundColor = {colors.secondary_green} onPress = {() => {LogInUser()}} fontFamily= {'Poppins-Regular'}></Button>
+
+                  <TouchableOpacity onPress={() => navigation.navigate('Signup')} style = {styles.textPos}>
+                  <View style = {styles.TextView}>
+                  <Text style = {styles.TextWrapper1}>Already Have An Account?</Text>
+                  <Text style = {styles.TextWrapper2}>Sign Up</Text>
+                  </View>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity onPress={() => navigation.navigate('adminLogin')}>
+                  <View style = {styles.TextView}>
+                  <Text style = {styles.TextWrapper1}>ADMIN LOGIN</Text>
+                  </View>
+                  </TouchableOpacity>
+                </View>
               </View>
-              </TouchableOpacity>
             </View>
-        </View>
-        </View>
-        <SafeAreaView style = {{opacity:0}}/>
+          <SafeAreaView style = {{opacity:0}}/>
         </ImageBackground>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }
 
+//Stylesheet for the UI components
 const styles = StyleSheet.create
 ({
   Container:
@@ -238,17 +244,6 @@ const styles = StyleSheet.create
     fontSize:16,
     borderColor:'#cc0000',
     fontFamily:'Poppins-Regular'
-  },
-  LogoView:
-  {
-    flexDirection:'column',
-    paddingHorizontal: 10,
-    marginTop:30,
-    marginBottom:15,
-    alignItems:'center'
-  },
-  LogoWrapper:{
-    marginBottom:10,
   },
   TextView:
   {
