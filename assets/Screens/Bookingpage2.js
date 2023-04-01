@@ -5,7 +5,7 @@ import CButton from '../Components/CustomButton';
 import { Calendar } from 'react-native-calendars';
 import colors from '../Colors/colors';
 import { useEffect } from 'react';
-import {doc,getDocs,collection,where,query,getDoc} from 'firebase/firestore';
+import {doc,getDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 import { Authentication } from '../Config/firebase';
 import { database } from '../Config/firebase';

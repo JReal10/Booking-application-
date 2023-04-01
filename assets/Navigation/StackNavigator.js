@@ -12,6 +12,7 @@ import useFonts from '../Hooks/useFonts';
 
 const Stack = createNativeStackNavigator();
 
+//create a navigation stack for seven screens: DrawerNavigator, HomeScreen, Gallerypage, ContactPage, BookingPage2, BookingPage3, BookingPage4
 function StackNavigator() {
 
   useFonts();

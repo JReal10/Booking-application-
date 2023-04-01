@@ -1,16 +1,16 @@
 import Login from "../Screens/Login";
 import Signup from "../Screens/Signup";
-import cLogin from "../Screens/Clientlogin";
+import adminLogin from "../Screens/Adminlogin";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import colors from "../Colors/colors";
 
 const Stack = createNativeStackNavigator();
 
+//create a navigation stack for three screens: Login, Signup, and adminLogin.
 function AuthStack({navigation})
 {
   return (
       <Stack.Navigator initialRouteName= "Login">
-        <Stack.Screen name = 'cLogin' component = {cLogin} options = 
+        <Stack.Screen name = 'adminLogin' component = {adminLogin} options = 
         {{
           headerShown:false,
         }}/>

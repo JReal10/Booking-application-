@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity,FlatList,StatusBar,TextInput, Dimensions } from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity,FlatList} from 'react-native';
 import colors from '../Colors/colors';
 import AppLoading from 'expo-app-loading';
 import useFonts from '../Hooks/useFonts';
@@ -13,44 +13,35 @@ function Revenue({navigation}){
   const {height, width} = useWindowDimensions();
   const [IsReady, SetIsReady] = useState(false);
   const [count, setCount] = useState(0);
-  const [days, setDays] = useState(5);
+  const [totalPrice,setTotalPrice] = useState(0);
 
   const EnergyRateArray = [
-    { name: 'Air Conditioner', value: 318 * days },
-    { name: 'Air Purifier', value: 100 * days},
-    { name: 'UV Light', value: 96 * count},
-    { name: 'Nail Gel Remover', value: 72 * count},
-    { name: 'Desktop PC', value: 200 * days},
-    { name: 'Wifi', value: 20 * days},
-    { name: 'Vaccum', value: 120 * count},
-    { name: 'Card Reader', value: 0.5 * days},
-    { name: 'Light', value: 300 * days},
-    { name: 'Towel Warmer', value: 100 * days},
-    { name: 'Time Card', value: 10 * days},
+    { name: 'Jamie Ogundiran', value: 3500, date: "3/25/2023" },
+    { name: 'Qwerty Jones', value: 2500, date: "3/25/2023"},
+    { name: 'Jamie Ogundiran', value: 1000, date: "3/25/2023"},
+    { name: 'Qwerty Jones', value: 4000, date: "3/25/2023"},
+    { name: 'Qwerty Jones', value: 5000, date: "3/25/2023"},
+    { name: 'Qwerty Jones', value: 6000, date: "3/25/2023"},
+    { name: 'Qwerty Jones', value: 1000, date: "3/25/2023"},
+    { name: 'Qwerty Jones', value: 1000, date: "3/25/2023"},
+    { name: 'Qwerty Jones', value: 1000, date: "3/25/2023"},
+    { name: 'Qwerty Jones', value: 1000, date: "3/25/2023"},
+    { name: 'Qwerty Jones', value: 1000, date: "3/25/2023"},
   ];
 
+  const totalPriceCalc = () => 
+  {
+    let total = 0;
+
+    for (let i = 0; i < EnergyRateArray.length; i++) {
+      const item = EnergyRateArray[i];
+      total += item.value;
+    }
+
+    return total;
+  }
+
   const date = new Date().toLocaleDateString();
-  const ElectricityPrices = 25.620; // 25.620/kwh 
-  const ac = 318; // 318 watts/h
-  const airPurifier = 100;
-  const uvLight = 96;
-  const gelRemover = 72;
-  const PC = 200;
-  const wifi = 20;
-  const vaccum = 120;
-  const cardReader = 0.5;
-  const light = 300; 
-  const towelWarmer = 100;
-  const timeCard = 10;
-  const AverageCustomer = (count/days) * 100;
-
-  const WattsPerAppointment = (uvLight * 1) + (gelRemover * 0.5) + (vaccum * 0.5);
-  const WattsPerday = (ac * 8) + (airPurifier * 8) + (PC * 8) + (wifi * 8) + (cardReader * 8) + (light * 8) + (towelWarmer * 8) + (timeCard * 8);
-
-  const totalCost = ((WattsPerday/1000) * ElectricityPrices * days) + ((WattsPerAppointment/1000) * ElectricityPrices * count);
-  const roundedTotalCost = totalCost.toFixed(0);
-  const PredictedCost = ((WattsPerday/1000) * ElectricityPrices * 30) + ((WattsPerAppointment/1000) * ElectricityPrices * AverageCustomer);
-  const roundedPredictedCost = PredictedCost.toFixed(0)
 
   const isFocused = useIsFocused();
 
@@ -80,9 +71,14 @@ function Revenue({navigation}){
   }
 
   const renderItem = ({ item }) => (
+    <View>
     <View style = {styles.flContainer}>
     <Text style = {styles.itemText}>{item.name}</Text>
-    <Text style = {styles.itemText}>{item.value * count} w/h</Text>
+    <Text style = {styles.itemText}>¥{item.value}</Text>
+    </View>
+    <View style = {styles.flContainer2}>
+    <Text style = {styles.itemText}>{item.date}</Text>
+    </View>
     </View>
   );
 
@@ -102,22 +98,21 @@ function Revenue({navigation}){
     <View style ={styles.Container}>
       <SafeAreaView style = {styles.SafeAreaView} height = {height}>
         <View style ={styles.PriceContainer} height = {height/4} marginVertical = {height * 0.025} marginHorizontal = {width * 0.025}>
-        <Text style = {styles.priceStatusStyle}>Energy Price Status</Text>
+        <Text style = {styles.priceStatusStyle}>Total Revenue</Text>
         <View style = {styles.PriceHeader}>
-        <Text style = {styles.HeaderText}>¥ {roundedTotalCost}</Text>
+        <Text style = {styles.HeaderText}>¥{totalPriceCalc()}</Text>
         <Text style = {styles.dateStyle}>{date}</Text>
         </View>
-        <Text style = {styles.ppTextStyle}>Predicted Price: ¥{roundedPredictedCost}</Text>
         </View>
         <View style = {styles.flatList}>
-        <Text style = {styles.BalancHeader}>Energy Usage</Text>
+        <Text style = {styles.SubHeader}>Appointment History</Text>
         <View>
         <FlatList
         height = {height/2.25}
         ItemSeparatorComponent={ItemDivider}
         data={EnergyRateArray}
         renderItem={renderItem}
-        keyExtractor={item => item.name}
+        keyExtractor={item => item}
         />
         </View>
         </View>
@@ -151,6 +146,10 @@ const styles = StyleSheet.create
     justifyContent:'space-between',
     padding: 10,
   },
+  flContainer2:
+  {
+    paddingHorizontal: 10,
+  },
   flatList:
   {
     marginHorizontal:10,
@@ -169,7 +168,7 @@ const styles = StyleSheet.create
     fontFamily:'Poppins-Regular',
     color:colors.text_brown
   },
-  BalancHeader:
+  SubHeader:
   {
     fontSize:24,
     paddingVertical: 10,

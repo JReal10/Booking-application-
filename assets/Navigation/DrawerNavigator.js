@@ -7,6 +7,7 @@ import useFonts from '../Hooks/useFonts';
 
 const Drawer = createDrawerNavigator();
 
+//create a navigation drawer for two screens: CustomDrawer and TabNavigtor.
 function DrawerNavigator() {
 
   useFonts();
