@@ -1,14 +1,12 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,Image,StatusBar} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView} from 'react-native';
 import colors from '../Colors/colors';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import useFonts from '../Hooks/useFonts';
 import Button from '../Components/CustomButton';
 
 function Bookingpage4({navigation}) {
 
-  useFonts();
-
+  //The UI componenet part of the screen
   return (
     <View style = {styles.Container}>
       <SafeAreaView>
@@ -26,6 +24,7 @@ function Bookingpage4({navigation}) {
   );
 } 
 
+//Stylesheet for the UI components
 const styles = StyleSheet.create
 ({
   Container: 

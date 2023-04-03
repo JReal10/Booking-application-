@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import ClientHomepage from '../Screens/ClientHomepage';
+import AdminHomepage from '../Screens/AdminHomepage';
 import colors from '../Colors/colors';
-import CustomDrawer from '../Components/ClientCustomDrawer';
+import CustomDrawer from '../Components/AdminCustomDrawer';
 import useFonts from '../Hooks/useFonts';
 import Revenue from '../Screens/Revenue';
-import ClientAddMenu from '../Screens/ClientAddMenu';
+import AdminAddMenu from '../Screens/AdminAddMenu';
 import AppLoading from 'expo-app-loading';
 import EnergyConsumption from '../Screens/EnergyConsumption';
 
@@ -50,10 +50,10 @@ function AdminDrawer() {
         },
     }}>
 
-      <Drawer.Screen name = {'Home'} component = {ClientHomepage} options ={{
+      <Drawer.Screen name = {'Home'} component = {AdminHomepage} options ={{
         headerTitle: 'Appointments',
       }} />
-      <Drawer.Screen name = {'Add Menu'} component = {ClientAddMenu} options ={{
+      <Drawer.Screen name = {'Add Menu'} component = {AdminAddMenu} options ={{
         headerTitle: 'Add Menu',
       }}/>
       <Drawer.Screen name = {'Energy Consumption'} component = {EnergyConsumption} options ={{

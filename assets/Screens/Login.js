@@ -11,6 +11,7 @@ import AppLoading from 'expo-app-loading';
  
 function Login({navigation}){ //Main componenets for the login screen
 
+  // Initialize state variables for authentication
   const [IsReady, SetIsReady] = useState(false);
   const [error, setError] = useState(false)
   const [email,setEmail] = useState('')

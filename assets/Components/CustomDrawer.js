@@ -9,6 +9,7 @@ import { useEffect,useState } from 'react';
 import { Authentication } from '../Config/firebase';
 import { signOut } from 'firebase/auth';
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useIsFocused } from "@react-navigation/native";
 
 const CustomDrawer = ({navigation}) =>
 {
@@ -16,14 +17,12 @@ const CustomDrawer = ({navigation}) =>
   const [name, setName] = useState("");
   const [course,setCourse] = useState("");
   const [refreshing, setRefreshing] = useState(true);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    //if(refreshing){
     GetAppointment(user);
     GetUser(user);
-    setRefreshing(false);
-    //}
-  },[])
+  },[isFocused])
 
   const logout =() =>
   {

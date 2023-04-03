@@ -10,84 +10,79 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function ClientHomeage({}){
+function AdminHomepage(){
 
-  const [AppointmentFuture, setApointmentFuture] = useState("");
-  const [AppointmentToday, setApointmentToday] = useState("");
-  const [appointment,setAppointment] = useState("");
-  const [refreshing, setRefreshing] = useState(true);
-  const [IsReady, SetIsReady] = useState(false);
-  const isFocused = useIsFocused();
-  const [count, setCount] = useState(0);
-  const [day, setDay] = useState(0);
-  const [appointmentHist, setAppointmentHist] = useState([]);
+  const [AppointmentFuture, setApointmentFuture] = useState(""); // state variable to hold future appointments
+  const [AppointmentToday, setApointmentToday] = useState(""); // state variable to hold today's appointments
+  const [appointment,setAppointment] = useState(""); // state variable to hold all appointments
+  const [refreshing, setRefreshing] = useState(true); // state variable to force a component re-render
+  const [IsReady, SetIsReady] = useState(false); // state variable to determine if the font is loaded
+  const isFocused = useIsFocused(); // hook to determine if the component is in focus
+  const [count, setCount] = useState(0); // state variable to hold the count of appointments deleted
+  const [day, setDay] = useState(0); // state variable to hold the current day
+  const [appointmentHist, setAppointmentHist] = useState([]); // state variable to hold the deleted appointments' history
 
   useEffect(() => {
 
     if(refreshing){  
-    GetAppointment();
-    setRefreshing(false);
-    loadCount();
-    }
-    if (isFocused){
-      autoDelete();
-    }
+      GetAppointment(); // function to get all appointments from Firestore
+      setRefreshing(false);
+      loadCount(); // function to load the count of deleted appointments from AsyncStorage
+      }
+      if (isFocused){
+        autoDelete(); // function to delete appointments that have already passed
+      }
   },[refreshing,isFocused])
 
   const loadCount = async () => {
-    const storedCount = await AsyncStorage.getItem('count');
+    const storedCount = await AsyncStorage.getItem('count'); // retrieve the count from AsyncStorage
     if (storedCount !== null) {
-      setCount(parseInt(storedCount));
+      setCount(parseInt(storedCount)); // convert the stored count to an integer and set it to the state variable
     }
-    const storedDay = await AsyncStorage.getItem('day');
+    const storedDay = await AsyncStorage.getItem('day'); // retrieve the current day from AsyncStorage
     if (storedDay !== null) {
-      setDay(parseInt(storedDay));
+      setDay(parseInt(storedDay)); // convert the stored day to an integer and set it to the state variable
     }
-    const storedAppo = await AsyncStorage.getItem('appoData');
+    const storedAppo = await AsyncStorage.getItem('appoData'); // retrieve the deleted appointments' history from AsyncStorage
     if (storedAppo !== null) {
-      setAppointmentHist(JSON.parse(storedAppo));
+      setAppointmentHist(JSON.parse(storedAppo)); // parse the stored JSON string and set the result to the state variable
     }
   };
 
   const autoDelete = async()=>{
 
-    const today = new Date();
-    const dayOfMonth = today.getDate();
-    AsyncStorage.setItem('day', dayOfMonth.toString());
+    const today = new Date(); // get the current date
+    const dayOfMonth = today.getDate(); // get the day of the month
+    AsyncStorage.setItem('day', dayOfMonth.toString()); // store the day of the month to AsyncStorage
 
-    // compare the date parts of the two Date objects
-
-    if(dayOfMonth == 1)
+    if(dayOfMonth == 1) // if it's the first day of the month
     {
-      AsyncStorage.setItem('count', "0");
+      AsyncStorage.setItem('count', "0"); // reset the count to 0 and store it to AsyncStorage
     }
 
-    for (let i = 0; i < appointment.length; i++) {
-      const item = appointment[i];
-      const DATE = new Date(item.date); 
+    for (let i = 0; i < appointment.length; i++) { 
+      const item = appointment[i]; 
+      const DATE = new Date(item.date); // create a new Date object for the appointment date
 
-      const isPastDate = DATE < today
+      const isPastDate = DATE < today // determine if the appointment date is in the past
 
-      if (isPastDate){
-        const newCount = count + 1;
-        const Ref = doc(database, "Booking_Appointment", item.id);
-        setCount(newCount);
-        AsyncStorage.setItem('count', newCount.toString());
-        appointmentHist.push(item)
-        const aString = JSON.stringify([appointmentHist]);
-        await AsyncStorage.setItem('appoData', aString);
-
-        await deleteDoc(Ref);
+      if (isPastDate){ // if the appointment date is in the past
+        const newCount = count + 1; // increment the count of deleted appointments
+        const Ref = doc(database, "Booking_Appointment", item.id); 
+        setCount(newCount); // set the new count to the state variable
+        AsyncStorage.setItem('count', newCount.toString()); // store the new count to AsyncStorage
     }
     }
     setRefreshing(true);
   }
 
+  // This function deletes an appointment with the specified ID from the database, and then sets the refreshing state to true to trigger a re-rendering of the component that displays the appointment list
   const deleteAppointment = async(id)=>{
     await deleteDoc(doc(database, "Booking_Appointment", id));
     setRefreshing(true);
   }
 
+  // This function renders a single appointment item with the specified data
   const renderItem = ({ item }) => (
     <View style = {styles.itemContainer}>
         <Text style = {styles.courseHeader}>COURSE:</Text>
@@ -111,23 +106,22 @@ function ClientHomeage({}){
     </View>
   );
 
-
+  // This function takes a document snapshot from the database and returns an object with the document ID and data
   const collectIdsAndDocs = (doc) => {
     return {id: doc.id, ...doc.data()};
   };
 
+  // This function retrieves all appointments from the database, categorizes them into "Today" and "Future" appointments, and sets the state variables accordingly
   const GetAppointment = async() => {
 
     const Ref = collection(database, "Booking_Appointment");
 
-    //SetData is wrong use an if statement
     const docSnap = await getDocs(Ref);
     const list = docSnap.docs.map(collectIdsAndDocs);
 
     
     const FutureApp = []
     const TodayApp = []
-    // get the current date
     const today = new Date();
 
     // compare the date parts of the two Date objects
@@ -332,4 +326,4 @@ const styles = StyleSheet.create
 })
 
 
-export default ClientHomeage;
+export default AdminHomepage;

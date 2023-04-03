@@ -63,8 +63,4 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     flexDirection:'row',
   },
-  LogoWrapper:
-  {
-    color:'white',
-  },
 });

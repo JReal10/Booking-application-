@@ -7,42 +7,39 @@ import { database } from '../Config/firebase';
 import { addDoc,collection,getDocs,deleteDoc,doc} from 'firebase/firestore';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Button from '../Components/CustomButton';
-import { useState,useEffect,useCallback }from 'react';
+import { useState,useEffect}from 'react';
 
-function ClientAddMenu({navigation}){
+function AdminAddMenu({navigation}){
 
-  const [IsReady, SetIsReady] = useState(false);
-  const [courseName, setCourseName] = useState("");
-  const [courseTime, setCourseTime] = useState("");
-  const [coursePrice, setCoursePrice] = useState("");
-  const [courseDesc,setCourseDesc] = useState(""); 
-  const [course,setCourse] = useState([]);
-  const [refreshing, setRefreshing] = useState(true);
+const [IsReady, SetIsReady] = useState(false); // A boolean state variable that determines if the component is ready to be rendered
+const [courseName, setCourseName] = useState(""); // A state variable that holds the name of the course
+const [courseTime, setCourseTime] = useState(""); // A state variable that holds the time of the course
+const [coursePrice, setCoursePrice] = useState(""); // A state variable that holds the price of the course
+const [courseDesc,setCourseDesc] = useState(""); // A state variable that holds the description of the course
+const [course,setCourse] = useState([]); // A state variable that holds the list of courses
+const [refreshing, setRefreshing] = useState(true); // A boolean state variable that determines if the list of courses needs to be refreshed
 
-  useEffect(() => {
-    if(refreshing){
+// useEffect hook that executes a function when the component mounts or when the refreshing state variable changes
+useEffect(() => {
+  // If the refreshing variable is true, call the GetUser function and set the refreshing state variable to false
+  if(refreshing){
     GetUser();
     setRefreshing(false);
-    }
-  },[refreshing])
+  }
+},[refreshing]);
 
-  const clearInput = useCallback(()=> (setCourseName(""),setCourseDesc(""),setCoursePrice(""),setCourseTime("")), []);
+// A function that maps over the documents retrieved from the "Booking_Course" collection and returns an array of objects that includes the document ID and data
+const collectIdsAndDocs = (doc) => {
+  return {id: doc.id, ...doc.data()};
+};
 
-  
-  const collectIdsAndDocs = (doc) => {
-    return {id: doc.id, ...doc.data()};
-  };
-
-  const GetUser = async() => {
-
-    const Ref = collection(database, "Booking_Course");
-
-    //SetData is wrong use an if statement
-    const docSnap = await getDocs(Ref);
-    const list = docSnap.docs.map(collectIdsAndDocs);
-
-    setCourse(list);
-    }
+// A function that retrieves the documents from the "Booking_Course" collection and sets the course state variable to the mapped array of objects returned by the collectIdsAndDocs function
+const GetUser = async() => {
+  const Ref = collection(database, "Booking_Course");
+  const docSnap = await getDocs(Ref);
+  const list = docSnap.docs.map(collectIdsAndDocs);
+  setCourse(list);
+};
 
   const FetchFonts = async () => {
     await useFonts();
@@ -58,6 +55,7 @@ function ClientAddMenu({navigation}){
     );
   }
 
+  // AddMenu function that takes in courseName, courseTime, coursePrice, and courseDesc as arguments
   const AddMenu = async(Name,Time,Price,Desc) =>{
     const docRef = await addDoc(collection(database, "Booking_Course"), {
       Course_name: courseName,
@@ -73,6 +71,7 @@ function ClientAddMenu({navigation}){
     setRefreshing(true);
   }
 
+  // This function renders a single appointment item with the specified data
   const renderItem = ({ item }) => (
     <View style = {styles.itemContainer}>
       <Text style = {styles.itemHeader}>Course: {item.Course_name}</Text>
@@ -241,4 +240,4 @@ const styles = StyleSheet.create
 })
 
 
-export default ClientAddMenu;
+export default AdminAddMenu;

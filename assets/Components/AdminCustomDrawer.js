@@ -7,7 +7,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Authentication } from '../Config/firebase';
 import { signOut } from 'firebase/auth';
 
-const ClientCustomDrawer = (props) =>
+const AdminCustomDrawer = (props) =>
 {
 
   const logout =() =>
@@ -109,4 +109,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default ClientCustomDrawer;
+export default AdminCustomDrawer;

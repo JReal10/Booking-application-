@@ -8,9 +8,9 @@ import {collection,getDocs} from 'firebase/firestore';
 import Button from '../Components/CustomButton';
 import { database } from '../Config/firebase';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import useFonts from '../Hooks/useFonts';
 import { useState,useEffect } from 'react';
 
+//custom styles for the step indicator
 const customStyles = {
   stepIndicatorSize: 30,
   currentStepIndicatorSize:35,
@@ -35,28 +35,39 @@ const customStyles = {
   currentStepLabelColor: colors.secondary_green
 }
 
+//label for the step indicator
 const labels = ["Menu","Date","Confirmation"];
 
 function Bookingpage1({navigation}) {
 
-  const [course,setCourse] = useState([]);
-  const [refreshing, setRefreshing] = useState(true);
-  const [buttons, setButtons] = useState(course.reduce((obj, item) => ({...obj, [item.id]: false}), {}));
-
-  const handleButtonPress = (id) => {
-    setButtons({...buttons, [id]: !buttons[id]});
+  const [course,setCourse] = useState([]); // initialize state variable course with an empty array
+  const [refreshing, setRefreshing] = useState(true); // initialize state variable refreshing with true
+  const [selectedCourse, setSelectedCourse] = useState(false);
+  const [buttons, setButtons] = useState(course.reduce((obj, item) => ({...obj, [item.id]: false}), {})); // initialize state variable buttons with an object where the keys are the ids of the items in course and the values are false
+  
+  const handleButtonPress = (id) => { // function that takes an id as parameter
+    setButtons({...buttons, [id]: !buttons[id]}); // toggles the value of the id in the buttons object
+    setRefreshing(true)
   }
-
+  
   useEffect(() => {
     if(refreshing){
-    GetCourse();
+    GetCourse();// function to get all courses from Firestore
     setRefreshing(false);
+
+    for (const key in buttons) {
+      if (buttons[key] === true) {
+        setSelectedCourse(true)
+        break;
+      } else
+      {
+        setSelectedCourse(false)
+      }
+    }
     }
   },[refreshing])
 
-  
-  useFonts();
-
+  // This function renders a single appointment item with the specified data
   const renderItem = ({ item }) => (
     <View style = {styles.courseContainer}>
       <View style = {styles.courseHeader}>
@@ -80,6 +91,7 @@ function Bookingpage1({navigation}) {
     </View>
   );
 
+  //separator UI component for the flatlist
   const ItemDivider = () => {
     return (
       <View
@@ -100,13 +112,13 @@ function Bookingpage1({navigation}) {
 
     const Ref = collection(database, "Booking_Course");
 
-    //SetData is wrong use an if statement
     const docSnap = await getDocs(Ref);
     const list = docSnap.docs.map(collectIdsAndDocs);
 
     setCourse(list);
-    }
+  }
 
+  //The UI componenet part of the screen
   return (
     <View style = {styles.Container}>
       <SafeAreaView>
@@ -128,7 +140,9 @@ function Bookingpage1({navigation}) {
           showsVerticalScrollIndicator = {false}
           />
           <View style = {styles.ContinueButton}>
-          <Button onPress ={() => (navigation.navigate('Booking2',{paramAdded:buttons}))} title = 'CONTINUE' backgroundColor = {colors.secondary_green} fontFamilly = {"Poppins-SemiBold"}></Button>
+          {selectedCourse && ( 
+          <Button onPress ={() => (navigation.navigate('Booking2',{paramAdded:buttons}))} title = 'CONTINUE' backgroundColor = {colors.secondary_green} fontFamilly = {"Poppins-SemiBold"}></Button>)
+          }
           </View>
           </View>
       </SafeAreaView>
@@ -136,6 +150,7 @@ function Bookingpage1({navigation}) {
   );
 }
 
+//Stylesheet for the UI components
 const styles = StyleSheet.create
 ({
   stepIndicator: 
@@ -216,15 +231,11 @@ const styles = StyleSheet.create
     fontWeight: 'bold',
     color: colors.text_white,
   },
-  mainButton:{
-    position:'absolute',
-  },
   ContinueButton:
   {
     alignItems:'center',
     marginTop:'3%'
   }
-
 })
 
 export default Bookingpage1;

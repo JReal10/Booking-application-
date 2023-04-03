@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView, ScrollView,Modal,Button} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView, ScrollView,Button} from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 import CButton from '../Components/CustomButton';
 import { Calendar } from 'react-native-calendars';
 import colors from '../Colors/colors';
-import { useEffect } from 'react';
-import {doc,getDoc} from 'firebase/firestore';
+import {collection, doc,getDoc} from 'firebase/firestore';
 import { useRoute } from '@react-navigation/native';
 import { Authentication } from '../Config/firebase';
 import { database } from '../Config/firebase';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 
+//custom styles for the step indicator
 const customStyles = {
   stepIndicatorSize: 30,
   currentStepIndicatorSize:35,
@@ -35,8 +35,10 @@ const customStyles = {
   currentStepLabelColor: colors.secondary_green
 }
 
+//label for the step indicator
 const labels = ["Menu","Date","Confirmation"];
 
+//function to toggle the color between the buttons on the screen
 const getMarkedDates = (date) => {
   const markedDates = {};
 
@@ -48,13 +50,15 @@ const getMarkedDates = (date) => {
 
 function Bookingpage2({navigation}) {
 
-  const [date,setDate] = useState(new Date());
-  const [name, setName] = useState("");
-  const [email,setEmail] = useState("");
-  const [timestamp,setTimeStamp] = useState(new Date());
-  const [showTime,setShowTime] = useState(false);
-  const [selectedTime, setSelectedTime] = useState("");
-  const AVAILABLE_TIMES = ['8:00','10:00', '12:00', '14:00', '16:00', '18:00'];
+  const [date,setDate] = useState(new Date()); // Current date
+  const [name, setName] = useState(""); // User's name
+  const [email,setEmail] = useState(""); // User's email
+  const [timestamp,setTimeStamp] = useState(new Date()); // Date and time of the appointment
+  const [showTime,setShowTime] = useState(false); // Flag to control whether the time selector is shown
+  const [selectedTime, setSelectedTime] = useState(""); // Selected time for the appointment
+  const AVAILABLE_TIMES = ['8:00','10:00', '12:00', '14:00', '16:00', '18:00']; // Available times for the appointment
+
+  //The AVAILABLE_TIMES constant defines an array of available booking times, and the availableTimes state variable is initialized as an object with keys for each time in the AVAILABLE_TIMES array, with initial values set to false
   const [availableTimes, setAvailableTimes] = useState(
     AVAILABLE_TIMES.reduce((obj, time) => {
       obj[time] = false;
@@ -67,11 +71,11 @@ function Bookingpage2({navigation}) {
   const route = useRoute();
 
   useEffect(() => {
-    GetUser();
+    GetUser();//Gets user from the Firebase
   },[])
   
+  //The handleToggle function takes a time parameter and toggles the value of the corresponding key in the availableTimes object to either true or false, depending on its current value. It also updates the selectedTime state variable to either the provided time value or an empty string, depending on whether the time key is currently true or false.
   const handleToggle = (time) => {
-    console.log(timestamp);
     const updatedTimes = { ...availableTimes };
     Object.keys(updatedTimes).forEach((key) => {
       if (key !== time) {
@@ -83,10 +87,14 @@ function Bookingpage2({navigation}) {
     setSelectedTime(updatedTimes[time] ? time : '');
   };
 
+  //Gets user name and user email from the firebase and store it in a react state
   const GetUser = async() => {
 
     const Ref = doc(database, "Booking_User",user);
     const docSnap = await getDoc(Ref);
+    
+    /*const ARef = collection(database, "Booking_Appointment");
+    docSnap = await getDoc(Ref);*/
 
     const data = docSnap.exists() ? docSnap.data() : null
     if (data === null || data === undefined) return null
@@ -97,7 +105,6 @@ function Bookingpage2({navigation}) {
   const BookingHandle = () =>{
     navigation.navigate('Booking3',{paramKey:selectedTime, paramDate:date, paramName:name,paramEmail:email,paramTimeStamp: timestamp, paramAdded: route.params.paramAdded});
   }
-
 
   return (
     <View style = {styles.Container}>
@@ -119,7 +126,7 @@ function Bookingpage2({navigation}) {
           // Handler which gets executed on day long press. Default = undefined
           minDate = {currentDate}
           markedDates={
-            getMarkedDates(date)
+          getMarkedDates(date)
           }
 
           style = {{
@@ -175,11 +182,12 @@ function Bookingpage2({navigation}) {
   );
 }
 
+//Stylesheet for the UI components
 const styles = StyleSheet.create
 ({
   stepIndicator: 
   {
-    paddingVertical: '8%',
+    paddingVertical: '5%',
     paddingHorizontal:'5%',
   },
   Container: 
@@ -194,7 +202,6 @@ const styles = StyleSheet.create
     color: colors.text_brown,
     paddingVertical: '3%',
     fontWeight: 'bold'
-
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -214,7 +221,6 @@ const styles = StyleSheet.create
   {
     alignItems:'center'
   }
-
 })
 
 export default Bookingpage2

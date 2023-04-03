@@ -9,15 +9,17 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState,useEffect } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useFonts } from 'expo-font';
 
 const AppointmentModal = ({visible,children}) =>{
+  // Declare state to control modal visibility
   const [showModal,setShowModal] = useState(visible);
 
+  // Update modal visibility when 'visible' prop changes
   useEffect(()=>{
     toggleModal();
   },[visible]);
 
+  // Toggle modal visibility based on current state
   const toggleModal = () =>{
     if(visible){
       setShowModal(true);
@@ -26,6 +28,7 @@ const AppointmentModal = ({visible,children}) =>{
     }
   }
 
+  // Render the modal component
   return (
     <Modal transparent visible = {visible}> 
       <View style = {styles.modalBackGround}>
@@ -34,80 +37,103 @@ const AppointmentModal = ({visible,children}) =>{
         </View>
       </View>
     </Modal>
-    );
+  );
 };
 
+
+
+
+
+
 function Profilepage({route}) {
-
+  // Get the current user's ID from Firebase Authentication
   const user = Authentication.currentUser?.uid
+
+  // State variables to control the component's behavior
   const [refreshing, setRefreshing] = useState(true);
-
-  useEffect(() => {
-    if(refreshing){
-    GetUser(user);
-    GetAppointment(user);
-    setRefreshing(false);
-    }
-  },[refreshing])
-
   const [name, setName] = useState("");
   const [course,setCourse] = useState("");
   const [visible, setVisible] = useState(false);
 
+  // useEffect hook to fetch data from Firebase when the component mounts or when the 'refreshing' state changes
+  useEffect(() => {
+    if(refreshing){
+      // Fetch the user's profile data
+      GetUser(user);
+
+      // Fetch the user's appointment data
+      GetAppointment(user);
+
+      // Set 'refreshing' to false to prevent an infinite loop
+      setRefreshing(false);
+    }
+  },[refreshing])
+
+  // Helper function to extract document IDs and data from query snapshots
   const collectIdsAndDocs = (doc) => {
     return {id: doc.id, ...doc.data()};
   };
 
+  // Fetch the user's appointment data from Firebase
   const GetAppointment = async (userID)=>{
+    // Get a reference to the 'Booking_Appointment' collection
     const Ref = collection(database, "Booking_Appointment");
     
-    // Create a query against the collection.
+    // Create a query against the collection to get all appointments for the current user
     const q = query(Ref, where("uid", "==", userID));
     
+    // Execute the query and get the query snapshot
     const querySnapshot = await getDocs(q);
+
+    // Map the query snapshot to an array of appointment objects, including their IDs
     const list = querySnapshot.docs.map(collectIdsAndDocs);
-    
+
+    // Set the 'course' state variable to the list of appointments
     setCourse(list);
   }
 
   const CancelAppointment = async(appoID) => {
-
+    // delete appointment document from firestore using appoID
     await deleteDoc(doc(database, "Booking_Appointment", appoID));
+    // refresh the list of appointments
     setRefreshing(true);
   }
-  
-  const GetUser = async(user) => {
 
+  const GetUser = async(user) => {
+    // get user document from firestore using user ID
     const Ref = doc(database, "Booking_User",user);
     const docSnap = await getDoc(Ref);
 
     const data = docSnap.exists() ? docSnap.data() : null
+    // if no data is returned, exit function
     if (data === null || data === undefined) return null
     const ac = data.appointmentCreated;
-
+    // set the name state variable to the name field of the user document
     setName(data.name);
   }
 
   const renderItem = ({item}) => (
+    // render appointment item as a container with course, date, time, price, and cancel appointment button
     <View style = {styles.courseContainer}>
       <Text style = {styles.courseHeader}>COURSE:</Text>
-        <View>
+      <View>
         {(item.course).map(item => (
-        <Text style ={styles.courseText} key={item}> {item}</Text>
+          <Text style ={styles.courseText} key={item}> {item}</Text>
         ))}
       </View>
       <View style = {styles.courseDetailContainer}>
-      <Text style = {styles.courseDetailText}>Date&Time: {item.date}</Text>
-
-      <Text style = {styles.courseDetailText}>estimated time: {item.timeTaken} min</Text>
-
-      <Text style = {styles.courseDetailText}>Price: {item.price} yen</Text>
-      <TouchableOpacity onPress = {()=> CancelAppointment(item.id)}style = {styles.CancelAppointment}><Text style = {styles.CancelAppointmentText}> Cancel Appointment </Text></TouchableOpacity>
+        <Text style = {styles.courseDetailText}>Date&Time: {item.date}</Text>
+        <Text style = {styles.courseDetailText}>estimated time: {item.timeTaken} min</Text>
+        <Text style = {styles.courseDetailText}>Price: {item.price} yen</Text>
+        <TouchableOpacity onPress = {()=> CancelAppointment(item.id)}style = {styles.CancelAppointment}>
+          <Text style = {styles.CancelAppointmentText}> Cancel Appointment </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 
   const ItemDivider = () => {
+    // render a horizontal divider to separate appointment items
     return (
       <View
         style={{
@@ -119,17 +145,19 @@ function Profilepage({route}) {
     );
   }
 
-   const logout =() =>
-   {
-     signOut(Authentication)
-     .then((re) => 
-     {
-     }).catch
-     {
-     }
-   }
+  const logout =() =>
+  {
+    // sign out user using firebase authentication signOut method
+    signOut(Authentication)
+    .then((re) => 
+    {
+    }).catch
+    {
+    }
+  }
 
   const handleNoti =() =>{
+    // open device settings for notifications
     Linking.openURL('App-Prefs:NOTIFICATIONS_ID&path=<bundle_id>');
   }
 
@@ -195,15 +223,21 @@ function Profilepage({route}) {
       
         
         <View style = {styles.ContentContainer2}>
-          <View style = {styles.TextContainer3}>
-          <Text style = {styles.TextStyle}>Privacy Policy</Text>
-          </View>
-          <View style = {styles.TextContainer3}>
-          <Text style = {styles.TextStyle}>Terms & Conditions</Text>
-          </View>
-          <View style = {styles.TextContainer3}>
-          <Text style = {styles.TextStyle}>About us</Text>
-          </View>
+          <TouchableOpacity>
+            <View style = {styles.TextContainer3}>
+            <Text style = {styles.TextStyle}>Privacy Policy</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View style = {styles.TextContainer3}>
+            <Text style = {styles.TextStyle}>Terms & Conditions</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <View style = {styles.TextContainer3}>
+            <Text style = {styles.TextStyle}>About us</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         <View style = {styles.LogOutContainer}>

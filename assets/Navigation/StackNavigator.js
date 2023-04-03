@@ -9,13 +9,31 @@ import Bookingpage4 from '../Screens/Bookingpage4';
 import Gallerypage from '../Screens/Gallerypage';
 import DrawerNavigator from './DrawerNavigator';
 import useFonts from '../Hooks/useFonts';
+import AppLoading from 'expo-app-loading';
+import { useState } from 'react';
 
 const Stack = createNativeStackNavigator();
 
 //create a navigation stack for seven screens: DrawerNavigator, HomeScreen, Gallerypage, ContactPage, BookingPage2, BookingPage3, BookingPage4
 function StackNavigator() {
 
-  useFonts();
+  const [IsReady, SetIsReady] = useState(false);// initialize state variable refreshing with true
+
+   //A function to load fonts
+   const FetchFonts = async () => {
+    await useFonts();
+  };
+
+  //Loads the font if React Hook "isReady" is true, if not displays loading screen till it's true.
+  if (!IsReady) {
+    return (
+      <AppLoading
+        startAsync={FetchFonts}
+        onFinish={() => SetIsReady(true)}
+        onError={(err) => console.log(err)}
+      />
+    );
+  }
 
   return (
       <Stack.Navigator>

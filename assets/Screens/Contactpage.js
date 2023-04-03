@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,StatusBar, Button, ScrollView } from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView} from 'react-native';
 import colors from '../Colors/colors';
 import Buttons from '../Components/ContactButtons';
 import sendEmail from 'react-native-email';
 import call from 'react-native-phone-call';
 import openMap from 'react-native-open-maps';
 
-//Main content for contact page
 function ContactPage() {
 
   const handleEmail = () => {
@@ -25,11 +24,10 @@ const handleCall = () => {
     prompt: false, // Optional boolean property. Determines if the user should be prompted prior to the call 
     skipCanOpen: true // Skip the canOpenURL check
   }
-
-
   call(args).catch(console.error)
   };
 
+  // This function handles opening the device's default map application and showing a specific location
   const handleMap =() =>{
     openMap({ latitude: 35.749668, longitude: 139.804901 });
   }
@@ -37,53 +35,44 @@ const handleCall = () => {
   return (
     <View style = {styles.container}>
       <SafeAreaView>
-        <ScrollView>
-      <View style = {styles.ScreenContainer}>
-        <Text style={styles.baseText}>
-          Contact Us
-        </Text>
-        <Text style={styles.innerText}>             
-        Have any questions? Please visit our FAQ section below or contact our customer care team for more information.
-        </Text>
-        <View style = {styles.Container2}>
-        <Text style ={styles.ContainerHeader}>
-          EMAIL
-        </Text>
-          <Text style = {styles.ContainerInnerText}>
-            Contact our customer care team 
-            with any enquiries
+        <View style = {styles.ScreenContainer}>
+          <Text style={styles.baseText}>
+            Contact Us
           </Text>
-          <Buttons
-            title="Email Us" onPress = {() => handleEmail()} 
-          />
-        </View>
-        <View style = {styles.Container2}>
-        <Text style ={styles.ContainerHeader}>
-          PHONE
-        </Text>
-          <Text style = {styles.ContainerInnerText}>
-            Contact our customer care team 
-            with any enquiries
+          <Text style={styles.innerText}>             
+          Have any questions? Please visit our FAQ section below or contact our customer care team for more information.
           </Text>
-          <Buttons
-            title="Call Us" 
-            onPress = {() => handleCall()}
-          />
+          <View style = {styles.Container2}>
+            <Text style ={styles.ContainerHeader}>
+              EMAIL
+            </Text>
+            <Text style = {styles.ContainerInnerText}>
+              Contact our customer care team 
+              with any enquiries
+            </Text>
+            <Buttons title="Email Us" onPress = {() => handleEmail()}/>
+          </View>
+          <View style = {styles.Container2}>
+            <Text style ={styles.ContainerHeader}>
+              PHONE
+            </Text>
+            <Text style = {styles.ContainerInnerText}>
+              Contact our customer care team 
+              with any enquiries
+            </Text>
+            <Buttons title="Call Us" onPress = {() => handleCall()}/>
+          </View>
+          <View style = {styles.Container2}>
+            <Text style ={styles.ContainerHeader}>
+              LOCATION
+            </Text>
+            <Text style = {styles.ContainerInnerText}>
+              Contact our customer care team 
+              with any enquiries
+            </Text>
+            <Buttons title="Our Location"  onPress = {() => handleMap()}/>
+          </View>
         </View>
-        <View style = {styles.Container2}>
-        <Text style ={styles.ContainerHeader}>
-          LOCATION
-        </Text>
-          <Text style = {styles.ContainerInnerText}>
-            Contact our customer care team 
-            with any enquiries
-          </Text>
-          <Buttons
-            title="Our Location"  onPress = {() => handleMap()}
-          />
-        </View>
-      </View>
-      </ScrollView>
       </SafeAreaView>
     </View>
   );
