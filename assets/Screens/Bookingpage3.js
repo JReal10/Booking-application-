@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView, FlatList} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView, FlatList,Dimensions} from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import colors from '../Colors/colors';
 import StepIndicator from 'react-native-step-indicator';
@@ -36,6 +36,8 @@ const customStyles = {
 
 //label for the step indicator
 const labels = ["Menu","Date","Confirmation"];
+
+const { width, height } = Dimensions.get('window');
 
 function Bookingpage3({navigation}) {
 
@@ -130,8 +132,14 @@ function Bookingpage3({navigation}) {
             renderItem={renderItem}
             showsVerticalScrollIndicator = {false}
             />
-            <Text style = {styles.Text1}>Total Price: {price} yen </Text>
-            <Text style = {styles.Text1}>Time Taken: {time} min </Text>
+            </View>
+          <View style = {styles.ContainerElement}>
+            <Text style = {styles.Header2}>Total Price</Text>
+            <Text style = {styles.Text1}>{price} yen</Text>
+          </View>
+          <View style = {styles.ContainerElement}>
+            <Text style = {styles.Header2}>Estimated Time Taken</Text>
+            <Text style = {styles.Text1}>{time} min</Text>
           </View>
           <View style = {styles.ContainerElement}>
             <Text style = {styles.Header2}>Name</Text>
@@ -142,12 +150,8 @@ function Bookingpage3({navigation}) {
             <Text style = {styles.Text1}>{route.params.paramEmail}</Text>
           </View>
           <View style = {styles.ContainerElement}>
-            <Text style = {styles.Header2}>Date</Text>
-            <Text style = {styles.Text1}>{route.params.paramDate}</Text>
-          </View>
-          <View style = {styles.ContainerElement}>
-            <Text style = {styles.Header2}>Time</Text>
-            <Text style = {styles.Text1}>{route.params.paramKey}</Text>
+            <Text style = {styles.Header2}>Date & Time</Text>
+            <Text style = {styles.Text1}>{route.params.paramDate}  {route.params.paramKey} </Text>
           </View>
         </View>
         <View style = {styles.Button}>
@@ -164,8 +168,7 @@ const styles = StyleSheet.create
 ({
   stepIndicator: 
   {
-    paddingVertical: '5%',
-    paddingHorizontal:'5%',
+    paddingVertical: height * 0.025,
   },
   Container: 
   {
@@ -173,49 +176,47 @@ const styles = StyleSheet.create
   },
   DetailContainer: 
   {
-    marginHorizontal:40,
-    borderRadius:8,
-    marginBottom:'5%',
+    marginHorizontal:width * 0.05,
+    marginBottom:height * 0.02,
 
   },
   Header:
   {
     fontFamily:'Merriweather-Bold',
-    fontSize:24,
+    fontSize:height * 0.025,
     fontWeight:'bold',
     color: colors.text_brown
   },
   ContainerHeader:
   {
-    marginBottom:28,
+    marginBottom:height * 0.05,
   },
   Header2:
   {
     fontFamily:'Merriweather-Bold',
-    fontSize:18,
+    fontSize:height * 0.02,
     fontWeight:'bold',
     color: colors.text_brown
   },
   Text1:
   {
     fontFamily:'Poppins-Medium',
-    fontSize:15,
+    fontSize:height * 0.018,
     color: "#181A18",
-    marginTop:7,
+    marginTop:height * 0.01,
   },
   ContainerElement: 
   {
-    marginBottom: 24,
+    marginBottom: height * 0.025,
   },
   courseContainer:
   {
-    paddingVertical:'2%',
-    paddingHorizontal:'2%'
+    paddingVertical:height * 0.008,
   },
   courseText:
   {
     fontFamily:'Poppins-Medium',
-    fontSize:14
+    fontSize:height * 0.018,
   },
   Button:
   {

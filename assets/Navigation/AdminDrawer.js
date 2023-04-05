@@ -11,6 +11,8 @@ import EnergyConsumption from '../Screens/EnergyConsumption';
 
 const Drawer = createDrawerNavigator();
 
+const { width, height } = Dimensions.get('window');
+
 //create a navigation drawer for a screen: CustomDrawer, AdminHomepage, AdminAddMenu, EbergyConsumption and Revenue
 function AdminDrawer() {
 
@@ -29,7 +31,6 @@ function AdminDrawer() {
       />
     );
   }
-
 
   return (
     <Drawer.Navigator drawerContent={props => <CustomDrawer {...props}/>} screenOptions= 

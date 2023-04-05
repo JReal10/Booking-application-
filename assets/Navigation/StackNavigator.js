@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Dimensions } from 'react-native';
 import HomeScreen from '../Screens/Homescreen';
 import ContactPage from '../Screens/Contactpage';
 import colors from '../Colors/colors';
@@ -13,6 +14,7 @@ import AppLoading from 'expo-app-loading';
 import { useState } from 'react';
 
 const Stack = createNativeStackNavigator();
+const { width, height } = Dimensions.get('window');
 
 //create a navigation stack for seven screens: DrawerNavigator, HomeScreen, Gallerypage, ContactPage, BookingPage2, BookingPage3, BookingPage4
 function StackNavigator() {
@@ -55,7 +57,7 @@ function StackNavigator() {
         },
         headerTitleStyle: 
         {
-          fontSize:28,
+          fontSize:height * 0.035,
           fontFamily:'DancingScript'
         },
         }}/>
@@ -73,7 +75,7 @@ function StackNavigator() {
         },
         headerTitleStyle: 
         {
-          fontSize:28,
+          fontSize:height * 0.035,
           fontFamily:'DancingScript'
         },
         }}/>
@@ -91,7 +93,7 @@ function StackNavigator() {
         },
         headerTitleStyle: 
         {
-          fontSize:28,
+          fontSize:height * 0.035,
           fontFamily:'DancingScript'
         },
         }}/>
@@ -109,7 +111,7 @@ function StackNavigator() {
         },
         headerTitleStyle: 
         {
-          fontSize:28,
+          fontSize:height * 0.035,
           fontFamily:'DancingScript'
         },
         }}/>
@@ -125,7 +127,7 @@ function StackNavigator() {
         },
         headerTitleStyle: 
         {
-          fontSize:28,
+          fontSize:height * 0.035,
           color:'#FFFFFF',
           fontFamily:'DancingScript'
         },

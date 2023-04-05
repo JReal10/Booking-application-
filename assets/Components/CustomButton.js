@@ -1,10 +1,7 @@
 import React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
-import colors from '../Colors/colors';
 
-const windowWidth = Dimensions.get('window').width;
-const windowWidth80 = (windowWidth * 0.85);
-const windowHeight = (Dimensions.get('window').height) * 0.022;
+const { width, height } = Dimensions.get('window');
 
 export default function Button(props) {
   const { onPress, title = 'Save',backgroundColor, size,fontFamilly} = props;
@@ -38,24 +35,17 @@ const styles = StyleSheet.create({
     elevation: 8,
     backgroundColor: "#009688",
     borderRadius: 10,
-    paddingVertical: windowHeight,
-    paddingHorizontal: 24,
-    width: windowWidth80
+    paddingVertical: height * 0.022,
+    paddingHorizontal: width * 0.02,
+    width: width * 0.85
   },
   appButtonText: {
-    fontSize: 18,
+    fontSize: height * 0.02,
     flex: 1,
     textAlign: 'center',
     color: "#fff",
     fontWeight: "bold",
 
-  },
-  text: {
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: 'bold',
-    letterSpacing: 0.25,
-    color: colors.text_white,
   },
   ButtonWrapper:
   {

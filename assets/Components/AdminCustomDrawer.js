@@ -1,11 +1,13 @@
 import React from "react";
-import { View,Text,StyleSheet } from "react-native";
-import { DrawerContentScrollView,DrawerItemList  } from "@react-navigation/drawer";
+import { View,Text,StyleSheet,Dimensions } from "react-native";
+import { DrawerContentScrollView,DrawerItemList } from "@react-navigation/drawer";
 import colors from "../Colors/colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Authentication } from '../Config/firebase';
 import { signOut } from 'firebase/auth';
+
+const { width, height } = Dimensions.get('window');
 
 const AdminCustomDrawer = (props) =>
 {
@@ -31,7 +33,7 @@ const AdminCustomDrawer = (props) =>
 
     </DrawerContentScrollView>
       
-        <TouchableOpacity onPress={() => {logout()}} style={{paddingVertical: 30,paddingHorizontal:15}}>
+        <TouchableOpacity onPress={() => {logout()}} style={styles.logoutContainer}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <MaterialIcons name = 'logout' size = {32} color = {colors.text_brown} />
             <Text style = {styles.Logout}>
@@ -44,68 +46,69 @@ const AdminCustomDrawer = (props) =>
 }
 
 const styles = StyleSheet.create({
-  Wrapper:
-  {
-    flex:1,
-    backgroundColor:colors.primary_brown,
+  wrapper: {
+    flex: 1,
+    backgroundColor: colors.primary_brown,
   },
-  AppointmentHeaderWrapper:{
-    paddingTop:10,
+  appointmentHeaderWrapper: {
+    paddingTop: height * 0.02,
   },
-  DateTimeWrapper:{
-    justifyContent: 'space-between',
-    flexDirection:'row',
-    paddingVertical: 10,
+  dateTimeWrapper: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    paddingVertical: height * 0.02,
   },
-  CourseTextStyle:{
-    fontSize : 15,
-    textAlign: 'left',
-    padding:2,
+  courseTextStyle: {
+    fontSize: width * 0.035,
+    textAlign: "left",
+    padding: width * 0.01,
     color: colors.text_brown,
-    fontFamily:'Poppins-Regular'
+    fontFamily: "Poppins-Regular",
   },
-  TextStyle2:{
-    color:colors.text_brown,
-    fontSize:15,
-    fontFamily:'Poppins-Regular'
+  textStyle2: {
+    color: colors.text_brown,
+    fontSize: width * 0.035,
+    fontFamily: "Poppins-Regular",
   },
-  ApoointmentSubWrapper:{
+  appointmentSubWrapper: {
     backgroundColor: "#BAA793",
-    padding: 10,
-    margin:5,
-    borderRadius:8,
-    shadowRadius:5,
+    padding: width * 0.03,
+    margin: width * 0.01,
+    borderRadius: width * 0.02,
+    shadowRadius: width * 0.007,
   },
-  HeaderWrapper:
-  {
-    padding:5,
-    marginBottom:20,
-    margin:5,
-    borderRadius:8,
+  headerWrapper: {
+    padding: width * 0.01,
+    marginBottom: height * 0.02,
+    margin: width * 0.01,
+    borderRadius: width * 0.02,
   },
-  SubTextWrapper:{
-    fontSize:20,
-    padding: 10,
+  subTextWrapper: {
+    fontSize: width * 0.05,
+    padding: width * 0.02,
     color: colors.text_brown,
-    fontFamily:'Merriweather-Regular'
+    fontFamily: "Merriweather-Regular",
   },
-  HeaderTextWrapper:
-  {
-    fontSize:32,
-    color:colors.background,
-    fontFamily:'Merriweather-Regular'
+  headerTextWrapper: {
+    fontSize: width * 0.08,
+    color: colors.background,
+    fontFamily: "Merriweather-Regular",
   },
-  TextStyle:{
-    fontSize: 18, 
+  textStyle: {
+    fontSize: width * 0.06,
     color: colors.text_brown,
-    fontFamily:'Poppins-Regular'
+    fontFamily: "Poppins-Regular",
   },
-  Logout:
-  {
-    fontSize: 20,
-    marginLeft: 5,
+  logout: {
+    fontSize: width * 0.05,
+    marginLeft: width * 0.02,
     color: colors.text_brown,
-    fontFamily:'Poppins-Regular'
+    fontFamily: "Poppins-Regular",
+  },
+  logoutContainer:
+  {
+    paddingVertical: height * 0.03,
+    paddingHorizontal:width * 0.04
   }
 })
 

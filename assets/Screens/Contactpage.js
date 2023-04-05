@@ -1,10 +1,14 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,Dimensions} from 'react-native';
 import colors from '../Colors/colors';
 import Buttons from '../Components/ContactButtons';
 import sendEmail from 'react-native-email';
 import call from 'react-native-phone-call';
 import openMap from 'react-native-open-maps';
+import { ScrollView } from 'react-native-gesture-handler';
+
+// Get the width and height of the screen using the Dimensions API
+const { width, height } = Dimensions.get('window');
 
 function ContactPage() {
 
@@ -35,6 +39,7 @@ const handleCall = () => {
   return (
     <View style = {styles.container}>
       <SafeAreaView>
+        <ScrollView showsVerticalScrollIndicator = {false}>
         <View style = {styles.ScreenContainer}>
           <Text style={styles.baseText}>
             Contact Us
@@ -73,66 +78,59 @@ const handleCall = () => {
             <Buttons title="Our Location"  onPress = {() => handleMap()}/>
           </View>
         </View>
+        </ScrollView>
       </SafeAreaView>
     </View>
   );
 }
 
 //Stylesheet for the contact page
-const styles = StyleSheet.create
-({
-    container :
-    {
-      flex:1
-    },
-    ScreenContainer: 
-    {
-     flexDirection: 'column',
-     justifyContent: 'center', 
-     padding: 20,
-    },
-    baseText: {
-      fontSize:36,
-      marginTop: 20,
-      color: colors.text_brown,
-      textAlign: 'center'
-    },
-    innerText: {
-      paddingTop: 20,
-      color: colors.text_brown,
-      fontSize: 16,
-      opacity: 0.9,
-      textAlign: 'center',
-      marginBottom:40,
-    },
-    Container2: 
-    {
-      backgroundColor: '#EEEEEE',
-      borderRadius: 8,
-      paddingVertical:23,
-      paddingHorizontal:22,
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      marginBottom:21,
-    },
-
-    ContainerHeader:
-    {
-      fontSize: 36,
-      color: colors.text_brown,
-      textAlign: 'center',
-      paddingBottom:21
-    },
-    ContainerInnerText:
-    {
-      color: colors.text_brown,
-      fontSize: 16,
-      opacity: 0.9,
-      textAlign: 'center',
-      paddingHorizontal:50,
-      paddingBottom:21
-    },
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  ScreenContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: width * 0.05,
+  },
+  baseText: {
+    fontSize: width * 0.08,
+    marginTop: height * 0.02,
+    color: colors.text_brown,
+    textAlign: 'center'
+  },
+  innerText: {
+    paddingTop: height * 0.03,
+    color: colors.text_brown,
+    fontSize: width * 0.05,
+    opacity: 0.9,
+    textAlign: 'center',
+    marginBottom: height * 0.04,
+  },
+  Container2: {
+    backgroundColor: '#EEEEEE',
+    borderRadius: width * 0.03,
+    paddingVertical: height * 0.03,
+    paddingHorizontal: width * 0.04,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    marginBottom: height * 0.03,
+  },
+  ContainerHeader: {
+    fontSize: width * 0.08,
+    color: colors.text_brown,
+    textAlign: 'center',
+    paddingBottom: height * 0.03,
+  },
+  ContainerInnerText: {
+    color: colors.text_brown,
+    fontSize: width * 0.05,
+    opacity: 0.9,
+    textAlign: 'center',
+    paddingHorizontal: width * 0.1,
+    paddingBottom: height * 0.03,
+  },
 });
 
 export default ContactPage;

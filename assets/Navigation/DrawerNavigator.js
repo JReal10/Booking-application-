@@ -1,11 +1,13 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import { Dimensions } from 'react-native';
 import TabNavigator from './TabNavigator';
 import colors from '../Colors/colors';
 import CustomDrawer from '../Components/CustomDrawer';
 import useFonts from '../Hooks/useFonts';
 
 const Drawer = createDrawerNavigator();
+const { width, height } = Dimensions.get('window');
 
 //create a navigation drawer for two screens: CustomDrawer and TabNavigtor.
 function DrawerNavigator() {
@@ -25,7 +27,7 @@ function DrawerNavigator() {
         },
         headerTitleStyle: 
         {
-          fontSize:28,
+          fontSize:height * 0.035,
           fontFamily:'DancingScript'
         },
         drawerItemStyle: {

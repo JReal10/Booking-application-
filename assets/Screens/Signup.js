@@ -10,8 +10,6 @@ import Button from '../Components/CustomButton';
  import useFonts from '../Hooks/useFonts';
  import { useState } from 'react';
  import AppLoading from 'expo-app-loading';
- import LogoButton from '../Components/LogoButton';
-
  
 function Signup({navigation}) {
 
@@ -127,15 +125,6 @@ function Signup({navigation}) {
                 <View style = {styles.blankSpace}></View>
 
                 <Button title = {'SIGN UP'} backgroundColor = {colors.secondary_green} onPress = {() => {RegisterUser()}} fontFamily= {'Poppins-Regular'}></Button>
-
-                <View style = {styles.LogoView}>
-                <View style = {styles.LogoWrapper}>
-                  <LogoButton backgroundColor = {"#4267B2"} title = "Connect with Facebook" logo = {'facebook'}></LogoButton>
-                </View>
-                <View style = {styles.LogoWrapper}>
-                  <LogoButton backgroundColor = {"#d34836"} title = "Connect with Facebook" logo = {'google'}></LogoButton>
-                </View>
-              </View>
 
                 <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                     <View style = {styles.TextView}>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView, ScrollView,Button} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView, ScrollView,Button,Dimensions} from 'react-native';
 import StepIndicator from 'react-native-step-indicator';
 import CButton from '../Components/CustomButton';
 import { Calendar } from 'react-native-calendars';
@@ -37,6 +37,8 @@ const customStyles = {
 
 //label for the step indicator
 const labels = ["Menu","Date","Confirmation"];
+
+const { width, height } = Dimensions.get('window');
 
 //function to toggle the color between the buttons on the screen
 const getMarkedDates = (date) => {
@@ -185,10 +187,8 @@ function Bookingpage2({navigation}) {
 //Stylesheet for the UI components
 const styles = StyleSheet.create
 ({
-  stepIndicator: 
-  {
-    paddingVertical: '5%',
-    paddingHorizontal:'5%',
+  stepIndicator: {
+    paddingVertical: height * 0.025,
   },
   Container: 
   {
@@ -197,8 +197,8 @@ const styles = StyleSheet.create
   AvailableTime: 
   {
     fontFamily:'Poppins-SemiBold',
-    paddingHorizontal:12,
-    fontSize: 16,
+    paddingHorizontal:width * 0.03,
+    fontSize: height * 0.018,
     color: colors.text_brown,
     paddingVertical: '3%',
     fontWeight: 'bold'
@@ -208,13 +208,13 @@ const styles = StyleSheet.create
     flexWrap:'wrap',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 10,
+    padding: height * 0.008,
   },
   selectedTime: {
-    marginVertical: '5%',
+    marginVertical: height * 0.02,
     fontWeight: 'bold',
-    paddingHorizontal:12,
-    fontSize: 14,
+    paddingHorizontal:width * 0.03,
+    fontSize: height * 0.015,
     color: colors.text_brown,
   },
   customButton:

@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,Dimensions} from 'react-native';
 import colors from '../Colors/colors';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Button from '../Components/CustomButton';
+
+const { width, height } = Dimensions.get('window');
+
 
 function Bookingpage4({navigation}) {
 
@@ -33,35 +36,35 @@ const styles = StyleSheet.create
   },
   Container1: 
   {
-    marginHorizontal:12,
+    marginHorizontal:width * 0.01,
     alignItems: 'center'
   },
   Header:
   {
-    padding:50,
-    fontSize:24,
+    padding:height * 0.05,
+    fontSize:height * 0.03,
     fontWeight:'bold',
     color: colors.text_brown,
     fontFamily:'Merriweather-Bold'
   },
   FontAwesome: 
   {
-    padding:50, 
+    padding:height * 0.05, 
     color:colors.secondary_green
   },
   Text1:
   {
     fontFamily:'Poppins-Regular',
-    paddingHorizontal: 40,
-    paddingVertical:30,
+    paddingHorizontal: width * 0.04,
+    paddingVertical:height * 0.04,
     textAlign: 'center',
-    fontSize:18,
+    fontSize:height * 0.02,
     color: colors.text_brown,
-    marginTop:7,
+    marginTop:height * 0.01,
   },
   Button:
   {
-    marginTop:'40%',
+    marginTop:height * 0.2,
     alignItems:'center',
   }
 })

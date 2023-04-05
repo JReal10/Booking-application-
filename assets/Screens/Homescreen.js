@@ -5,6 +5,9 @@ import colors from '../Colors/colors';
 import AppLoading from 'expo-app-loading';
 import useFonts from '../Hooks/useFonts';
 import {useState} from 'react';
+import { Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
 
 function HomeScreen({navigation}){
 
@@ -83,57 +86,48 @@ function HomeScreen({navigation}){
 }
 
 //Stylesheet for the UI components
-const styles = StyleSheet.create
-({
-  Container:
-  {
-    flex:1
+const styles = StyleSheet.create({
+  Container: {
+    flex: 1,
   },
-  ImageContainer:
-  {
-    marginTop: 30,
-    marginHorizontal:15,
-    paddingVertical:10,
-    alignItems:'center',
+  ImageContainer: {
+    marginTop: height * 0.03,
+    marginHorizontal: width * 0.04,
+    paddingVertical: height * 0.01,
+    alignItems: 'center',
     backgroundColor: colors.background,
-    borderRadius:8,
+    borderRadius: 8,
   },
-  ImageContainer2:
-  {
-    marginTop: 20,
-    marginHorizontal:15,
-    paddingVertical:10,
-    alignItems:'center',
+  ImageContainer2: {
+    marginTop: height * 0.02,
+    marginHorizontal: width * 0.04,
+    paddingVertical: height * 0.01,
+    alignItems: 'center',
     backgroundColor: colors.background,
-    borderRadius:8,
+    borderRadius: 8,
   },
-  ImageStyle:
-  {
-    width: 362,
-    height:193,
+  ImageStyle: {
+    width: width * 0.9,
+    height: height * 0.215,
   },
-  TextStyle:
-  {
-    fontSize: 40,
+  TextStyle: {
+    fontSize: width * 0.11,
     color: colors.text_brown,
-    fontFamily: 'Poppins-Medium'
+    fontFamily: 'Poppins-Medium',
   },
-  TextContainer:
-  {
-    paddingTop:5,
-    paddingLeft:20,
+  TextContainer: {
+    paddingTop: height * 0.01,
+    paddingLeft: width * 0.05,
   },
-  IconStyle:
-  {
-    alignItems:'flex-end',
-    marginTop:'22%',
-    marginHorizontal: '5%'
+  IconStyle: {
+    alignItems: 'flex-end',
+    marginTop: height * 0.07,
+    marginHorizontal: width * 0.05,
   },
-  overlayContainer:{
-    flex:1,
-    backgroundColor: '#C7B39E40'
+  overlayContainer: {
+    flex: 1,
+    backgroundColor: '#C7B39E40',
   },
-})
-
+});
 
 export default HomeScreen;

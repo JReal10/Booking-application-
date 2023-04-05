@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,FlatList, Modal,Linking} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,FlatList, Modal,Linking,Dimensions} from 'react-native';
 import colors from '../Colors/colors';
 import { signOut } from 'firebase/auth';
 import { Authentication } from '../Config/firebase';
@@ -9,6 +9,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useState,useEffect } from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+
+const { width, height } = Dimensions.get('window');
 
 const AppointmentModal = ({visible,children}) =>{
   // Declare state to control modal visibility
@@ -115,20 +117,24 @@ function Profilepage({route}) {
   const renderItem = ({item}) => (
     // render appointment item as a container with course, date, time, price, and cancel appointment button
     <View style = {styles.courseContainer}>
-      <Text style = {styles.courseHeader}>COURSE:</Text>
+      <Text style = {styles.courseHeader}>Course</Text>
       <View>
         {(item.course).map(item => (
-          <Text style ={styles.courseText} key={item}> {item}</Text>
+          <Text style ={styles.courseText} key={item}> {item} </Text>
         ))}
       </View>
-      <View style = {styles.courseDetailContainer}>
-        <Text style = {styles.courseDetailText}>Date&Time: {item.date}</Text>
-        <Text style = {styles.courseDetailText}>estimated time: {item.timeTaken} min</Text>
-        <Text style = {styles.courseDetailText}>Price: {item.price} yen</Text>
+      <View style = {styles.LineBreak}></View>
+      <Text style = {styles.courseHeader}>Date & Time</Text>
+      <Text style = {styles.courseText}> {item.date}  {item.time}</Text>
+      <View style = {styles.LineBreak}></View>
+      <Text style = {styles.courseHeader}>Estimated Time Taken</Text>
+      <Text style = {styles.courseText}>{item.timeTaken} min</Text>
+      <View style = {styles.LineBreak}></View>
+      <Text style = {styles.courseHeader}>Price</Text>
+        <Text style = {styles.courseText}>¥{item.price}</Text>
         <TouchableOpacity onPress = {()=> CancelAppointment(item.id)}style = {styles.CancelAppointment}>
           <Text style = {styles.CancelAppointmentText}> Cancel Appointment </Text>
         </TouchableOpacity>
-      </View>
     </View>
   );
 
@@ -168,8 +174,7 @@ function Profilepage({route}) {
         <View style = {styles.TextContainer}>
           <MaterialIcons name = 'account-circle' size = {60} color = '#839A7F' />
           <Text style = {styles.TextStyle}>{name}</Text>
-          </View>
-
+        </View>
           <AppointmentModal visible = {visible}>
             <View>
               <View style = {styles.PopUpHeader}>
@@ -179,9 +184,8 @@ function Profilepage({route}) {
               </TouchableOpacity>
               </View>
               {(course != "")? 
-              <View style = {styles.ApoointmentSubWrapper}>
+              <View style = {styles.FlatListWrapper}>
                 <FlatList
-                  style = {styles.FlatList} 
                   data={course}
                   renderItem={renderItem}
                   ItemSeparatorComponent={ItemDivider}
@@ -248,204 +252,141 @@ function Profilepage({route}) {
   );
 }
 
-const styles = StyleSheet.create
-({
-  ScreenContainer: 
-  {
-    flex: 1 
+const styles = StyleSheet.create({
+  ScreenContainer: {
+    flex: 1,
   },
-  modalBackGround:{
-    flex:1,
-    backgroundColor:'rgba(0,0,0,0.5)',
+  modalBackGround: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
     justifyContent: 'center',
-    alignItems:'center',
+    alignItems: 'center',
   },
-  modalContainer:{
-    width:'80%',
-    height:'60%',
-    backgroundColor:'white',
-    paddingHorizontal:20,
-    paddingVertical:30,
-    borderRadius:20,
-    elevation:20,
+  modalContainer: {
+    width: width * 0.8, // Use percentage of screen width
+    height: height * 0.6, // Use percentage of screen height
+    backgroundColor: 'white',
+    paddingHorizontal: (width * 0.8) * 0.05,
+    paddingVertical: (width * 0.8) * 0.1,
+    borderRadius: 20,
   },
-  ContentContainer:
-  {
+  ContentContainer: {
     backgroundColor: '#EEEEEE',
-    marginVertical:29.5,
-    marginHorizontal:21,
+    marginVertical: height * 0.02,
+    marginHorizontal: width * 0.03,
     borderRadius: 8,
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    paddingLeft: 5,
-    paddingRight:20,
-    paddingVertical:15,
+    paddingLeft: width * 0.03,
+    paddingVertical: width * 0.03,
   },
-  TextContainer:
-  {
-    flexDirection:'row',
-    alignItems:'center',
-  },
-  TextStyle:
-  {
-    marginLeft:10,
-    fontSize: 18,
+  TextStyle: {
+    marginLeft: width * 0.03,
+    fontSize: width * 0.045, // Use percentage of screen width
     color: colors.text_brown,
-    fontFamily:'Merriweather-Regular'
+    fontFamily: 'Merriweather-Regular',
   },
-  TextStyle2:{
-    marginLeft:10,
-    fontSize: 18,
-    color: colors.text_brown,
-    fontFamily:'Poppins-Regular'
-
-  },
-  ContentContainer2:
-  {
+  ContentContainer2: {
     backgroundColor: '#EEEEEE',
-    marginBottom: 29.5,
-    marginHorizontal:21,
+    marginBottom: height * 0.01,
+    marginHorizontal: width * 0.02,
     borderRadius: 8,
     justifyContent: 'flex-start',
     flexDirection: 'column',
-    paddingLeft: 5,
-    paddingRight:20,
-    paddingVertical:25,
+    paddingLeft: width * 0.02,
+    paddingVertical: height * 0.02,
   },
-  TextContainer2: 
-  {
-    flexDirection:'row',
-    alignItems:'center',
-    marginLeft:'3%',
-    marginTop: '5%',
-    marginBottom: '3%'
+  TextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: width * 0.01,
+    marginTop: height * 0.005,
+    marginBottom: height * 0.005,
   },
-  TextContainer3:
-  {
-    flexDirection:'row',
-    alignItems:'center',
-    marginLeft:'3%',
-    marginTop: '3%',
-    marginBottom: '5%'
+  TextContainer2: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: width * 0.03,
+    marginTop: height * 0.01,
+    marginBottom: height * 0.025,
   },
-  LogOutContainer: 
-  {
-    marginBottom: 29.5,
-    marginHorizontal:21,
+  TextContainer3: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: width * 0.03,
+    marginTop: height * 0.025,
+    marginBottom: height * 0.025,
+  },
+  LogOutContainer: {
+    marginBottom: height * 0.02,
+    marginHorizontal: width * 0.03,
     justifyContent: 'center',
     flexDirection: 'row',
-    paddingLeft: 5,
-    paddingRight:20,
-    paddingVertical:10,
+    paddingVertical: height * 0.02,
   },
-  editStyle:{
-    fontSize:16,
-    color: colors.icon_dark,
+  PopUpHeader: {
+    marginBottom: height * 0.02,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  courseContainer:
-  {
-    flexDirection: 'column',
-    paddingVertical:'5%',
-    padding:'2%',
-  },
-  CourseHeaderWrapper:{
-    paddingTop:5,
-    paddingBottom:3,
-    fontSize: 20, 
-    color:"#371D10",
-  
-  },
-  PopUpHeader:{
-    marginBottom:'5%',
-    alignItems:'center',
-    flexDirection:'row',
-    justifyContent:'space-between'
+  TextStyle2: {
+    fontSize: width * 0.045,
+    color: colors.text_brown,
+    textAlign:'center',
+    fontFamily: 'Poppins-Regular',
   },
   AppointmentHeader:{
-    fontSize:24,
+    fontSize:width * 0.05,
+    fontFamily:'Merriweather-Regular',
+    color:colors.text_brown
   },
   CancelAppointment:{
-    marginTop: '10%',
-    marginBottom: '5%',
+    marginTop: height * 0.02,
+    marginBottom: height * 0.01,
     alignItems:'center',
   },
   CancelAppointmentText:{
     textDecorationLine:'underline'
   },
-  inputHeader:
-  {
-    fontSize:18,
-    color:colors.text_brown,
-    paddingBottom:9,
-  },
-  Inputs:
-  {
-    paddingVertical: 10
-  },
-  EmailInput:
-  {
-    backgroundColor:'#DFDFDF',
-    borderRadius:8,
-    fontSize:16,
-    height:50,
-    paddingLeft:10,
-  },
   NoAppWrapper:
   {
-    paddingVertical:'40%',
+    paddingVertical: height * 0.3,
     alignItems:'center'
   },
   NoAppText:
   {
     fontFamily:'Poppins-Regular',
-    fontSize:16,
+    fontSize:width * 0.04,
     color:'#66554190',
     textDecorationLine:'underline'    
   },
-  FlatList:
-  {
-    height:'90%'
-  },
-  HeaderText: 
-  {
-    fontFamily:'Merriweather-Regular',
-    fontSize: 16,
-    color: colors.text_brown,
-  },
   courseText:{
     fontFamily:'Poppins-Regular',
-    fontSize: 16,
+    fontSize: width * 0.035,
     color: '#626262'
-  },
-  courseSubText:
-  {
-    fontFamily:'Poppins-Regular',
-    fontSize: 16,
-    color: '#626262'
-
-  },
-  courseDetailText:{
-    fontFamily:'Poppins-Regular',
-    fontSize: 14,
-    color: '#626262',
-    paddingVertical:'1%'
-  },
-  courseDetailContainer:{
-    paddingVertical:'3%'
   },
   courseContainer:
   {
     flexDirection: 'column',
-    paddingVertical:'2%',
-    padding:'2%',
+    paddingVertical: height * 0.01,
+    paddingHorizontal: width * 0.01,
   },
   courseHeader:
   {
-    fontFamily:'Poppins-Regular',
-    fontSize: 18,
-    color: '#626262'
+    fontFamily:'Merriweather-Regular',
+    fontSize: width * 0.04,
+    color: colors.text_brown
   },
+  FlatListWrapper:
+  {
+    height: height * 0.5
+  },
+  LineBreak:
+  {
+    height: height * 0.005
+  }
 })
 
 export default Profilepage;

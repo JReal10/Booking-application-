@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,FlatList} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,FlatList,Dimensions} from 'react-native';
 import colors from '../Colors/colors';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,6 +9,8 @@ import Button from '../Components/CustomButton';
 import { database } from '../Config/firebase';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useState,useEffect } from 'react';
+
+const { width, height } = Dimensions.get('window');
 
 //custom styles for the step indicator
 const customStyles = {
@@ -151,91 +153,76 @@ function Bookingpage1({navigation}) {
 }
 
 //Stylesheet for the UI components
-const styles = StyleSheet.create
-({
-  stepIndicator: 
-  {
-    paddingVertical: '8%',
-    paddingHorizontal:'5%',
+const styles = StyleSheet.create({
+  stepIndicator: {
+    paddingVertical: height * 0.025,
   },
-  Container: 
-  {
-    flex:1
+  Container: {
+    flex: 1
   },
-  courseContainer:
-  {
+  courseContainer: {
     flexDirection: 'column',
-    paddingVertical:'2%',
-    padding:'2%',
+    paddingVertical: height * 0.02,
+    padding: width * 0.02,
   },
-  courseHeader:
-  {
+  courseHeader: {
     flexDirection: 'row',
   },
-  courseSubContainer:
-  {
+  courseSubContainer: {
     flexDirection: 'row',
-    justifyContent:'space-between'
+    justifyContent: 'space-between'
   },
-  HeaderText: 
-  {
-    fontFamily:'Merriweather-Regular',
-    fontSize: 18,
+  HeaderText: {
+    fontFamily: 'Merriweather-Regular',
+    fontSize: height * 0.022,
     color: colors.text_brown,
   },
-  TimeText: 
-  {
-    fontFamily:'Poppins-Regular',
-    fontSize:16,
+  TimeText: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: height * 0.02,
     color: '#828282',
-    marginLeft: '2%'
+    marginLeft: width * 0.02
   },
-  time:
-  {
+  time: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    marginLeft: '5%'
+    marginLeft: width * 0.05
   },
-  DescriptionText:
-  {
-    fontFamily:'Poppins-Regular',
-    paddingTop: 5,
-    fontSize:16,
+  DescriptionText: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: height * 0.018,
     color: '#828282',
-    marginBottom:'5%',
-    marginTop:'3%'
+    marginBottom: height * 0.04,
+    marginTop: height * 0.02
   },
-  priceText: 
-  {
-    fontFamily:'Poppins-Regular',
-    fontSize: 20,
+  priceText: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: height * 0.025,
     color: '#626262'
   },
-  FlatList:
-  {
-    height:'67%',
-    borderRadius:'8'
+  FlatList: {
+    height: height * 0.55,
+    borderRadius: width * 0.03
   },
   button: {
     alignItems: 'center',
-    paddingVertical: 6,
-    paddingHorizontal:15,
-    borderRadius: 8,
+    paddingVertical: height * 0.005,
+    paddingHorizontal: width * 0.03,
+    borderRadius: width * 0.03,
     elevation: 3,
     backgroundColor: colors.secondary_green,
-    flexDirection:'row'
+    flexDirection: 'row'
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: height * 0.02,
     fontWeight: 'bold',
     color: colors.text_white,
   },
-  ContinueButton:
-  {
-    alignItems:'center',
-    marginTop:'3%'
+  ContinueButton: {
+    alignItems: 'center',
+    marginTop: height * 0.01
   }
-})
+});
 
 export default Bookingpage1;
