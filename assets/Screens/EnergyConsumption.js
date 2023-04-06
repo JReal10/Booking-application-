@@ -3,30 +3,31 @@ import { Text,View, StyleSheet,SafeAreaView,FlatList} from 'react-native';
 import colors from '../Colors/colors';
 import AppLoading from 'expo-app-loading';
 import useFonts from '../Hooks/useFonts';
-import {useWindowDimensions} from 'react-native';
+import {Dimensions} from 'react-native';
 import { useState,useEffect}from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function EnergyConsumption({navigation}){
+const { width, height } = Dimensions.get('window');
 
-  const {height, width} = useWindowDimensions();
+function EnergyConsumption(){
+
   const [IsReady, SetIsReady] = useState(false);
   const [count, setCount] = useState(0);
-  const [day, setDay] = useState(5);
+  const [day, setDay] = useState(0);
 
   const EnergyRateArray = [
-    { name: 'Air Conditioner', value: 318 * day },
-    { name: 'Air Purifier', value: 100 * day},
+    { name: 'Air Conditioner', value: 318},
+    { name: 'Air Purifier', value: 100},
     { name: 'UV Light', value: 96 * count},
-    { name: 'Nail Gel Remover', value: 72 * count},
-    { name: 'Desktop PC', value: 200 * day},
-    { name: 'Wifi', value: 20 * day},
-    { name: 'Vaccum', value: 120 * count},
-    { name: 'Card Reader', value: 0.5 * day},
-    { name: 'Light', value: 300 * day},
-    { name: 'Towel Warmer', value: 100 * day},
-    { name: 'Time Card', value: 10 * day},
+    { name: 'Nail Gel Remover', value: 72},
+    { name: 'Desktop PC', value: 200},
+    { name: 'Wifi', value: 20},
+    { name: 'Vaccum', value: 120},
+    { name: 'Card Reader', value: 0.5},
+    { name: 'Light', value: 300},
+    { name: 'Towel Warmer', value: 100},
+    { name: 'Time Card', value: 10},
   ];
 
   const date = new Date().toLocaleDateString();
@@ -67,6 +68,7 @@ function EnergyConsumption({navigation}){
     if (storedDay !== null) {
       setDay(parseInt(storedDay));
     }
+    console.log(storedCount);
   };
 
   const FetchFonts = async () => {
@@ -145,7 +147,7 @@ const styles = StyleSheet.create
   },
   HeaderText:
   {
-    fontSize:'48',
+    fontSize:height * 0.05,
     fontFamily:'Poppins-Medium',
     color:colors.background
   },
@@ -153,11 +155,11 @@ const styles = StyleSheet.create
   {
     flexDirection:'row',
     justifyContent:'space-between',
-    padding: 10,
+    padding: height * 0.01,
   },
   flatList:
   {
-    marginHorizontal:10,
+    marginHorizontal:width * 0.02,
     justifyContent:'flex-start',
   },
   PriceContainer:
@@ -165,18 +167,18 @@ const styles = StyleSheet.create
     justifyContent:'space-evenly',
     backgroundColor: colors.secondary_green,
     borderRadius:8,
-    paddingHorizontal:'5%'
+    paddingHorizontal:width * 0.05
   },
   itemText:
   {
-    fontSize:18,
+    fontSize:height * 0.02,
     fontFamily:'Poppins-Regular',
     color:colors.text_brown
   },
   BalancHeader:
   {
-    fontSize:24,
-    paddingVertical: 10,
+    fontSize:height * 0.025,
+    paddingVertical: height * 0.015,
     fontFamily:'Merriweather-Regular',
     color:colors.text_brown,
     
@@ -184,18 +186,18 @@ const styles = StyleSheet.create
   priceStatusStyle:
   {
     fontFamily:'Merriweather-Bold',
-    fontSize:16,
+    fontSize:height * 0.02,
     color:colors.background
   },
   dateStyle:
   {
-    fontSize:16,
+    fontSize:height * 0.018,
     fontFamily:'Poppins-Regular',
     color: "#FFFFFF99"
   },
   ppTextStyle:
   {
-    fontSize:16,
+    fontSize:height * 0.018,
     fontFamily:'Poppins-Regular',
     color:colors.background
   }

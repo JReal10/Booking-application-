@@ -33,75 +33,38 @@ const AdminCustomDrawer = (props) =>
 
     </DrawerContentScrollView>
       
-        <TouchableOpacity onPress={() => {logout()}} style={styles.logoutContainer}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <MaterialIcons name = 'logout' size = {32} color = {colors.text_brown} />
-            <Text style = {styles.Logout}>
-              Log Out
-            </Text>
-          </View>
-        </TouchableOpacity>
+    <TouchableOpacity onPress={() => {logout()}} style={styles.logoutContainer}>
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+      <MaterialIcons name = 'logout' size = {height * 0.04} color = {colors.text_brown} />
+      <View style = {styles.logoutContainer}>
+        <Text style = {styles.logout}>
+          Log Out
+        </Text>
+      </View>
+    </View>
+    </TouchableOpacity>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
+  Wrapper: {
     flex: 1,
     backgroundColor: colors.primary_brown,
   },
-  appointmentHeaderWrapper: {
-    paddingTop: height * 0.02,
-  },
-  dateTimeWrapper: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    paddingVertical: height * 0.02,
-  },
-  courseTextStyle: {
-    fontSize: width * 0.035,
-    textAlign: "left",
-    padding: width * 0.01,
-    color: colors.text_brown,
-    fontFamily: "Poppins-Regular",
-  },
-  textStyle2: {
-    color: colors.text_brown,
-    fontSize: width * 0.035,
-    fontFamily: "Poppins-Regular",
-  },
-  appointmentSubWrapper: {
-    backgroundColor: "#BAA793",
-    padding: width * 0.03,
-    margin: width * 0.01,
-    borderRadius: width * 0.02,
-    shadowRadius: width * 0.007,
-  },
-  headerWrapper: {
+  HeaderWrapper: {
     padding: width * 0.01,
     marginBottom: height * 0.02,
     margin: width * 0.01,
     borderRadius: width * 0.02,
   },
-  subTextWrapper: {
-    fontSize: width * 0.05,
-    padding: width * 0.02,
-    color: colors.text_brown,
-    fontFamily: "Merriweather-Regular",
-  },
-  headerTextWrapper: {
+  HeaderTextWrapper: {
     fontSize: width * 0.08,
     color: colors.background,
     fontFamily: "Merriweather-Regular",
   },
-  textStyle: {
-    fontSize: width * 0.06,
-    color: colors.text_brown,
-    fontFamily: "Poppins-Regular",
-  },
   logout: {
     fontSize: width * 0.05,
-    marginLeft: width * 0.02,
     color: colors.text_brown,
     fontFamily: "Poppins-Regular",
   },

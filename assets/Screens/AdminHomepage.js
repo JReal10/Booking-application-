@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity, ScrollView,StatusBar,FlatList } from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity, ScrollView,StatusBar,FlatList,Dimensions } from 'react-native';
 import colors from '../Colors/colors';
 import AppLoading from 'expo-app-loading';
 import useFonts from '../Hooks/useFonts';
 import { database } from '../Config/firebase';
-import { deleteDoc,doc,collection,getDocs } from 'firebase/firestore';
+import { deleteDoc,doc,collection,getDocs, getDoc } from 'firebase/firestore';
 import { useState,useEffect }from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const { width, height } = Dimensions.get('window');
 
 function AdminHomepage(){
 
@@ -21,20 +23,21 @@ function AdminHomepage(){
   const [count, setCount] = useState(0); // state variable to hold the count of appointments deleted
   const [day, setDay] = useState(0); // state variable to hold the current day
   const [appointmentHist, setAppointmentHist] = useState([]); // state variable to hold the deleted appointments' history
+  const [Revenue, setRevenue] = useState([]);
 
   useEffect(() => {
 
     if(refreshing){  
       GetAppointment(); // function to get all appointments from Firestore
       setRefreshing(false);
-      loadCount(); // function to load the count of deleted appointments from AsyncStorage
+      loadData(); // function to load the count of deleted appointments from AsyncStorage
       }
       if (isFocused){
         autoDelete(); // function to delete appointments that have already passed
       }
   },[refreshing,isFocused])
 
-  const loadCount = async () => {
+  const loadData = async () => {
     const storedCount = await AsyncStorage.getItem('count'); // retrieve the count from AsyncStorage
     if (storedCount !== null) {
       setCount(parseInt(storedCount)); // convert the stored count to an integer and set it to the state variable
@@ -47,6 +50,15 @@ function AdminHomepage(){
     if (storedAppo !== null) {
       setAppointmentHist(JSON.parse(storedAppo)); // parse the stored JSON string and set the result to the state variable
     }
+    const storedRev = await AsyncStorage.getItem('Revenue');
+    if (storedRev !== null) {
+      setRevenue(JSON.parse(storedRev));
+    };
+  }
+
+  const storeData = async (data) => {
+      const jsonValue = JSON.stringify(data);
+      await AsyncStorage.setItem('Revenue', jsonValue);
   };
 
   const autoDelete = async()=>{
@@ -54,7 +66,7 @@ function AdminHomepage(){
     const today = new Date(); // get the current date
     const dayOfMonth = today.getDate(); // get the day of the month
     AsyncStorage.setItem('day', dayOfMonth.toString()); // store the day of the month to AsyncStorage
-
+    
     if(dayOfMonth == 1) // if it's the first day of the month
     {
       AsyncStorage.setItem('count', "0"); // reset the count to 0 and store it to AsyncStorage
@@ -71,7 +83,20 @@ function AdminHomepage(){
         const Ref = doc(database, "Booking_Appointment", item.id); 
         setCount(newCount); // set the new count to the state variable
         AsyncStorage.setItem('count', newCount.toString()); // store the new count to AsyncStorage
+        await deleteDoc(Ref);
+        const docSnap = await getDoc(Ref);
+
+        const newData = {
+          date: docSnap.data().date,
+          value: docSnap.data().price,
+          name: docSnap.data().name,
+        };
+
+        const updatedData = [...Revenue, newData];
+        setRevenue(updatedData);
+        storeData(updatedData);
     }
+    
     }
     setRefreshing(true);
   }
@@ -84,18 +109,19 @@ function AdminHomepage(){
 
   // This function renders a single appointment item with the specified data
   const renderItem = ({ item }) => (
-    <View style = {styles.itemContainer}>
-        <Text style = {styles.courseHeader}>COURSE:</Text>
-        <View>
+    <View style = {styles.courseContainer}>
+    <Text style = {styles.courseHeader}>Course</Text>
+      <View>
         {(item.course).map(item => (
-        <Text style ={styles.courseText} key={item}> {item}</Text>
+          <Text style ={styles.courseText} key={item}>{item} </Text>
         ))}
       </View>
-      <View style = {styles.courseDetailContainer}>
-      <Text style = {styles.courseDetailText}>Date: {item.date}</Text>
-      <Text style = {styles.courseDetailText}>time: {item.time}</Text>
-      <Text style = {styles.courseDetailText}>Price: {item.price} yen</Text>
-      </View>
+      <View style = {styles.LineBreak}></View>
+      <Text style = {styles.courseHeader}>Date & Time</Text>
+      <Text style = {styles.courseText}>{item.date}  {item.time}</Text>
+      <View style = {styles.LineBreak}></View>
+      <Text style = {styles.courseHeader}>Price</Text>
+      <Text style = {styles.courseText}>¥{item.price}</Text>
       
       <TouchableOpacity onPress={()=>{(deleteAppointment(item.id)),    setRefreshing(false)}}>
       <View style = {styles.deleteContainer}>
@@ -183,9 +209,7 @@ function AdminHomepage(){
             <Text style = {styles.subTextStyle}>There are no appointment today..</Text>
          </View>
           }
-          <View style = {styles.headerWrapper}>
           <Text style = {styles.headerStyle}>Future Appointments</Text>
-          </View>
           {
           (AppointmentFuture != "")?(
           <View style={styles.AppointmentView}>
@@ -212,115 +236,87 @@ const styles = StyleSheet.create
   {
     flex:1
   },
-  TabNavSpace: 
-  {
-    paddingVertical:40,
-  },
   contentContainer:
   {
-    height:'100%',
+    height:height,
     justifyContent: 'space-between',
     backgroundColor:colors.background,
+
   },
   headerStyle:
   {
     textAlign:'left',
-    fontSize:16,
+    fontSize:height * 0.02,
     fontFamily:'Merriweather-Regular',
     color: colors.text_brown,
   },
   subTextStyle:
   {
     textAlign:'center',
-
   },
   subTextWrapper:
   {
-    paddingVertical:'20%',
+    paddingVertical:height * 0.08,
     opacity:0.5,
   },
   appoContainer:
   {
-    paddingTop:'10%',
-    padding:20,
+    paddingTop:height * 0.05,
+    paddingHorizontal:width * 0.05,
   },
   headerWrapper2:
   {
     alignItems:'center',
-    paddingVertical:'5%'
-  },
-  itemContainer:
-  {
-    marginVertical:'1%',
-    padding:'2%',
-    borderRadius:8,
-    backgroundColor:colors.primary_brown
+    paddingVertical:height * 0.02
   },
   itemDeleteStyle:
   {
-    fontSize:'15',
+    fontSize:height * 0.015,
     fontFamily:'Merriweather-Bold',
     color:colors.text_white,
+  },
+  LineBreak:
+  {
+    height: height * 0.005
   },
   deleteContainer:
   {
     alignSelf:'center',
-    paddingBottom:'1%',
-    paddingVertical:'2%',
+    paddingVertical:height * 0.01,
     flexDirection:'row',
     alignItems:'center',
   },
   AppointmentView:
   {
-    height:'55%',
-    marginVertical:'5%'
+    height:height * 0.5,
+    marginVertical:height * 0.01
   },
   AppointmentView2:
   {
-    marginVertical:'5%',
-    height:'30%',
+    marginVertical:height * 0.01,
+    height:height * 0.3,
   },
   FlatList:
   {
     borderRadius:8
   },
-  HeaderText: 
-  {
-    fontFamily:'Merriweather-Regular',
-    fontSize: 16,
-    color: colors.text_brown,
-  },
   courseText:{
     fontFamily:'Poppins-Regular',
-    fontSize: 16,
+    fontSize: height * 0.015,
     color: '#626262'
-  },
-  courseSubText:
-  {
-    fontFamily:'Poppins-Regular',
-    fontSize: 16,
-    color: '#626262'
-
-  },
-  courseDetailText:{
-    fontFamily:'Poppins-Regular',
-    fontSize: 14,
-    color: '#626262',
-    paddingVertical:'0.5%'
-  },
-  courseDetailContainer:{
-    paddingVertical:'2%'
   },
   courseContainer:
   {
     flexDirection: 'column',
-    paddingVertical:'2%',
-    padding:'2%',
+    backgroundColor:colors.primary_brown,
+    marginVertical:height * 0.005,
+    padding:height * 0.008,
+    borderRadius:8,
   },
   courseHeader:
   {
     fontFamily:'Poppins-Regular',
-    fontSize: 18,
+    fontSize: height * 0.02,
     color: '#626262'
   },
 })

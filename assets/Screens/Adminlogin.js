@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,KeyboardAvoidingView,TouchableWithoutFeedback,Keyboard } from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,KeyboardAvoidingView,TouchableWithoutFeedback,Keyboard,Dimensions,TouchableOpacity } from 'react-native';
 import colors from '../Colors/colors';
 import { TextInput } from 'react-native-gesture-handler';
 import Button from '../Components/CustomButton';
@@ -8,6 +8,8 @@ import useFonts from '../Hooks/useFonts';
 import { useState } from 'react';
 import AppLoading from 'expo-app-loading';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+
+const { width, height } = Dimensions.get('window');
  
 function Adminlogin({navigation}) {
   const [IsReady, SetIsReady] = useState(false);  // Initializes a state variable for checking if the app is ready
@@ -110,6 +112,10 @@ function Adminlogin({navigation}) {
             <View style = {styles.blankSpace}></View>
 
             <Button onPress ={()=> LogInUser()} title = {'Login'} backgroundColor = {colors.secondary_green} fontFamily= {'Poppins-Regular'}></Button>
+
+            <TouchableOpacity onPress={() => navigation.navigate('Login')} style = {styles.textPos}>
+              <Text style = {styles.TextWrapper1}>Customer Login</Text>
+            </TouchableOpacity>
           </View>
         </SafeAreaView>
       </TouchableWithoutFeedback>
@@ -127,63 +133,56 @@ const styles = StyleSheet.create
   },
   Sharon:
   {
-    fontSize:42,
-    marginTop:'10%',
+    fontSize:height * 0.05,
     fontWeight:'bold',
     color:colors.primary_brown,
     fontFamily:'DancingScript',
     textAlign:'center',
-    marginBottom:'20%'
+    marginVertical: height * 0.04
   },
   LoginContent:
   {
-    paddingHorizontal:'7%',
+    paddingHorizontal:width * 0.08,
     flexDirection:'column',
-    },
+  },
   inputHeader:
   {
-    fontSize:18,
+    fontSize:height * 0.02,
     color:colors.text_brown,
-    paddingBottom:'1%',
+    paddingBottom:height * 0.01,
     fontFamily:'Merriweather-Regular'
   },
   Inputs:
   {
-    paddingVertical: '4%',
+    paddingVertical: height * 0.015,
     fontFamily:'Poppins-Regular'
   },
   EmailInput:
   {
     backgroundColor:'#DFDFDF',
     borderRadius:8,
-    fontSize:16,
-    paddingVertical:'4%',
-    paddingLeft:'4%',
+    fontSize:height * 0.015,
+    height:height * 0.05,
+    paddingLeft:width * 0.02,
     fontFamily:'Poppins-Regular'
-
   },
   PasswordInput:
   {
     borderWidth:1,
-    paddingVertical:'4%',
-    paddingLeft:'4%',
     borderRadius:8,
-    fontSize:16,
+    fontSize:height * 0.015,
+    height:height * 0.05,
+    paddingLeft:width * 0.02,
     borderColor:'#DFDFDF',
     fontFamily:'Poppins-Regular'
-
-  },
-  blankSpace:
-  {
-    marginTop:'10%',
   },
   errorPasswordInput:
   {
     borderWidth:1,
-    height:50,
-    paddingLeft:10,
     borderRadius:8,
-    fontSize:16,
+    fontSize:height * 0.015,
+    height:height * 0.05,
+    paddingLeft:width * 0.02,
     borderColor:'#cc0000',
     fontFamily:'Poppins-Regular'
   },
@@ -191,10 +190,10 @@ const styles = StyleSheet.create
   {
     backgroundColor:'#cc000020',
     borderWidth:1,
-    height:50,
-    paddingLeft:10,
     borderRadius:8,
-    fontSize:16,
+    fontSize:height * 0.015,
+    height:height * 0.05,
+    paddingLeft:width * 0.02,
     borderColor:'#cc0000',
     fontFamily:'Poppins-Regular'
   },
@@ -204,10 +203,20 @@ const styles = StyleSheet.create
   fpTextStyle:
   {
     color: colors.text_brown,
-    fontSize:15,
+    fontSize:height * 0.015,
     fontFamily:'Poppins-Regular',
-    paddingTop: 5,
-    paddingBottom:5,
+    paddingTop: height * 0.01,
+    paddingBottom:height * 0.05,
+  },
+  TextWrapper1:
+  {
+    color: colors.text_brown,
+    fontSize:height * 0.015,
+    fontFamily:'Poppins-Regular',
+    textAlign:'center'
+  },
+  textPos:{
+    marginTop:height * 0.03 
   }
 })
 

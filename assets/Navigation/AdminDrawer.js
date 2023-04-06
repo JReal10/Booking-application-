@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Dimensions } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import AdminHomepage from '../Screens/AdminHomepage';
 import colors from '../Colors/colors';
@@ -42,11 +43,10 @@ function AdminDrawer() {
         {  
           backgroundColor: colors.background,
           shadowColor: 'transparent',
-
         },
         headerTitleStyle: 
         {
-          fontSize:20,
+          fontSize:height * 0.025,
           fontFamily:'Poppins-SemiBold'
         },
     }}>
@@ -55,7 +55,7 @@ function AdminDrawer() {
         headerTitle: 'Appointments',
       }} />
       <Drawer.Screen name = {'Add Menu'} component = {AdminAddMenu} options ={{
-        headerTitle: 'Add Menu',
+        headerTitle: 'Menu',
       }}/>
       <Drawer.Screen name = {'Energy Consumption'} component = {EnergyConsumption} options ={{
         headerTitle: 'Energy Consumption',

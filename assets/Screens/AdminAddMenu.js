@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity,FlatList,StatusBar,TextInput } from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity,FlatList,StatusBar,TextInput,Dimensions} from 'react-native';
 import colors from '../Colors/colors';
 import AppLoading from 'expo-app-loading';
 import useFonts from '../Hooks/useFonts';
 import { database } from '../Config/firebase';
 import { addDoc,collection,getDocs,deleteDoc,doc} from 'firebase/firestore';
-import Entypo from 'react-native-vector-icons/Entypo';
 import Button from '../Components/CustomButton';
 import { useState,useEffect}from 'react';
+
+const { width, height } = Dimensions.get('window');
 
 function AdminAddMenu({navigation}){
 
@@ -66,33 +67,13 @@ const GetUser = async() => {
     setRefreshing(true);
   };
 
-  const deleteMenu = async(id)=>{
-    await deleteDoc(doc(database, "Booking_Course", id));
-    setRefreshing(true);
-  }
-
-  // This function renders a single appointment item with the specified data
-  const renderItem = ({ item }) => (
-    <View style = {styles.itemContainer}>
-      <Text style = {styles.itemHeader}>Course: {item.Course_name}</Text>
-      <Text style = {styles.itemTextStyle}>Description: {item.Description}</Text>
-      <Text style = {styles.itemTextStyle}>Time: {item.time} min</Text>
-      <Text style = {styles.itemTextStyle}>Price: {item.price} yen</Text>
-      <TouchableOpacity onPress={()=>(deleteMenu(item.id))}>
-      <View style = {styles.deleteContainer}>
-      <Entypo name = 'cross' size = {20} color = {colors.text_white} />
-      <Text style = {styles.itemDeleteStyle}>Delete course</Text>
-      </View> 
-      </TouchableOpacity>
-    </View>
-  );
-
   return (
     <View style ={styles.Container}>
       <SafeAreaView style = {styles.SafeAreaView}>
       <View style = {styles.contentContainer}>
       <StatusBar barStyle={'dark-content'}></StatusBar>
           <View>
+          <Text style = {styles.HeaderStyle}>Add Menu</Text>
           <View style = {styles.Inputs}>
             <Text style = {styles.inputHeader}>Course Name</Text>
             <TextInput placeholder = 'enter course name...' 
@@ -126,16 +107,11 @@ const GetUser = async() => {
             autoCapitalize = 'none'/>
         </View>
         <View style = {styles.Button}>
-        <Button title = {'ADD MENU'} backgroundColor = {colors.secondary_green} onPress = { ()=> (AddMenu(courseName,coursePrice,courseTime,courseDesc),clearInput)} fontFamily= {'Poppins-Regular'}></Button>
+        <Button title = {'ADD MENU'} backgroundColor = {colors.secondary_green} onPress = { ()=> (AddMenu(courseName,coursePrice,courseTime,courseDesc))} fontFamily= {'Poppins-Regular'}></Button>
         </View>
-        <Text style = {styles.HeaderStyle}>Menu</Text>
-        <FlatList
-          style = {styles.FlatList} 
-          data={course}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.key}
-          extraData={course}
-        />
+        <TouchableOpacity style = {styles.textPos} onPress={()=>(navigation.navigate('delete menu'))}>
+        <Text style = {styles.ViewMenu}>View Menus </Text>
+        </TouchableOpacity>
         </View>
         </View>
       </SafeAreaView>
@@ -147,95 +123,63 @@ const styles = StyleSheet.create
   Container:
   {
     flex:1,
+
   },
   SafeAreaView:
   {
     backgroundColor:colors.background,
+    width:width,
+    height:height,
   },
   contentContainer:
   {
-    paddingTop:20,
-    borderTopLeftRadius:23,
-    borderTopRightRadius:23,
+    paddingTop:height * 0.02,
     backgroundColor:colors.background,
-    width:'100%',
-    height:'100%',
-    paddingHorizontal:30,
-    flexDirection:'row',
+    marginHorizontal:height * 0.022
   },
   InputWrapper:
   {
     backgroundColor:'#DFDFDF',
     borderRadius:8,
-    fontSize:16,
-    height:45,
-    paddingLeft:10,
+    fontSize:height * 0.015,
+    height:height * 0.05,
+    paddingLeft:width * 0.02,
     fontFamily:'Poppins-Regular'
-
   },
   Inputs:
   {
-    paddingVertical: 5,
+    paddingVertical: height * 0.015,
     fontFamily:'Poppins-Regular'
   },
   inputHeader:
   {
-    fontSize:15,
+    fontSize:height * 0.018,
     color:colors.text_brown,
-    paddingBottom:9,
+    paddingBottom:height * 0.01,
     fontFamily:'Merriweather-Regular'
   },
   HeaderStyle:
   {
-    paddingVertical:'6%',
-    fontSize:18,
+    paddingVertical:height * 0.03,
+    fontSize:height * 0.02,
     color:colors.text_brown,
     fontFamily:'Merriweather-Regular'
   },
   Button:
   {
-    paddingVertical:'3%',
+    paddingVertical:height * 0.02,
+    alignSelf:'center'
   },
-  itemTextStyle:
+  ViewMenu:
   {
-    fontSize:'15',
-    paddingBottom:'1%',
-    fontFamily:'Merriweather-Regular',
-    color:colors.text_white,
-    opacity:'0.8'
+    color: colors.text_brown,
+    fontSize:height * 0.018,
+    fontFamily:'Poppins-Regular',
+    textAlign:'center'
   },
-  itemContainer:
-  {
-    marginVertical:'1%',
-    padding:'2%',
-    borderRadius:8,
-    backgroundColor:colors.primary_brown
+  textPos:{
+    marginTop:height * 0.03 
   },
-  itemHeader:
-  {
-    color:colors.text_brown,
-    fontFamily:'Poppins-Medium',
-    fontSize:'16',
-    paddingBottom:'2%'
-  },
-  itemDeleteStyle:
-  {
-    fontSize:'15',
-    fontFamily:'Merriweather-Bold',
-    color:colors.text_white,
-  },
-  deleteContainer:
-  {
-    alignSelf:'center',
-    paddingBottom:'1%',
-    paddingVertical:'2%',
-    flexDirection:'row',
-    alignItems:'center',
-  },
-  FlatList:
-  {
-    height:'40%'
-  }
 
 })
 

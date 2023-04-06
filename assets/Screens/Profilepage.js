@@ -120,18 +120,18 @@ function Profilepage({route}) {
       <Text style = {styles.courseHeader}>Course</Text>
       <View>
         {(item.course).map(item => (
-          <Text style ={styles.courseText} key={item}> {item} </Text>
+          <Text style ={styles.courseText} key={item}>{item} </Text>
         ))}
       </View>
       <View style = {styles.LineBreak}></View>
       <Text style = {styles.courseHeader}>Date & Time</Text>
-      <Text style = {styles.courseText}> {item.date}  {item.time}</Text>
+      <Text style = {styles.courseText}>{item.date}  {item.time}</Text>
       <View style = {styles.LineBreak}></View>
       <Text style = {styles.courseHeader}>Estimated Time Taken</Text>
       <Text style = {styles.courseText}>{item.timeTaken} min</Text>
       <View style = {styles.LineBreak}></View>
       <Text style = {styles.courseHeader}>Price</Text>
-        <Text style = {styles.courseText}>¥{item.price}</Text>
+      <Text style = {styles.courseText}>¥{item.price}</Text>
         <TouchableOpacity onPress = {()=> CancelAppointment(item.id)}style = {styles.CancelAppointment}>
           <Text style = {styles.CancelAppointmentText}> Cancel Appointment </Text>
         </TouchableOpacity>
@@ -352,8 +352,8 @@ const styles = StyleSheet.create({
   },
   NoAppWrapper:
   {
-    paddingVertical: height * 0.3,
-    alignItems:'center'
+    paddingVertical: height * 0.2,
+    alignItems:'center',
   },
   NoAppText:
   {

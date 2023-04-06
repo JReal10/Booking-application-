@@ -118,7 +118,7 @@ const CustomDrawer = ({navigation}) =>
         }
         <TouchableOpacity onPress={() => {logout()}} style={styles.logoutContainer}>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <MaterialIcons name = 'logout' size = {32} color = {colors.text_brown} />
+          <MaterialIcons name = 'logout' size = {height * 0.04} color = {colors.text_brown} />
             <Text style = {styles.Logout}>
               Log Out
             </Text>
@@ -166,7 +166,6 @@ const styles = StyleSheet.create({
   Logout:
   {
     fontSize: width * 0.05,
-    marginLeft: width * 0.01,
     color: colors.text_brown,
     fontFamily: 'Poppins-Regular',
   },
@@ -174,7 +173,7 @@ const styles = StyleSheet.create({
   {
     alignItems: 'flex-start',
     paddingHorizontal: width * 0.03,
-    paddingVertical: height * 0.05,
+    paddingVertical: height * 0.1,
     justifyContent: 'space-evenly',
   },
   NoAppText: {
@@ -214,6 +213,8 @@ const styles = StyleSheet.create({
   },
   logoutContainer:
   {
+    position:'absolute',
+    top:height * 0.35,
     paddingVertical:height * 0.02,
     paddingHorizontal:width * 0.02,
   }
