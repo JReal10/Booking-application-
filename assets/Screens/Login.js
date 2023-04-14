@@ -119,9 +119,11 @@ function Login({navigation}){ //Main componenets for the login screen
                   }
   
                   <View>
+                  <TouchableOpacity onPress={() => navigation.navigate('fp')}>
                     <Text style = {styles.fpTextStyle}>
                       Forgot Password?
                     </Text>
+                    </TouchableOpacity>
                   </View>
 
                   <Button title = {'LOGIN'} backgroundColor = {colors.secondary_green} onPress = {() => {LogInUser()}} fontFamily= {'Poppins-Regular'}></Button>

@@ -10,10 +10,10 @@ import { useState,useEffect}from 'react';
 
 const { width, height } = Dimensions.get('window');
 
-function DeleteMenu({navigation}){
+function RevenueHist({navigation}){
 
 const [IsReady, SetIsReady] = useState(false); // A boolean state variable 
-const [course,setCourse] = useState([]); // A state variable that holds the list of courses
+const [Revenue,setRevenue] = useState([]); // A state variable that holds the list of courses
 const [refreshing, setRefreshing] = useState(true); // A boolean state variable that determines if the list of courses needs to be refreshed
 
 // useEffect hook that executes a function when the component mounts or when the refreshing state variable changes
@@ -32,7 +32,7 @@ const collectIdsAndDocs = (doc) => {
 
 // A function that retrieves the documents from the "Booking_Course" collection and sets the course state variable to the mapped array of objects returned by the collectIdsAndDocs function
 const GetUser = async() => {
-  const Ref = collection(database, "Booking_Course");
+  const Ref = collection(database, "Revenue_price");
   const docSnap = await getDocs(Ref);
   const list = docSnap.docs.map(collectIdsAndDocs);
   setCourse(list);
@@ -51,11 +51,6 @@ const GetUser = async() => {
       />
     );
   }
-  
-  const deleteMenu = async(id)=>{
-    await deleteDoc(doc(database, "Booking_Course", id));
-    setRefreshing(true);
-  }
 
   // This function renders a single appointment item with the specified data
   const renderItem = ({ item }) => (
@@ -64,12 +59,6 @@ const GetUser = async() => {
       <Text style = {styles.itemTextStyle}>Description: {item.Description}</Text>
       <Text style = {styles.itemTextStyle}>Time: {item.time} min</Text>
       <Text style = {styles.itemTextStyle}>Price: {item.price} yen</Text>
-      <TouchableOpacity onPress={()=>(deleteMenu(item.id))}>
-      <View style = {styles.deleteContainer}>
-      <Entypo name = 'cross' size = {20} color = {colors.text_white} />
-      <Text style = {styles.itemDeleteStyle}>Delete course</Text>
-      </View> 
-      </TouchableOpacity>
     </View>
   );
 
@@ -81,7 +70,7 @@ const GetUser = async() => {
         <View>
         <FlatList
           style = {styles.FlatList} 
-          data={course}
+          data={Revenue}
           renderItem={renderItem}
           keyExtractor={(item) => item.key}
           extraData={course}
@@ -155,4 +144,4 @@ const styles = StyleSheet.create
 })
 
 
-export default DeleteMenu;
+export default RevenueHist;

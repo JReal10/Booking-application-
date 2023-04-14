@@ -1,13 +1,10 @@
 import React from "react";
 import { View,Text,StyleSheet,FlatList,Dimensions } from "react-native";
 import colors from "../Colors/colors";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { query, getDocs,getDoc,doc, collection, where } from 'firebase/firestore';
 import { database } from '../Config/firebase';
 import { useEffect,useState } from 'react';
 import { Authentication } from '../Config/firebase';
-import { signOut } from 'firebase/auth';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useIsFocused } from "@react-navigation/native";
 
@@ -25,16 +22,6 @@ const CustomDrawer = ({navigation}) =>
     GetAppointment(user);
     GetUser(user);
   },[isFocused])
-
-  const logout =() =>
-  {
-    signOut(Authentication)
-    .then((re) => 
-    {
-    }).catch
-    {
-    }
-  }
 
   const collectIdsAndDocs = (doc) => {
     return {id: doc.id, ...doc.data()};
@@ -116,14 +103,6 @@ const CustomDrawer = ({navigation}) =>
             />: 
             (<View style = {styles.NoAppWrapper}><Text style = {styles.NoAppText}>No Appointment Booked</Text></View>)
         }
-        <TouchableOpacity onPress={() => {logout()}} style={styles.logoutContainer}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <MaterialIcons name = 'logout' size = {height * 0.04} color = {colors.text_brown} />
-            <Text style = {styles.Logout}>
-              Log Out
-            </Text>
-          </View>
-        </TouchableOpacity>
     </SafeAreaView>
   )
 }
@@ -162,12 +141,6 @@ const styles = StyleSheet.create({
     paddingTop: height * 0.02,
     color: colors.background,
     fontFamily: 'Merriweather-Regular',
-  },
-  Logout:
-  {
-    fontSize: width * 0.05,
-    color: colors.text_brown,
-    fontFamily: 'Poppins-Regular',
   },
   NoAppWrapper:
   {
@@ -211,13 +184,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#626262' 
   },
-  logoutContainer:
-  {
-    position:'absolute',
-    top:height * 0.35,
-    paddingVertical:height * 0.02,
-    paddingHorizontal:width * 0.02,
-  }
 })
 
 export default CustomDrawer;

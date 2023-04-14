@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,FlatList,Dimensions} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,FlatList,Dimensions,TouchableOpacity} from 'react-native';
 import colors from '../Colors/colors';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -7,7 +7,6 @@ import StepIndicator from 'react-native-step-indicator';
 import {collection,getDocs} from 'firebase/firestore';
 import Button from '../Components/CustomButton';
 import { database } from '../Config/firebase';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useState,useEffect } from 'react';
 
 const { width, height } = Dimensions.get('window');

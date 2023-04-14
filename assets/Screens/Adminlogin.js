@@ -106,9 +106,13 @@ function Adminlogin({navigation}) {
                 <Text style = {styles.errorText}>Wrong password or email address</Text>
               </View>
               }
-              <Text style = {styles.fpTextStyle}>
-              Forgot Password?
-            </Text>
+              <View>
+              <TouchableOpacity onPress={() => navigation.navigate('fp')}>
+                <Text style = {styles.fpTextStyle}>
+                  Forgot Password?
+                </Text>
+                </TouchableOpacity>
+              </View>
             <View style = {styles.blankSpace}></View>
 
             <Button onPress ={()=> LogInUser()} title = {'Login'} backgroundColor = {colors.secondary_green} fontFamily= {'Poppins-Regular'}></Button>

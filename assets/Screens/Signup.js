@@ -19,8 +19,9 @@ function Signup({navigation}) {
   const [password,setPassword] = useState('')
   const [emailUsed, setEmailUsed] = useState(false)
   const [invalidEmail, setInvalidEmail] = useState(false)
+  const [firstName,setFirstName] = useState('')
+  const [lastName,setLastName] = useState('')
   const [name,setName] = useState('')
-  const [UserID,setUserID] = useState('')
   const [IsReady, SetIsReady] = useState(false);
   const [nameError, SetNameError] = useState(true);
 
@@ -28,23 +29,22 @@ function Signup({navigation}) {
     await useFonts();
   };
 
-  const AddData = async (UserName,UserEmail,userID) => {
+  const AddData = async (name,UserEmail,userID) => {
 
     const Ref = doc(database, "Booking_User", userID);
     const data = {
-      name: UserName,
+      name: name,
       email: UserEmail
     };
    
     await setDoc(Ref, data)
   };
 
-    const RegisterUser = () =>
+  const RegisterUser = () =>
     {
       createUserWithEmailAndPassword(Authentication,email,password )
       .then((re) => {
-        AddData(name,email,re.user.uid)
-        setUserID(re.user.uid)
+        AddData(firstName + " " + lastName,email,re.user.uid);
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
@@ -76,19 +76,19 @@ function Signup({navigation}) {
                 <Text style = {styles.Sharon}>Create Account</Text>
                 <View style = {styles.Inputs}>
                   <Text style = {styles.inputHeader}>First Name</Text>
-                  <TextInput placeholder = 'name' value = {name}
-                  onChangeText={(name) => setName(name)} style = {styles.EmailInput}/>
+                  <TextInput placeholder = 'first name' value = {firstName}
+                  onChangeText={(firstname) => setFirstName(firstname)} style = {styles.EmailInput}/>
                 </View>
-                {(name.length < 0 && nameError == true)?
+                {(lastName.length < 0 && nameError == true)?
                 <View style = {styles.Inputs}>
                   <Text style = {styles.inputHeader}>Last Name</Text>
-                  <TextInput placeholder = 'name' value = {name}
-                  onChangeText={(name) => setName(name)} style = {styles.errorEmailInput}/>
+                  <TextInput placeholder = 'last name' value = {lastName}
+                  onChangeText={(lastname) => setLastName(lastname)} style = {styles.errorEmailInput}/>
                 </View>:
                 <View style = {styles.Inputs}>
                   <Text style = {styles.inputHeader}>Last Name</Text>
-                  <TextInput placeholder = 'name' value = {name}
-                  onChangeText={(name) => setName(name)} style = {styles.EmailInput}/>
+                  <TextInput placeholder = 'lastname' value = {lastName}
+                  onChangeText={(lastname) => setLastName(lastname)} style = {styles.EmailInput}/>
                 </View> }
 
                 {(invalidEmail == true)?

@@ -7,6 +7,7 @@ import {Dimensions} from 'react-native';
 import { useState,useEffect}from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window');
 
@@ -19,7 +20,7 @@ function EnergyConsumption(){
   const EnergyRateArray = [
     { name: 'Air Conditioner', value: 318},
     { name: 'Air Purifier', value: 100},
-    { name: 'UV Light', value: 96 * count},
+    { name: 'UV Light', value: 96},
     { name: 'Nail Gel Remover', value: 72},
     { name: 'Desktop PC', value: 200},
     { name: 'Wifi', value: 20},
@@ -68,7 +69,6 @@ function EnergyConsumption(){
     if (storedDay !== null) {
       setDay(parseInt(storedDay));
     }
-    console.log(storedCount);
   };
 
   const FetchFonts = async () => {
@@ -88,7 +88,7 @@ function EnergyConsumption(){
   const renderItem = ({ item }) => (
     <View style = {styles.flContainer}>
     <Text style = {styles.itemText}>{item.name}</Text>
-    <Text style = {styles.itemText}>{item.value * count} w/h</Text>
+    <Text style = {styles.itemText}>{item.value} w/h</Text>
     </View>
   );
 
@@ -115,6 +115,7 @@ function EnergyConsumption(){
         </View>
         <Text style = {styles.ppTextStyle}>Predicted Price: ¥{roundedPredictedCost}</Text>
         </View>
+        <TouchableOpacity><Text>Energy Price History</Text></TouchableOpacity>
         <View style = {styles.flatList}>
         <Text style = {styles.BalancHeader}>Energy Usage</Text>
         <View>
