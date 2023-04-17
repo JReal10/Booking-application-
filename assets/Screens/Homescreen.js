@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity, ImageBackground} from 'react-native';
+import { Text,View, StyleSheet,SafeAreaView,TouchableOpacity, ImageBackground,Dimensions} from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import colors from '../Colors/colors';
 import AppLoading from 'expo-app-loading';
 import useFonts from '../Hooks/useFonts';
 import {useState} from 'react';
-import { Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
