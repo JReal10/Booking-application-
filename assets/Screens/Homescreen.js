@@ -9,7 +9,7 @@ import { Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
-function HomeScreen({navigation}){
+export default function HomeScreen({navigation}){
 
   const [IsReady, SetIsReady] = useState(false);// initialize state variable refreshing with true
 
@@ -129,5 +129,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#C7B39E40',
   },
 });
-
-export default HomeScreen;

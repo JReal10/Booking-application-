@@ -86,6 +86,7 @@ function Bookingpage3({navigation}) {
       const docRef = await addDoc(collection(database, "Booking_Appointment"), {
         date:route.params.paramDate,
         time:route.params.paramKey,
+        name: route.params.paramName,
         course:course,
         timeTaken:time,
         price: price,

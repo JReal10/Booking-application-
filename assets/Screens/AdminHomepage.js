@@ -4,7 +4,7 @@ import colors from '../Colors/colors';
 import AppLoading from 'expo-app-loading';
 import useFonts from '../Hooks/useFonts';
 import { database } from '../Config/firebase';
-import { deleteDoc,doc,collection,getDocs, getDoc } from 'firebase/firestore';
+import { deleteDoc,doc,collection,getDocs, getDoc,query,where } from 'firebase/firestore';
 import { useState,useEffect }from 'react';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { useIsFocused } from '@react-navigation/native';
@@ -22,8 +22,10 @@ function AdminHomepage(){
   const isFocused = useIsFocused(); // hook to determine if the component is in focus
   const [count, setCount] = useState(0); // state variable to hold the count of appointments deleted
   const [day, setDay] = useState(0); // state variable to hold the current day
-  const [appointmentHist, setAppointmentHist] = useState([]); // state variable to hold the deleted appointments' history
   const [Revenue, setRevenue] = useState([]);
+  const [tmpDate,setTmpDate] = useState("");
+  const [tmpName,setTmpName] = useState("");
+  const [tmpPrice,setTmpPrice] = useState("");
 
   useEffect(() => {
 
@@ -83,22 +85,38 @@ function AdminHomepage(){
         const Ref = doc(database, "Booking_Appointment", item.id); 
         setCount(newCount); // set the new count to the state variable
         AsyncStorage.setItem('count', newCount.toString()); // store the new count to AsyncStorage
-        await deleteDoc(Ref);
-        const docSnap = await getDoc(Ref);
+
+        const q = query(collection(database, "Booking_Appointment"), where("uid", "==", item.id ), where("date", "==",item.date));
+
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+          setTmpDate(doc.data().date)
+          setTmpPrice(doc.data().price)
+          setTmpName(doc.data().name)
+        });
 
         const newData = {
-          date: docSnap.data().date,
-          value: docSnap.data().price,
-          name: docSnap.data().name,
+          date: tmpDate.date,
+          value: tmpPrice.data().price,
+          name: tmpName.data().name,
         };
 
         const updatedData = [...Revenue, newData];
         setRevenue(updatedData);
         storeData(updatedData);
+
+        const updatedFAppointments = AppointmentFuture.filter(appointment => appointment.id !== item.id);
+        const updatedTAppointments = AppointmentToday.filter(appointment => appointment.id !== item.id);
+        //FIX can't update the program
+        setApointmentFuture(updatedFAppointments);
+        setApointmentToday(updatedTAppointments);
+
+        await deleteDoc(Ref);
+        setRefreshing(true);
     }
-    
     }
-    setRefreshing(true);
   }
 
   // This function deletes an appointment with the specified ID from the database, and then sets the refreshing state to true to trigger a re-rendering of the component that displays the appointment list

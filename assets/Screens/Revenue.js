@@ -16,16 +16,19 @@ function Revenue({navigation}){
   const [IsReady, SetIsReady] = useState(false);
   const [count, setCount] = useState(0);
   const [Revenue,setRevenue] = useState([]);
+  const vat = 0.08;
 
   const totalPriceCalc = () => 
   {
     let total = 0;
+    let totalVat = 0;
 
     for (let i = 0; i < Revenue.length; i++) {
       const item = Revenue[i];
       total += item.value;
+      totalVat += item.value * vat;
     }
-    return total;
+    return total - totalVat;
   }
 
   const date = new Date().toLocaleDateString();

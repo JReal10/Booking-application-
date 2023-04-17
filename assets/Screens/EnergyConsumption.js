@@ -7,11 +7,10 @@ import {Dimensions} from 'react-native';
 import { useState,useEffect}from 'react';
 import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window');
 
-function EnergyConsumption(){
+function EnergyConsumption({navigation}){
 
   const [IsReady, SetIsReady] = useState(false);
   const [count, setCount] = useState(0);
@@ -115,7 +114,6 @@ function EnergyConsumption(){
         </View>
         <Text style = {styles.ppTextStyle}>Predicted Price: ¥{roundedPredictedCost}</Text>
         </View>
-        <TouchableOpacity><Text>Energy Price History</Text></TouchableOpacity>
         <View style = {styles.flatList}>
         <Text style = {styles.BalancHeader}>Energy Usage</Text>
         <View>
