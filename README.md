@@ -1,19 +1,72 @@
-# Booking-application-
-Booking application created with React Native and Firebase
 
-# Project Summary
-The mobile application which is iOS-based is a nail-salon appointment booking application, the main concept of the app is that it has a live interactive booking system, a simple database manipulation system for the employer/admin for the employers with no technical background and a live salon statistics system that displays status of the energy consumption rate and the revenue of the company. Moreover, the project includes other extra features such as social media integration and integrated geolocation function to satisfy the user needs in which we will discuss in this report. 
+# Salon Appointment Application
 
-The app can be run using the expo app:
+![Description of Image](images/image-name.png)
 
-1. Make sure you have Expo CLI installed on your machine. If not, fear not! You can easily install it by running the following command in your terminal: npm install -g expo-cli.
+## Project Overview
 
-2. Navigate to the app project's directory using the command line.
+This Salon Appointment Application is an intuitive, user-friendly mobile app designed to streamline nail salon bookings and enhance customer experience. Built using React Native for the frontend and Firebase for backend services, the application offers robust and scalable functionality.
 
-3. Once inside your project's directory, run expo start. Expo will fire up, and you'll see a QR code on your screen.
+## Features
 
-4. On your mobile device, open the Expo app.  Tap on the "Scan QR Code" option and scan that QR code on your screen. 
+### Current Features
 
-5. The app is ready to see.
+- **Appointment Scheduling:** Real-time booking functionality allowing users to schedule salon appointments conveniently.
+- **Salon Statistics Dashboard:** View metrics like energy consumption rates, appointment frequency, and overall company revenue.
+- **Admin Dashboard:** Simplified interface for managing appointments, monitoring salon statistics, and reviewing company revenue.
+- **Social Media Integration:** Facilitates seamless connectivity to popular social platforms to enhance user engagement.
+- **Geolocation Functionality:** Assists users in locating the salon with ease through built-in navigation services.
 
-The app also has a development documentation. The documentation is named capstone report(1)(1).docx
+### Planned Future Enhancements
+- **Online Payment Integration:** Enable users to directly pay for salon services through the app.
+- **Push Notifications:** Regular appointment reminders and promotional offers sent directly to users.
+- **Customer Reviews and Ratings:** Allow customers to provide feedback and ratings for services received.
+
+## Getting Started
+
+### Prerequisites
+- Node.js installed on your computer.
+- Expo Go mobile application.
+
+### Installation and Setup
+
+1. **Clone the Repository:**
+```bash
+git clone https://github.com/YourGitHubUsername/Booking-application-.git
+```
+
+2. **Navigate to the Project Directory:**
+```bash
+cd Booking-application-
+```
+
+3. **Install Dependencies:**
+```bash
+npm install
+```
+
+4. **Start the Expo Development Server:**
+```bash
+expo start
+```
+
+5. **Launch the Application:**
+- Open the Expo Go app on your mobile device.
+- Scan the QR code from your terminal or browser.
+
+## Documentation
+
+Detailed documentation, including features, code structure, and backend setup, can be found in the [Development Documentation (PDF)](https://link-to-your-pdf-documentation).
+
+## Design Process
+
+Explore our design approach through our interactive [Figma Project](https://link-to-your-figma-design).
+
+## License
+
+This project is licensed under the MIT License. For more information, refer to the [LICENSE](LICENSE) file included with the project.
+
+## Acknowledgements
+
+Special thanks to the open-source communities and maintainers of React Native and Firebase for their invaluable resources and tools.
+
