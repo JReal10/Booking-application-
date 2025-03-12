@@ -1,7 +1,7 @@
 
 # Salon Appointment Application
 
-![Description of Image](assests/Images/sharon.png)
+![Description of Image](assets/Images/sharon.png)
 
 ## Project Overview
 
