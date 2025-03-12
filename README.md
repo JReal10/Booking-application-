@@ -56,7 +56,7 @@ expo start
 
 ## Documentation
 
-Detailed documentation, including features, code structure, and backend setup, can be found in the [Development Documentation (PDF)]([https://link-to-your-pdf-documentation](https://pdflink.to/sharon_booking_application_pdf/)).
+Detailed documentation, including features, code structure, and backend setup, can be found in the [Development Documentation (PDF)](https://pdflink.to/sharon_booking_application_pdf/).
 
 ## Design Process
 
