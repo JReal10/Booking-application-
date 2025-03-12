@@ -56,11 +56,11 @@ expo start
 
 ## Documentation
 
-Detailed documentation, including features, code structure, and backend setup, can be found in the [Development Documentation (PDF)](https://link-to-your-pdf-documentation).
+Detailed documentation, including features, code structure, and backend setup, can be found in the [Development Documentation (PDF)]([https://link-to-your-pdf-documentation](https://pdflink.to/sharon_booking_application_pdf/)).
 
 ## Design Process
 
-Explore our design approach through our interactive [Figma Project](https://link-to-your-figma-design).
+Explore our design approach through our interactive [Figma Project](https://www.figma.com/community/file/1481094071369393115).
 
 ## License
 
